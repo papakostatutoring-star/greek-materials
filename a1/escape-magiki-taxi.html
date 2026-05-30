@@ -1476,19 +1476,39 @@ const STAGE_REWARDS = {
 const FINAL_CODE = 'ΜΠΡΑΒΟ';
 
 /* ===========================================
-   TEXT-TO-SPEECH (Greek)
+   TEXT-TO-SPEECH (Greek only — no fallback)
+   Only speaks if the device actually has a Greek voice installed.
+   Otherwise hides 🔊 buttons entirely to avoid mispronunciation.
 =========================================== */
+let GREEK_VOICE = null;
+let TTS_AVAILABLE = false;
+
+function detectGreekVoice() {
+  if (!('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  // Look strictly for a Greek voice (lang starts with 'el')
+  return voices.find(v => v.lang && v.lang.toLowerCase().startsWith('el')) || null;
+}
+
+function updateTtsAvailability() {
+  GREEK_VOICE = detectGreekVoice();
+  TTS_AVAILABLE = !!GREEK_VOICE;
+  // Hide all 🔊 buttons if no Greek voice is installed
+  document.querySelectorAll('.tts-btn').forEach(b => {
+    b.style.display = TTS_AVAILABLE ? '' : 'none';
+  });
+}
+
 function speakGreek(text, btn) {
-  if (!('speechSynthesis' in window)) return;
+  // Refresh detection in case voices loaded late
+  if (!TTS_AVAILABLE) GREEK_VOICE = detectGreekVoice();
+  if (!GREEK_VOICE) return; // Silent — no English fallback
   window.speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'el-GR';
+  utter.voice = GREEK_VOICE;
+  utter.lang = GREEK_VOICE.lang || 'el-GR';
   utter.rate = 0.85;
   utter.pitch = 1.0;
-  // Try to pick a Greek voice if available
-  const voices = window.speechSynthesis.getVoices();
-  const greekVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('el'));
-  if (greekVoice) utter.voice = greekVoice;
   if (btn) {
     btn.classList.add('playing');
     utter.onend = () => btn.classList.remove('playing');
@@ -1496,9 +1516,15 @@ function speakGreek(text, btn) {
   }
   window.speechSynthesis.speak(utter);
 }
-// Pre-load voices (some browsers need this)
+
+// Pre-load voices (browsers load them asynchronously)
 if ('speechSynthesis' in window) {
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  // Initial detection
+  setTimeout(updateTtsAvailability, 100);
+  // Browsers fire this when voices finally load
+  window.speechSynthesis.onvoiceschanged = () => updateTtsAvailability();
+  // Final check after a delay (some browsers are slow)
+  setTimeout(updateTtsAvailability, 1500);
 }
 
 /* ===========================================
@@ -1539,6 +1565,8 @@ function goToStage(n) {
   if (n === 3) initStage3();
   if (n === 4) initStage4();
   if (n === 5) initStage5();
+  // Hide TTS buttons if no Greek voice is available
+  if (typeof updateTtsAvailability === 'function') updateTtsAvailability();
 }
 
 function updateProgressDots() {
@@ -1873,6 +1901,8 @@ function renderRiddle() {
       speakGreek(b.dataset.text, b);
     });
   });
+  // Hide TTS buttons if no Greek voice
+  if (typeof updateTtsAvailability === 'function') updateTtsAvailability();
   // Auto-speak prompt
   setTimeout(() => speakGreek(q.greek), 400);
 }
