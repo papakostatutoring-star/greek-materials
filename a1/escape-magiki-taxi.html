@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Η Μαγική Τάξη — Greek Escape Room (A1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1A2840;
+    --ink-soft: #3a4860;
+    --paper: #FAF5EC;
+    --paper-warm: #F5EBD7;
+    --sea: #2A6F97;
+    --sea-deep: #1B4F73;
+    --sun: #F4B942;
+    --sun-deep: #D89D27;
+    --terra: #D4744A;
+    --olive: #7A8C5C;
+    --leaf: #5A9C6E;
+    --rose: #D85A6C;
+    --gold: #C9A961;
+    --shadow: 0 8px 24px rgba(26,40,64,0.12), 0 2px 6px rgba(26,40,64,0.08);
+    --shadow-lg: 0 20px 60px rgba(26,40,64,0.18), 0 4px 12px rgba(26,40,64,0.1);
+    --radius: 18px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(244,185,66,0.10), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 100%, rgba(42,111,151,0.08), transparent 60%),
+      linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
+  }
+
+  /* Greek key pattern accents */
+  .meander {
+    height: 22px;
+    background-image:
+      linear-gradient(90deg, var(--sea-deep) 50%, transparent 50%),
+      linear-gradient(90deg, transparent 50%, var(--sea-deep) 50%);
+    background-size: 22px 11px, 22px 11px;
+    background-position: 0 0, 11px 11px;
+    background-repeat: repeat-x;
+    opacity: 0.18;
+  }
+
+  /* ===== Top bar ===== */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250,245,236,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(42,111,151,0.12);
+  }
+  .topbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 14px 22px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    align-items: center;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--sea-deep);
+  }
+  .brand-mark {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--sun);
+    display: grid; place-items: center;
+    box-shadow: inset 0 -3px 0 var(--sun-deep), 0 3px 10px rgba(216,157,39,0.3);
+  }
+  .progress-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: rgba(26,40,64,0.12);
+    border: 2px solid transparent;
+    transition: all 0.35s cubic-bezier(.4,1.4,.6,1);
+    position: relative;
+  }
+  .dot.active {
+    background: var(--sun);
+    border-color: var(--sun-deep);
+    transform: scale(1.25);
+    box-shadow: 0 0 0 4px rgba(244,185,66,0.25);
+  }
+  .dot.done {
+    background: var(--leaf);
+    border-color: #3f7a52;
+  }
+  .dot.done::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: grid; place-items: center;
+    color: white;
+    font-weight: 900;
+    font-size: 10px;
+    line-height: 1;
+  }
+  .inventory {
+    display: flex; gap: 6px;
+    align-items: center;
+    background: rgba(42,111,151,0.08);
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1.5px dashed rgba(42,111,151,0.3);
+    min-height: 40px;
+  }
+  .inv-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--sea-deep);
+    font-weight: 800;
+    padding-right: 4px;
+  }
+  .letter-token {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    width: 30px; height: 30px;
+    background: var(--sun);
+    color: var(--ink);
+    border-radius: 6px;
+    display: grid; place-items: center;
+    box-shadow: 0 2px 0 var(--sun-deep), 0 4px 8px rgba(0,0,0,0.1);
+    animation: pop 0.5s cubic-bezier(.4,1.6,.6,1);
+  }
+  @keyframes pop {
+    0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+    60% { transform: scale(1.3) rotate(10deg); }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+
+  /* ===== Main stage container ===== */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 22px 80px;
+    min-height: calc(100vh - 80px);
+  }
+  .stage {
+    display: none;
+    animation: stageIn 0.5s cubic-bezier(.4,1.4,.6,1) both;
+  }
+  .stage.active { display: block; }
+  @keyframes stageIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .stage-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .stage-label {
+    display: inline-block;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--sea-deep);
+    background: rgba(42,111,151,0.1);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+  .stage-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .stage-sub {
+    font-size: 1rem;
+    color: var(--ink-soft);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .stage-sub em {
+    color: var(--terra);
+    font-style: italic;
+  }
+
+  /* ===== Intro ===== */
+  .intro-card {
+    background: white;
+    border-radius: 28px;
+    padding: 50px 40px;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(201,169,97,0.3);
+  }
+  .intro-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 10% 20%, rgba(244,185,66,0.15), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(42,111,151,0.1), transparent 40%);
+    pointer-events: none;
+  }
+  .intro-card > * { position: relative; }
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--sea-deep);
+    margin-bottom: 6px;
+  }
+  .intro-translit {
+    font-size: 1rem;
+    color: var(--olive);
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+  .intro-story {
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    max-width: 540px;
+    margin: 0 auto 30px;
+    line-height: 1.65;
+  }
+  .intro-story strong {
+    color: var(--terra);
+    font-weight: 700;
+  }
+  .owl-stage {
+    margin: 20px auto 24px;
+    width: 180px;
+    height: 180px;
+    position: relative;
+  }
+  .owl-stage svg {
+    width: 100%;
+    height: 100%;
+    animation: hover 3s ease-in-out infinite;
+  }
+  @keyframes hover {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .start-btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 1.2rem;
+    padding: 18px 44px;
+    background: var(--sun);
+    color: var(--ink);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 var(--sun-deep), 0 10px 25px rgba(216,157,39,0.3);
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 var(--sun-deep), 0 12px 30px rgba(216,157,39,0.4);
+  }
+  .start-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 var(--sun-deep), 0 4px 10px rgba(216,157,39,0.3);
+  }
+
+  /* ===== Word chips with TTS ===== */
+  .word-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    padding: 4px 10px 4px 14px;
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    border: 2px solid transparent;
+  }
+  .word-chip .word {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--ink);
+  }
+  .tts-btn {
+    background: var(--sea);
+    color: white;
+    border: none;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid; place-items: center;
+    font-size: 0.85rem;
+    transition: transform 0.2s, background 0.2s;
+    flex-shrink: 0;
+  }
+  .tts-btn:hover { background: var(--sea-deep); transform: scale(1.1); }
+  .tts-btn:active { transform: scale(0.95); }
+  .tts-btn.playing { background: var(--sun); animation: pulse 0.6s ease infinite; }
+  @keyframes pulse { 50% { transform: scale(1.15); } }
+
+  /* ===== Stage 1: Matching ===== */
+  .match-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  @media (max-width: 600px) {
+    .match-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+  .match-col h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    text-align: center;
+    color: var(--sea-deep);
+    margin-bottom: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .match-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .match-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    box-shadow: var(--shadow);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 68px;
+    user-select: none;
+  }
+  .match-card:hover:not(.matched) {
+    transform: translateY(-3px);
+    border-color: var(--sun);
+  }
+  .match-card.selected {
+    border-color: var(--sea);
+    background: #EAF3F9;
+    box-shadow: 0 0 0 4px rgba(42,111,151,0.2), var(--shadow);
+  }
+  .match-card.matched {
+    background: #E4F1E8;
+    border-color: var(--leaf);
+    cursor: default;
+    opacity: 0.8;
+  }
+  .match-card.shake { animation: shake 0.45s; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+  }
+  .match-card .word-greek {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .match-card .word-translit {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-top: 2px;
+  }
+  .match-card .emoji {
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+  .match-card.matched .checkmark {
+    color: var(--leaf);
+    font-weight: 900;
+    font-size: 1.4rem;
+  }
+
+  /* ===== Stage 2: Colors ===== */
+  .color-question {
+    background: white;
+    border-radius: 24px;
+    padding: 36px 30px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .color-prompt {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .color-translit {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    margin-bottom: 26px;
+  }
+  .color-swatch {
+    width: 140px; height: 140px;
+    margin: 10px auto 30px;
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg), inset 0 -10px 30px rgba(0,0,0,0.1);
+    display: grid; place-items: center;
+    font-size: 4rem;
+    transition: transform 0.4s cubic-bezier(.4,1.4,.6,1);
+  }
+  .color-swatch.flip { transform: rotateY(360deg); }
+  .color-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+  .color-opt {
+    background: var(--paper-warm);
+    border: 3px solid transparent;
+    border-radius: 14px;
+    padding: 16px 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--ink);
+  }
+  .color-opt:hover:not(:disabled) {
+    border-color: var(--sea);
+    transform: translateY(-2px);
+  }
+  .color-opt.correct {
+    background: var(--leaf);
+    color: white;
+    border-color: #3f7a52;
+    animation: pop 0.5s;
+  }
+  .color-opt.wrong {
+    background: var(--rose);
+    color: white;
+    border-color: #a83e4d;
+    animation: shake 0.45s;
+  }
+  .color-opt:disabled { cursor: default; }
+  .q-counter {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 22px;
+  }
+  .q-counter span {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(26,40,64,0.15);
+  }
+  .q-counter span.done { background: var(--leaf); }
+  .q-counter span.current { background: var(--sun); transform: scale(1.4); }
+
+  /* ===== Stage 3: Owl riddles ===== */
+  .owl-scene {
+    background: linear-gradient(160deg, #fef4d7 0%, #fae5b5 100%);
+    border-radius: 28px;
+    padding: 36px 30px;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+    max-width: 720px;
+    margin: 0 auto;
+    border: 2px solid rgba(201,169,97,0.4);
+  }
+  .owl-scene::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4), transparent 30%),
+      radial-gradient(circle at 80% 70%, rgba(212,116,74,0.1), transparent 30%);
+    pointer-events: none;
+  }
+  .owl-scene > * { position: relative; }
+  .owl-talker {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+  .owl-portrait {
+    width: 92px; height: 92px;
+    flex-shrink: 0;
+  }
+  .owl-bubble {
+    background: white;
+    border-radius: 18px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    flex: 1;
+  }
+  .owl-bubble::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 24px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 12px solid white;
+  }
+  .owl-bubble .greek {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .owl-bubble .english {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-top: 4px;
+  }
+  .riddle-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .riddle-card {
+    background: white;
+    border-radius: 16px;
+    padding: 22px 16px;
+    text-align: center;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.2s;
+    box-shadow: var(--shadow);
+    user-select: none;
+  }
+  .riddle-card:hover:not(:disabled) {
+    transform: translateY(-3px);
+    border-color: var(--sun);
+  }
+  .riddle-card .icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+  .riddle-card .label {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+  .riddle-card.correct {
+    background: var(--leaf);
+    border-color: #3f7a52;
+    color: white;
+    animation: pop 0.5s;
+  }
+  .riddle-card.wrong {
+    background: #fce4e6;
+    border-color: var(--rose);
+    animation: shake 0.45s;
+  }
+
+  /* ===== Stage 4: Classroom hidden objects ===== */
+  .classroom-scene {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #cfe5f0 0%, #e8d5b0 60%, #d9b889 100%);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 16 / 10;
+    border: 3px solid var(--sea-deep);
+  }
+  .classroom-svg {
+    width: 100%; height: 100%;
+    display: block;
+  }
+  .hotspot {
+    cursor: pointer;
+    transition: filter 0.2s;
+  }
+  .hotspot:hover { filter: brightness(1.15) drop-shadow(0 0 8px var(--sun)); }
+  .hotspot.found { filter: drop-shadow(0 0 14px var(--leaf)) brightness(1.05); animation: foundPulse 0.6s; }
+  @keyframes foundPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  .object-tracker {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 22px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .tracker-item {
+    background: white;
+    border-radius: 14px;
+    padding: 12px 14px;
+    text-align: center;
+    border: 3px solid transparent;
+    box-shadow: var(--shadow);
+    transition: all 0.3s;
+    position: relative;
+  }
+  .tracker-item.found {
+    background: #e4f1e8;
+    border-color: var(--leaf);
+  }
+  .tracker-item .label {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--ink);
+  }
+  .tracker-item .translit {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .tracker-item.found::after {
+    content: "✓";
+    position: absolute;
+    top: 6px; right: 8px;
+    color: var(--leaf);
+    font-weight: 900;
+  }
+  .tracker-item.found .label {
+    text-decoration: line-through;
+    text-decoration-color: rgba(90,156,110,0.5);
+    text-decoration-thickness: 2px;
+  }
+  .hint-bar {
+    text-align: center;
+    margin: 16px 0 10px;
+    font-size: 1rem;
+    color: var(--sea-deep);
+    font-weight: 700;
+  }
+  .hint-bar .word-target {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    color: var(--terra);
+    margin-left: 4px;
+  }
+
+  /* ===== Stage 5: Final code ===== */
+  .door-scene {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .door-frame {
+    position: relative;
+    background: linear-gradient(180deg, #2A6F97 0%, #1B4F73 100%);
+    border-radius: 200px 200px 20px 20px;
+    padding: 50px 30px 30px;
+    margin: 0 auto 24px;
+    box-shadow: var(--shadow-lg), inset 0 0 60px rgba(0,0,0,0.25);
+    border: 6px solid var(--gold);
+    border-bottom: none;
+    border-radius: 200px 200px 0 0;
+  }
+  .door-greek-key {
+    position: absolute;
+    top: 12px; left: 12px; right: 12px;
+    height: 22px;
+    background-image:
+      linear-gradient(90deg, var(--gold) 50%, transparent 50%),
+      linear-gradient(90deg, transparent 50%, var(--gold) 50%);
+    background-size: 22px 11px;
+    background-position: 0 0, 11px 11px;
+    background-repeat: repeat-x;
+    opacity: 0.7;
+  }
+  .door-slots {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 30px auto 20px;
+    flex-wrap: wrap;
+  }
+  .slot {
+    width: 56px; height: 70px;
+    background: rgba(255,255,255,0.1);
+    border: 3px dashed rgba(255,255,255,0.4);
+    border-radius: 10px;
+    display: grid; place-items: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    transition: all 0.3s;
+  }
+  .slot.filled {
+    background: var(--sun);
+    color: var(--ink);
+    border: 3px solid var(--sun-deep);
+    border-style: solid;
+    animation: pop 0.4s;
+  }
+  .letter-bank {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0 30px;
+  }
+  .bank-letter {
+    width: 56px; height: 56px;
+    background: white;
+    border: 3px solid var(--sea-deep);
+    border-radius: 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--sea-deep), 0 6px 15px rgba(0,0,0,0.1);
+    transition: all 0.15s;
+  }
+  .bank-letter:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: var(--sun);
+  }
+  .bank-letter:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--sea-deep);
+  }
+  .bank-letter.used {
+    opacity: 0.25;
+    cursor: default;
+    pointer-events: none;
+  }
+  .door-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .door-btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 14px 28px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .door-btn.primary {
+    background: var(--sun);
+    color: var(--ink);
+    box-shadow: 0 4px 0 var(--sun-deep);
+  }
+  .door-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--sun-deep); }
+  .door-btn.primary:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--sun-deep); }
+  .door-btn.ghost {
+    background: white;
+    color: var(--ink);
+    box-shadow: 0 4px 0 rgba(26,40,64,0.2);
+  }
+  .door-btn.ghost:hover { transform: translateY(-2px); }
+  .door-hint {
+    margin-top: 18px;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  /* ===== Feedback toast ===== */
+  .toast {
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-30px);
+    background: var(--leaf);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(.4,1.4,.6,1);
+    z-index: 100;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.03em;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.error { background: var(--rose); }
+
+  /* ===== Reward modal ===== */
+  .reward {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,40,64,0.55);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .reward.show { display: flex; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .reward-card {
+    background: white;
+    border-radius: 28px;
+    padding: 40px 36px;
+    text-align: center;
+    max-width: 440px;
+    box-shadow: var(--shadow-lg);
+    animation: rewardIn 0.5s cubic-bezier(.4,1.6,.6,1);
+    border: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  @keyframes rewardIn {
+    from { transform: scale(0.5) rotate(-5deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  .reward-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(244,185,66,0.2), transparent 50%);
+    pointer-events: none;
+  }
+  .reward-card > * { position: relative; }
+  .reward-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--leaf);
+    margin-bottom: 6px;
+  }
+  .reward-sub {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    margin-bottom: 22px;
+  }
+  .reward-letters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0 26px;
+    flex-wrap: wrap;
+  }
+  .reward-letter {
+    width: 60px; height: 70px;
+    background: var(--sun);
+    border-radius: 14px;
+    display: grid; place-items: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: var(--ink);
+    box-shadow: 0 5px 0 var(--sun-deep);
+    animation: rewardLetterIn 0.5s cubic-bezier(.4,1.6,.6,1) both;
+  }
+  .reward-letter:nth-child(1) { animation-delay: 0.2s; }
+  .reward-letter:nth-child(2) { animation-delay: 0.4s; }
+  .reward-letter:nth-child(3) { animation-delay: 0.6s; }
+  @keyframes rewardLetterIn {
+    from { transform: translateY(-30px) rotate(-15deg); opacity: 0; }
+    to { transform: translateY(0) rotate(0); opacity: 1; }
+  }
+  .reward-msg {
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+  .reward-msg .greek {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    color: var(--terra);
+  }
+
+  /* ===== Victory ===== */
+  .victory {
+    display: none;
+    text-align: center;
+    padding: 30px 20px;
+    position: relative;
+  }
+  .victory.show { display: block; animation: stageIn 0.6s; }
+  .victory-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.6rem, 7vw, 4.5rem);
+    font-weight: 700;
+    background: linear-gradient(180deg, var(--sun) 0%, var(--terra) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1.05;
+    margin-bottom: 8px;
+    animation: titlePop 0.8s cubic-bezier(.4,1.6,.6,1);
+  }
+  @keyframes titlePop {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .victory-line2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+    color: var(--sea-deep);
+    font-weight: 600;
+    margin-bottom: 30px;
+    animation: titlePop 0.8s 0.2s cubic-bezier(.4,1.6,.6,1) both;
+  }
+  .victory-owl {
+    width: 200px; height: 200px;
+    margin: 0 auto 24px;
+    animation: hover 3s ease-in-out infinite, titlePop 0.8s 0.4s cubic-bezier(.4,1.6,.6,1) both;
+  }
+  .victory-msg {
+    max-width: 540px;
+    margin: 0 auto 30px;
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .victory-msg em {
+    font-style: italic;
+    color: var(--terra);
+    font-weight: 700;
+  }
+  .vocab-recap {
+    background: white;
+    border-radius: 22px;
+    padding: 28px 24px;
+    max-width: 720px;
+    margin: 30px auto 0;
+    box-shadow: var(--shadow);
+  }
+  .vocab-recap h3 {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--sea-deep);
+    font-size: 1.5rem;
+    margin-bottom: 14px;
+  }
+  .vocab-recap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px 16px;
+  }
+  .vocab-recap-grid div {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dotted rgba(26,40,64,0.15);
+    font-size: 0.95rem;
+  }
+  .vocab-recap-grid div .gr {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+  .vocab-recap-grid div .en { color: var(--ink-soft); font-style: italic; font-size: 0.85rem; }
+
+  .restart-btn {
+    margin-top: 24px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 14px 32px;
+    background: white;
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--ink);
+    transition: all 0.15s;
+  }
+  .restart-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--ink); }
+
+  /* ===== Confetti ===== */
+  #confetti {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 150;
+  }
+
+  /* ===== Greek flag accent ===== */
+  .flag-accent {
+    display: inline-block;
+    width: 22px; height: 14px;
+    background: linear-gradient(180deg,
+      #0d5eaf 0 14.3%, white 14.3% 28.6%,
+      #0d5eaf 28.6% 42.9%, white 42.9% 57.2%,
+      #0d5eaf 57.2% 71.5%, white 71.5% 85.8%,
+      #0d5eaf 85.8% 100%);
+    position: relative;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin: 0 4px;
+  }
+  .flag-accent::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 60%; height: 57%;
+    background: #0d5eaf;
+    border-radius: 2px 0 0 0;
+  }
+  .flag-accent::after {
+    content: "";
+    position: absolute;
+    top: 18%; left: 12%;
+    width: 36%; height: 21%;
+    background: white;
+    box-shadow: 0 0 0 6px white, inset 0 0 0 6px white;
+    clip-path: polygon(40% 0, 60% 0, 60% 40%, 100% 40%, 100% 60%, 60% 60%, 60% 100%, 40% 100%, 40% 60%, 0 60%, 0 40%, 40% 40%);
+  }
+
+  /* ===== Generic helpers ===== */
+  .stage-actions {
+    text-align: center;
+    margin-top: 30px;
+  }
+  .next-btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    padding: 14px 36px;
+    background: var(--sea);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--sea-deep);
+    transition: all 0.15s;
+  }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--sea-deep); }
+  .next-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--sea-deep); }
+  .next-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 var(--sea-deep); }
+
+  @media (max-width: 600px) {
+    .topbar-inner { grid-template-columns: 1fr; gap: 10px; padding: 10px 16px; }
+    .brand { justify-content: center; }
+    .inventory { justify-content: center; }
+    .stage-title { font-size: 1.8rem; }
+    .intro-card { padding: 30px 20px; }
+    .door-slots .slot { width: 44px; height: 56px; font-size: 1.5rem; }
+    .bank-letter { width: 48px; height: 48px; font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">🦉</div>
+      <span>Η Μαγική Τάξη</span>
+    </div>
+    <div class="progress-dots" id="progressDots">
+      <div class="dot" data-stage="1"></div>
+      <div class="dot" data-stage="2"></div>
+      <div class="dot" data-stage="3"></div>
+      <div class="dot" data-stage="4"></div>
+      <div class="dot" data-stage="5"></div>
+    </div>
+    <div class="inventory" id="inventory">
+      <span class="inv-label">Κλειδί</span>
+    </div>
+  </div>
+  <div class="meander"></div>
+</header>
+
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="stage active" id="stage-intro">
+  <div class="intro-card">
+    <div class="owl-stage">
+      <!-- Friendly owl SVG -->
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- branch -->
+        <ellipse cx="100" cy="180" rx="60" ry="6" fill="#7A5230" opacity="0.5"/>
+        <!-- body -->
+        <ellipse cx="100" cy="115" rx="62" ry="68" fill="#8B6F47"/>
+        <ellipse cx="100" cy="115" rx="62" ry="68" fill="url(#bodyGrad)"/>
+        <defs>
+          <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#A88565" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#5C4426" stop-opacity="0.6"/>
+          </linearGradient>
+        </defs>
+        <!-- belly feathers (V shapes) -->
+        <ellipse cx="100" cy="140" rx="40" ry="38" fill="#E8D4B0"/>
+        <path d="M 75 130 Q 85 138 95 130" stroke="#8B6F47" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M 95 130 Q 105 138 115 130" stroke="#8B6F47" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M 80 145 Q 92 153 104 145" stroke="#8B6F47" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M 100 145 Q 112 153 124 145" stroke="#8B6F47" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <!-- ear tufts -->
+        <path d="M 60 65 L 55 45 L 72 60 Z" fill="#5C4426"/>
+        <path d="M 140 65 L 145 45 L 128 60 Z" fill="#5C4426"/>
+        <!-- eye masks -->
+        <circle cx="78" cy="92" r="22" fill="#FAF5EC"/>
+        <circle cx="122" cy="92" r="22" fill="#FAF5EC"/>
+        <!-- pupils -->
+        <circle cx="78" cy="92" r="13" fill="#1A2840"/>
+        <circle cx="122" cy="92" r="13" fill="#1A2840"/>
+        <!-- pupil shine -->
+        <circle cx="82" cy="88" r="4" fill="#FAF5EC"/>
+        <circle cx="126" cy="88" r="4" fill="#FAF5EC"/>
+        <!-- beak -->
+        <path d="M 92 108 L 100 122 L 108 108 Z" fill="#D89D27"/>
+        <!-- wings -->
+        <path d="M 50 110 Q 38 130 52 160 Q 65 145 70 130 Z" fill="#5C4426"/>
+        <path d="M 150 110 Q 162 130 148 160 Q 135 145 130 130 Z" fill="#5C4426"/>
+        <!-- feet -->
+        <path d="M 88 178 L 85 188 M 92 178 L 92 188 M 96 178 L 99 188" stroke="#D89D27" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M 104 178 L 101 188 M 108 178 L 108 188 M 112 178 L 115 188" stroke="#D89D27" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- tiny laurel on head -->
+        <path d="M 80 55 Q 100 38 120 55" stroke="#5A9C6E" stroke-width="2" fill="none"/>
+        <ellipse cx="86" cy="50" rx="4" ry="2" fill="#7A8C5C" transform="rotate(-25 86 50)"/>
+        <ellipse cx="100" cy="42" rx="4" ry="2" fill="#7A8C5C"/>
+        <ellipse cx="114" cy="50" rx="4" ry="2" fill="#7A8C5C" transform="rotate(25 114 50)"/>
+      </svg>
+    </div>
+    <h1 class="intro-title">Η Μαγική Τάξη</h1>
+    <p class="intro-translit">[i magh-i-ki' tá-ksi] · "The Magical Classroom"</p>
+    <p class="intro-story">
+      <strong>Φέτος</strong> μαθαίνεις Ελληνικά! Today you are trapped inside a magical classroom.
+      A mischievous owl from Greek <strong>μυθολογία</strong> has hidden the key.
+      <br><br>
+      Solve <strong>five</strong> puzzles. Collect the secret letters. Escape «<em>την τάξη</em>» (the classroom)!
+    </p>
+    <button class="start-btn" onclick="goToStage(1)">Πάμε! Let's go →</button>
+  </div>
+</section>
+
+<!-- ============ STAGE 1: Matching ============ -->
+<section class="stage" id="stage-1">
+  <div class="stage-header">
+    <div class="stage-label">Στάδιο 1 · Stage 1</div>
+    <h2 class="stage-title">Βρες τα αντικείμενα της τάξης</h2>
+    <p class="stage-sub">Find the classroom objects. Tap a Greek word, then tap its picture. <em>«πάτησε» = tap</em></p>
+  </div>
+
+  <div class="match-grid">
+    <div class="match-col">
+      <h3>Λέξεις · Words</h3>
+      <div class="match-list" id="wordList"></div>
+    </div>
+    <div class="match-col">
+      <h3>Εικόνες · Pictures</h3>
+      <div class="match-list" id="picList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STAGE 2: Colors ============ -->
+<section class="stage" id="stage-2">
+  <div class="stage-header">
+    <div class="stage-label">Στάδιο 2 · Stage 2</div>
+    <h2 class="stage-title">Τα χρώματα</h2>
+    <p class="stage-sub">The colors! Look at the picture, then choose the correct Greek color word.</p>
+  </div>
+
+  <div class="color-question" id="colorBox">
+    <!-- Built by JS -->
+  </div>
+</section>
+
+<!-- ============ STAGE 3: Owl Riddles ============ -->
+<section class="stage" id="stage-3">
+  <div class="stage-header">
+    <div class="stage-label">Στάδιο 3 · Stage 3</div>
+    <h2 class="stage-title">Η γωνιά της μυθολογίας</h2>
+    <p class="stage-sub">The mythology corner. The ancient owl asks you a question — tap the correct answer!</p>
+  </div>
+
+  <div class="owl-scene" id="riddleScene">
+    <!-- Built by JS -->
+  </div>
+</section>
+
+<!-- ============ STAGE 4: Hidden classroom objects ============ -->
+<section class="stage" id="stage-4">
+  <div class="stage-header">
+    <div class="stage-label">Στάδιο 4 · Stage 4</div>
+    <h2 class="stage-title">Το μυστήριο της τάξης</h2>
+    <p class="stage-sub">Find each object hidden in the classroom. Tap the highlighted word below to know what to look for, then click it in the scene.</p>
+  </div>
+
+  <div class="hint-bar" id="hintBar">
+    Βρες όλα τα αντικείμενα · Find all objects: <span class="word-target" id="targetWord">4 αντικείμενα</span>
+  </div>
+
+  <div class="classroom-scene">
+    <svg class="classroom-svg" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" id="classroomSvg">
+      <!-- Floor -->
+      <rect x="0" y="350" width="800" height="150" fill="#c69960"/>
+      <!-- Floorboards -->
+      <line x1="0" y1="380" x2="800" y2="380" stroke="#a87a44" stroke-width="1"/>
+      <line x1="0" y1="420" x2="800" y2="420" stroke="#a87a44" stroke-width="1"/>
+      <line x1="0" y1="460" x2="800" y2="460" stroke="#a87a44" stroke-width="1"/>
+      <!-- Back wall -->
+      <rect x="0" y="0" width="800" height="350" fill="#e8d5b0"/>
+      <!-- window -->
+      <rect x="600" y="60" width="140" height="120" fill="#bfdef0" stroke="#5C4426" stroke-width="4"/>
+      <line x1="670" y1="60" x2="670" y2="180" stroke="#5C4426" stroke-width="3"/>
+      <line x1="600" y1="120" x2="740" y2="120" stroke="#5C4426" stroke-width="3"/>
+      <!-- Sun outside -->
+      <circle cx="715" cy="95" r="14" fill="#F4B942"/>
+      <!-- Cloud -->
+      <ellipse cx="630" cy="100" rx="18" ry="8" fill="white" opacity="0.85"/>
+
+      <!-- HOTSPOT: ο πίνακας (chalkboard) -->
+      <g class="hotspot" data-target="pinakas" onclick="findObject(this, 'pinakas')">
+        <rect x="80" y="50" width="380" height="180" rx="8" fill="#2E4A3A" stroke="#5C4426" stroke-width="8"/>
+        <text x="270" y="120" text-anchor="middle" fill="white" font-family="'Cormorant Garamond', serif" font-size="38" font-weight="600">Καλημέρα!</text>
+        <text x="270" y="170" text-anchor="middle" fill="#F4B942" font-family="'Cormorant Garamond', serif" font-size="28">α β γ δ ε</text>
+        <text x="270" y="208" text-anchor="middle" fill="white" font-family="'Cormorant Garamond', serif" font-size="22" opacity="0.8">1 + 2 = 3</text>
+      </g>
+
+      <!-- Desk (θρανίο) -->
+      <g class="hotspot" data-target="thranio" onclick="findObject(this, 'thranio')">
+        <rect x="130" y="320" width="180" height="20" fill="#8B6F47" stroke="#5C4426" stroke-width="2"/>
+        <rect x="140" y="340" width="14" height="80" fill="#5C4426"/>
+        <rect x="290" y="340" width="14" height="80" fill="#5C4426"/>
+        <rect x="135" y="345" width="170" height="40" fill="#A88565" opacity="0.6"/>
+      </g>
+
+      <!-- Ruler on desk (χάρακας) -->
+      <g class="hotspot" data-target="charakas" onclick="findObject(this, 'charakas')">
+        <rect x="160" y="305" width="120" height="14" rx="2" fill="#F4B942" stroke="#D89D27" stroke-width="1.5"/>
+        <g stroke="#5C4426" stroke-width="1">
+          <line x1="170" y1="305" x2="170" y2="312"/>
+          <line x1="180" y1="305" x2="180" y2="310"/>
+          <line x1="190" y1="305" x2="190" y2="310"/>
+          <line x1="200" y1="305" x2="200" y2="312"/>
+          <line x1="210" y1="305" x2="210" y2="310"/>
+          <line x1="220" y1="305" x2="220" y2="310"/>
+          <line x1="230" y1="305" x2="230" y2="312"/>
+          <line x1="240" y1="305" x2="240" y2="310"/>
+          <line x1="250" y1="305" x2="250" y2="310"/>
+          <line x1="260" y1="305" x2="260" y2="312"/>
+        </g>
+      </g>
+
+      <!-- Sharpener (ξύστρα) on shelf -->
+      <g class="hotspot" data-target="ksystra" onclick="findObject(this, 'ksystra')">
+        <!-- shelf -->
+        <rect x="490" y="270" width="170" height="8" fill="#8B6F47"/>
+        <!-- sharpener box -->
+        <rect x="560" y="248" width="40" height="22" rx="3" fill="#D85A6C" stroke="#a83e4d" stroke-width="2"/>
+        <circle cx="582" cy="259" r="5" fill="#1A2840"/>
+        <rect x="565" y="252" width="14" height="3" fill="white" opacity="0.4"/>
+      </g>
+
+      <!-- Book on desk (decoy/extra) -->
+      <g>
+        <rect x="200" y="298" width="42" height="14" fill="#2A6F97" stroke="#1B4F73" stroke-width="1.5"/>
+        <rect x="200" y="297" width="42" height="3" fill="#D89D27"/>
+      </g>
+
+      <!-- Chair -->
+      <g>
+        <rect x="200" y="385" width="60" height="8" fill="#8B6F47"/>
+        <rect x="205" y="393" width="6" height="35" fill="#5C4426"/>
+        <rect x="248" y="393" width="6" height="35" fill="#5C4426"/>
+        <rect x="200" y="345" width="6" height="48" fill="#5C4426"/>
+        <rect x="254" y="345" width="6" height="48" fill="#5C4426"/>
+        <rect x="200" y="348" width="60" height="8" fill="#8B6F47"/>
+      </g>
+
+      <!-- Wall clock (decor) -->
+      <g>
+        <circle cx="525" cy="115" r="32" fill="white" stroke="#5C4426" stroke-width="3"/>
+        <circle cx="525" cy="115" r="3" fill="#1A2840"/>
+        <line x1="525" y1="115" x2="525" y2="92" stroke="#1A2840" stroke-width="3" stroke-linecap="round"/>
+        <line x1="525" y1="115" x2="540" y2="115" stroke="#1A2840" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="525" y="98" text-anchor="middle" font-size="8" fill="#1A2840" font-weight="700">12</text>
+      </g>
+
+      <!-- Plant -->
+      <g>
+        <rect x="520" y="280" width="30" height="20" fill="#8B6F47"/>
+        <ellipse cx="535" cy="270" rx="8" ry="12" fill="#5A9C6E"/>
+        <ellipse cx="525" cy="265" rx="6" ry="10" fill="#7A8C5C" transform="rotate(-20 525 265)"/>
+        <ellipse cx="545" cy="265" rx="6" ry="10" fill="#7A8C5C" transform="rotate(20 545 265)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="object-tracker" id="objectTracker">
+    <!-- Built by JS -->
+  </div>
+</section>
+
+<!-- ============ STAGE 5: Final code ============ -->
+<section class="stage" id="stage-5">
+  <div class="stage-header">
+    <div class="stage-label">Στάδιο 5 · Stage 5</div>
+    <h2 class="stage-title">Ο κωδικός της πόρτας</h2>
+    <p class="stage-sub">The door code. Tap the collected letters <strong>in the correct order</strong> to spell the secret word!</p>
+  </div>
+
+  <div class="door-scene">
+    <div class="door-frame">
+      <div class="door-greek-key"></div>
+      <div class="door-slots" id="doorSlots">
+        <div class="slot" data-pos="0"></div>
+        <div class="slot" data-pos="1"></div>
+        <div class="slot" data-pos="2"></div>
+        <div class="slot" data-pos="3"></div>
+        <div class="slot" data-pos="4"></div>
+        <div class="slot" data-pos="5"></div>
+      </div>
+    </div>
+    <div class="letter-bank" id="letterBank"></div>
+    <div class="door-actions">
+      <button class="door-btn ghost" onclick="clearSlots()">↺ Καθάρισε · Clear</button>
+      <button class="door-btn primary" onclick="tryDoor()">🔓 Άνοιξε! · Open!</button>
+    </div>
+    <p class="door-hint">💡 Hint: it's the word the owl keeps saying when you do well…</p>
+  </div>
+</section>
+
+<!-- ============ VICTORY ============ -->
+<section class="victory" id="victory">
+  <div class="victory-owl">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Same owl, slightly happier -->
+      <ellipse cx="100" cy="115" rx="62" ry="68" fill="#8B6F47"/>
+      <ellipse cx="100" cy="140" rx="40" ry="38" fill="#E8D4B0"/>
+      <path d="M 60 65 L 55 45 L 72 60 Z" fill="#5C4426"/>
+      <path d="M 140 65 L 145 45 L 128 60 Z" fill="#5C4426"/>
+      <!-- Closed happy eyes -->
+      <path d="M 65 90 Q 78 100 92 90" stroke="#1A2840" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M 108 90 Q 122 100 135 90" stroke="#1A2840" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- Beak smile -->
+      <path d="M 92 108 L 100 122 L 108 108 Z" fill="#D89D27"/>
+      <path d="M 88 124 Q 100 132 112 124" stroke="#5C4426" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- wings -->
+      <path d="M 50 110 Q 38 130 52 160 Q 65 145 70 130 Z" fill="#5C4426"/>
+      <path d="M 150 110 Q 162 130 148 160 Q 135 145 130 130 Z" fill="#5C4426"/>
+      <!-- Holding a key -->
+      <g transform="translate(80 145) rotate(-15)">
+        <circle cx="0" cy="0" r="10" fill="none" stroke="#F4B942" stroke-width="4"/>
+        <rect x="8" y="-2" width="22" height="4" fill="#F4B942"/>
+        <rect x="22" y="-2" width="3" height="6" fill="#F4B942"/>
+        <rect x="27" y="-2" width="3" height="8" fill="#F4B942"/>
+      </g>
+      <!-- Laurel -->
+      <path d="M 80 55 Q 100 38 120 55" stroke="#5A9C6E" stroke-width="2" fill="none"/>
+      <ellipse cx="86" cy="50" rx="4" ry="2" fill="#7A8C5C" transform="rotate(-25 86 50)"/>
+      <ellipse cx="100" cy="42" rx="4" ry="2" fill="#7A8C5C"/>
+      <ellipse cx="114" cy="50" rx="4" ry="2" fill="#7A8C5C" transform="rotate(25 114 50)"/>
+    </svg>
+  </div>
+  <h1 class="victory-title">ΜΠΡΑΒΟ!</h1>
+  <h2 class="victory-line2">ΒΓΗΚΕΣ ΑΠΟ ΤΗΝ ΤΑΞΗ!</h2>
+  <p class="victory-msg">
+    <em>«Φέτος έμαθες πολλά!»</em><br>
+    This year you learned many words! <span class="flag-accent"></span> You escaped the magical classroom.
+    Πολύ καλά! 🌟
+  </p>
+
+  <div class="vocab-recap">
+    <h3>Οι λέξεις σου · Your words</h3>
+    <div class="vocab-recap-grid">
+      <div><span class="gr">το βιβλίο</span><span class="en">the book</span></div>
+      <div><span class="gr">το μολύβι</span><span class="en">the pencil</span></div>
+      <div><span class="gr">το στυλό</span><span class="en">the pen</span></div>
+      <div><span class="gr">η ξύστρα</span><span class="en">the sharpener</span></div>
+      <div><span class="gr">ο χάρακας</span><span class="en">the ruler</span></div>
+      <div><span class="gr">ο πίνακας</span><span class="en">the board</span></div>
+      <div><span class="gr">ο χάρτης</span><span class="en">the map</span></div>
+      <div><span class="gr">το θρανίο</span><span class="en">the desk</span></div>
+      <div><span class="gr">η τάξη</span><span class="en">the class(room)</span></div>
+      <div><span class="gr">η μυθολογία</span><span class="en">mythology</span></div>
+      <div><span class="gr">φέτος</span><span class="en">this year</span></div>
+      <div><span class="gr">κίτρινο</span><span class="en">yellow</span></div>
+      <div><span class="gr">κόκκινο</span><span class="en">red</span></div>
+      <div><span class="gr">μπλε</span><span class="en">blue</span></div>
+      <div><span class="gr">μαύρο</span><span class="en">black</span></div>
+      <div><span class="gr">άσπρο</span><span class="en">white</span></div>
+    </div>
+  </div>
+
+  <button class="restart-btn" onclick="location.reload()">↻ Παίξε ξανά · Play again</button>
+</section>
+
+</main>
+
+<!-- ============ TOAST + REWARD + CONFETTI ============ -->
+<div class="toast" id="toast"></div>
+
+<div class="reward" id="reward">
+  <div class="reward-card">
+    <h2 class="reward-title" id="rewardTitle">Μπράβο!</h2>
+    <p class="reward-sub" id="rewardSub">Stage complete — bravo!</p>
+    <div class="reward-letters" id="rewardLetters"></div>
+    <p class="reward-msg" id="rewardMsg">You earned a new letter for your key!</p>
+    <button class="next-btn" id="rewardBtn">Συνέχισε · Continue →</button>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+/* ===========================================
+   GAME STATE
+=========================================== */
+const state = {
+  currentStage: 0,            // 0 = intro
+  collectedLetters: [],       // Letters earned across stages
+  stagesDone: [false, false, false, false, false],
+};
+
+// The final code spells ΜΠΡΑΒΟ (BRAVO) — 6 letters total.
+// We distribute across stages: 1→Μ, 2→Π, 3→Ρ, 4→ΑΒΟ (three at once)
+const STAGE_REWARDS = {
+  1: ['Μ'],
+  2: ['Π'],
+  3: ['Ρ'],
+  4: ['Α', 'Β', 'Ο'],
+};
+const FINAL_CODE = 'ΜΠΡΑΒΟ';
+
+/* ===========================================
+   TEXT-TO-SPEECH (Greek)
+=========================================== */
+function speakGreek(text, btn) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'el-GR';
+  utter.rate = 0.85;
+  utter.pitch = 1.0;
+  // Try to pick a Greek voice if available
+  const voices = window.speechSynthesis.getVoices();
+  const greekVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('el'));
+  if (greekVoice) utter.voice = greekVoice;
+  if (btn) {
+    btn.classList.add('playing');
+    utter.onend = () => btn.classList.remove('playing');
+    utter.onerror = () => btn.classList.remove('playing');
+  }
+  window.speechSynthesis.speak(utter);
+}
+// Pre-load voices (some browsers need this)
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
+/* ===========================================
+   TOAST FEEDBACK
+=========================================== */
+const toastEl = document.getElementById('toast');
+let toastTimer;
+function toast(msg, type = 'good') {
+  toastEl.textContent = msg;
+  toastEl.classList.remove('error');
+  if (type === 'error') toastEl.classList.add('error');
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+}
+const PRAISE = ['Μπράβο!', 'Πολύ καλά!', 'Συνέχισε!', 'Τέλεια!', 'Φανταστικά!'];
+const ENCOURAGE = ['Δοκίμασε ξανά!', 'Όχι ακόμα — πάλι!', 'Σχεδόν!'];
+function praise() { return PRAISE[Math.floor(Math.random() * PRAISE.length)]; }
+function encourage() { return ENCOURAGE[Math.floor(Math.random() * ENCOURAGE.length)]; }
+
+/* ===========================================
+   STAGE NAVIGATION
+=========================================== */
+function goToStage(n) {
+  document.querySelectorAll('.stage.active').forEach(s => s.classList.remove('active'));
+  document.getElementById('victory').classList.remove('show');
+  const target = n === 0 ? 'stage-intro' : `stage-${n}`;
+  const el = document.getElementById(target);
+  if (el) {
+    el.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  state.currentStage = n;
+  updateProgressDots();
+  // Initialize stage content
+  if (n === 1) initStage1();
+  if (n === 2) initStage2();
+  if (n === 3) initStage3();
+  if (n === 4) initStage4();
+  if (n === 5) initStage5();
+}
+
+function updateProgressDots() {
+  document.querySelectorAll('.progress-dots .dot').forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (state.stagesDone[i]) d.classList.add('done');
+    if (i + 1 === state.currentStage) d.classList.add('active');
+  });
+}
+
+function updateInventory() {
+  const inv = document.getElementById('inventory');
+  inv.innerHTML = '<span class="inv-label">Κλειδί</span>';
+  state.collectedLetters.forEach(L => {
+    const t = document.createElement('div');
+    t.className = 'letter-token';
+    t.textContent = L;
+    inv.appendChild(t);
+  });
+}
+
+/* ===========================================
+   REWARD MODAL
+=========================================== */
+function showReward(stage, letters, customMsg) {
+  const r = document.getElementById('reward');
+  document.getElementById('rewardTitle').textContent = praise();
+  document.getElementById('rewardSub').textContent = `Στάδιο ${stage} ολοκληρώθηκε! · Stage ${stage} complete!`;
+  const letterBox = document.getElementById('rewardLetters');
+  letterBox.innerHTML = '';
+  letters.forEach(L => {
+    const el = document.createElement('div');
+    el.className = 'reward-letter';
+    el.textContent = L;
+    letterBox.appendChild(el);
+  });
+  document.getElementById('rewardMsg').innerHTML = customMsg || 'You earned a new letter for your key! 🔑';
+  document.getElementById('rewardBtn').onclick = () => {
+    r.classList.remove('show');
+    letters.forEach(L => state.collectedLetters.push(L));
+    state.stagesDone[stage - 1] = true;
+    updateInventory();
+    goToStage(stage + 1);
+  };
+  r.classList.add('show');
+}
+
+/* ===========================================
+   STAGE 1 — Matching
+=========================================== */
+const STAGE1_PAIRS = [
+  { word: 'το βιβλίο',  translit: 'to vi-vlí-o',   id: 'book',    emoji: '📖' },
+  { word: 'το μολύβι',  translit: 'to mo-lí-vi',   id: 'pencil',  emoji: '✏️' },
+  { word: 'το στυλό',   translit: 'to sti-ló',     id: 'pen',     emoji: '🖊️' },
+  { word: 'ο χάρτης',   translit: 'o khár-tis',    id: 'map',     emoji: '🗺️' },
+];
+let s1Selected = null;
+let s1MatchedCount = 0;
+
+function shuffle(arr) {
+  return arr.slice().sort(() => Math.random() - 0.5);
+}
+
+function initStage1() {
+  s1Selected = null;
+  s1MatchedCount = 0;
+  const wordList = document.getElementById('wordList');
+  const picList = document.getElementById('picList');
+  wordList.innerHTML = '';
+  picList.innerHTML = '';
+
+  const wordsShuffled = shuffle(STAGE1_PAIRS);
+  const picsShuffled = shuffle(STAGE1_PAIRS);
+
+  wordsShuffled.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'match-card';
+    card.dataset.id = p.id;
+    card.dataset.kind = 'word';
+    card.innerHTML = `
+      <div>
+        <div class="word-greek">${p.word}</div>
+        <div class="word-translit">[${p.translit}]</div>
+      </div>
+      <button class="tts-btn" data-text="${p.word}" title="Άκουσε · Listen">🔊</button>
+    `;
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.tts-btn')) return;
+      handleMatchClick(card);
+    });
+    wordList.appendChild(card);
+  });
+
+  picsShuffled.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'match-card';
+    card.dataset.id = p.id;
+    card.dataset.kind = 'pic';
+    card.innerHTML = `
+      <div class="emoji">${p.emoji}</div>
+      <span style="font-weight:700; color: var(--ink-soft); opacity:0.5; font-size:0.9rem;">?</span>
+    `;
+    card.addEventListener('click', () => handleMatchClick(card));
+    picList.appendChild(card);
+  });
+
+  // TTS buttons
+  document.querySelectorAll('#stage-1 .tts-btn').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      speakGreek(b.dataset.text, b);
+    });
+  });
+}
+
+function handleMatchClick(card) {
+  if (card.classList.contains('matched')) return;
+  if (!s1Selected) {
+    document.querySelectorAll('#stage-1 .match-card.selected').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    s1Selected = card;
+    return;
+  }
+  if (s1Selected === card) {
+    card.classList.remove('selected');
+    s1Selected = null;
+    return;
+  }
+  // Must be opposite kinds
+  if (s1Selected.dataset.kind === card.dataset.kind) {
+    document.querySelectorAll('#stage-1 .match-card.selected').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    s1Selected = card;
+    return;
+  }
+  // Compare ids
+  if (s1Selected.dataset.id === card.dataset.id) {
+    s1Selected.classList.remove('selected');
+    s1Selected.classList.add('matched');
+    card.classList.add('matched');
+    // Show check on pic card
+    const picCard = card.dataset.kind === 'pic' ? card : s1Selected;
+    picCard.querySelector('span').textContent = '✓';
+    picCard.querySelector('span').style.color = 'var(--leaf)';
+    picCard.querySelector('span').style.opacity = '1';
+    picCard.querySelector('span').style.fontSize = '1.4rem';
+    s1Selected = null;
+    s1MatchedCount++;
+    toast(praise(), 'good');
+    // Try to speak the matched word
+    const matchedWord = STAGE1_PAIRS.find(p => p.id === card.dataset.id).word;
+    setTimeout(() => speakGreek(matchedWord), 200);
+    if (s1MatchedCount === STAGE1_PAIRS.length) {
+      setTimeout(() => {
+        showReward(1, STAGE_REWARDS[1],
+          'You found all the objects! You earned the first letter: <span class="greek">Μ</span> 🔑');
+      }, 800);
+    }
+  } else {
+    s1Selected.classList.add('shake');
+    card.classList.add('shake');
+    toast(encourage(), 'error');
+    setTimeout(() => {
+      s1Selected.classList.remove('shake', 'selected');
+      card.classList.remove('shake');
+      s1Selected = null;
+    }, 500);
+  }
+}
+
+/* ===========================================
+   STAGE 2 — Colors
+=========================================== */
+const STAGE2_Q = [
+  { obj: 'το μολύβι', objEn: 'the pencil', icon: '✏️', color: '#F4B942', answer: 'κίτρινο', translit: 'kí-tri-no' },
+  { obj: 'το βιβλίο', objEn: 'the book',   icon: '📕', color: '#D85A6C', answer: 'κόκκινο', translit: 'kó-ki-no' },
+  { obj: 'ο χάρτης',  objEn: 'the map',    icon: '🗺️', color: '#2A6F97', answer: 'μπλε',    translit: 'ble' },
+  { obj: 'ο πίνακας', objEn: 'the board',  icon: '⬛', color: '#1A2840', answer: 'μαύρο',   translit: 'má-vro' },
+  { obj: 'το στυλό',  objEn: 'the pen',    icon: '🖊️', color: '#f5f5f0', answer: 'άσπρο',   translit: 'á-spro' },
+];
+const ALL_COLORS = ['κίτρινο', 'κόκκινο', 'μπλε', 'μαύρο', 'άσπρο'];
+let s2Index = 0;
+let s2Correct = 0;
+
+function initStage2() {
+  s2Index = 0;
+  s2Correct = 0;
+  renderColorQ();
+}
+
+function renderColorQ() {
+  const box = document.getElementById('colorBox');
+  const q = STAGE2_Q[s2Index];
+  // 3 options: correct + 2 distractors
+  const distractors = ALL_COLORS.filter(c => c !== q.answer);
+  const picks = shuffle(distractors).slice(0, 2);
+  const options = shuffle([q.answer, ...picks]);
+
+  // Determine icon contrast — white objects need a darker background hint
+  const usesShadowBorder = q.color.toLowerCase() === '#f5f5f0';
+
+  box.innerHTML = `
+    <div class="color-prompt">«${q.obj} είναι …;»</div>
+    <div class="color-translit">"${q.objEn} is …?" — what color is it?</div>
+    <div class="color-swatch" style="background:${q.color}; ${usesShadowBorder ? 'border:3px solid #ccc;' : ''}">${q.icon}</div>
+    <div class="color-options">
+      ${options.map(opt => `<button class="color-opt" data-answer="${opt}">${opt}</button>`).join('')}
+    </div>
+    <div class="q-counter">
+      ${STAGE2_Q.map((_, i) => `<span class="${i < s2Index ? 'done' : (i === s2Index ? 'current' : '')}"></span>`).join('')}
+    </div>
+  `;
+  // Animate swatch
+  setTimeout(() => box.querySelector('.color-swatch').classList.add('flip'), 50);
+  box.querySelectorAll('.color-opt').forEach(b => {
+    b.addEventListener('click', () => handleColorPick(b, q.answer));
+  });
+}
+
+function handleColorPick(btn, correctAnswer) {
+  const picked = btn.dataset.answer;
+  document.querySelectorAll('#colorBox .color-opt').forEach(b => b.disabled = true);
+  if (picked === correctAnswer) {
+    btn.classList.add('correct');
+    s2Correct++;
+    toast(praise(), 'good');
+    speakGreek(correctAnswer);
+    setTimeout(() => {
+      s2Index++;
+      if (s2Index >= STAGE2_Q.length) {
+        showReward(2, STAGE_REWARDS[2],
+          'You named all five colors! Next letter unlocked: <span class="greek">Π</span> 🎨');
+      } else {
+        renderColorQ();
+      }
+    }, 1000);
+  } else {
+    btn.classList.add('wrong');
+    toast(encourage(), 'error');
+    setTimeout(() => {
+      btn.classList.remove('wrong');
+      document.querySelectorAll('#colorBox .color-opt').forEach(b => b.disabled = false);
+    }, 700);
+  }
+}
+
+/* ===========================================
+   STAGE 3 — Owl Riddles
+=========================================== */
+const STAGE3_Q = [
+  {
+    greek: 'Πού είναι το βιβλίο;',
+    en: '"Where is the book?"',
+    correct: 'book',
+    options: [
+      { id: 'book', icon: '📖', label: 'το βιβλίο' },
+      { id: 'map',  icon: '🗺️', label: 'ο χάρτης' },
+      { id: 'pen',  icon: '🖊️', label: 'το στυλό' },
+    ]
+  },
+  {
+    greek: 'Δείξε τον χάρτη!',
+    en: '"Show the map!"',
+    correct: 'map',
+    options: [
+      { id: 'pencil', icon: '✏️', label: 'το μολύβι' },
+      { id: 'map',    icon: '🗺️', label: 'ο χάρτης' },
+      { id: 'book',   icon: '📖', label: 'το βιβλίο' },
+    ]
+  },
+  {
+    greek: 'Βρες τη μυθολογία!',
+    en: '"Find mythology!"',
+    correct: 'myth',
+    options: [
+      { id: 'ruler', icon: '📏', label: 'ο χάρακας' },
+      { id: 'myth',  icon: '🏛️', label: 'η μυθολογία' },
+      { id: 'pen',   icon: '🖊️', label: 'το στυλό' },
+    ]
+  },
+];
+let s3Index = 0;
+
+function initStage3() {
+  s3Index = 0;
+  renderRiddle();
+}
+
+function renderRiddle() {
+  const scene = document.getElementById('riddleScene');
+  const q = STAGE3_Q[s3Index];
+  scene.innerHTML = `
+    <div class="owl-talker">
+      <div class="owl-portrait">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="58" rx="32" ry="35" fill="#8B6F47"/>
+          <ellipse cx="50" cy="70" rx="20" ry="20" fill="#E8D4B0"/>
+          <path d="M 28 32 L 25 22 L 36 30 Z" fill="#5C4426"/>
+          <path d="M 72 32 L 75 22 L 64 30 Z" fill="#5C4426"/>
+          <circle cx="38" cy="46" r="11" fill="#FAF5EC"/>
+          <circle cx="62" cy="46" r="11" fill="#FAF5EC"/>
+          <circle cx="38" cy="46" r="6" fill="#1A2840"/>
+          <circle cx="62" cy="46" r="6" fill="#1A2840"/>
+          <circle cx="40" cy="44" r="2" fill="#FAF5EC"/>
+          <circle cx="64" cy="44" r="2" fill="#FAF5EC"/>
+          <path d="M 46 54 L 50 62 L 54 54 Z" fill="#D89D27"/>
+        </svg>
+      </div>
+      <div class="owl-bubble">
+        <div class="greek">${q.greek} <button class="tts-btn" data-text="${q.greek}" style="vertical-align:middle;">🔊</button></div>
+        <div class="english">${q.en}</div>
+      </div>
+    </div>
+    <div class="riddle-options">
+      ${q.options.map(o => `
+        <button class="riddle-card" data-id="${o.id}">
+          <span class="icon">${o.icon}</span>
+          <span class="label">${o.label}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="q-counter" style="margin-top:20px;">
+      ${STAGE3_Q.map((_, i) => `<span class="${i < s3Index ? 'done' : (i === s3Index ? 'current' : '')}"></span>`).join('')}
+    </div>
+  `;
+  scene.querySelectorAll('.riddle-card').forEach(c => {
+    c.addEventListener('click', () => handleRiddle(c, q.correct));
+  });
+  scene.querySelectorAll('.tts-btn').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      speakGreek(b.dataset.text, b);
+    });
+  });
+  // Auto-speak prompt
+  setTimeout(() => speakGreek(q.greek), 400);
+}
+
+function handleRiddle(card, correctId) {
+  if (card.dataset.id === correctId) {
+    card.classList.add('correct');
+    document.querySelectorAll('#riddleScene .riddle-card').forEach(c => c.disabled = true);
+    toast(praise(), 'good');
+    setTimeout(() => {
+      s3Index++;
+      if (s3Index >= STAGE3_Q.length) {
+        showReward(3, STAGE_REWARDS[3],
+          'The mythology owl is impressed! Next letter: <span class="greek">Ρ</span> 🦉');
+      } else {
+        renderRiddle();
+      }
+    }, 900);
+  } else {
+    card.classList.add('wrong');
+    toast(encourage(), 'error');
+    setTimeout(() => card.classList.remove('wrong'), 500);
+  }
+}
+
+/* ===========================================
+   STAGE 4 — Hidden classroom objects
+=========================================== */
+const STAGE4_OBJECTS = [
+  { id: 'pinakas',  word: 'ο πίνακας',  translit: 'o pí-na-kas',  en: 'the board' },
+  { id: 'thranio',  word: 'το θρανίο',  translit: 'to thra-ní-o', en: 'the desk' },
+  { id: 'charakas', word: 'ο χάρακας',  translit: 'o khá-ra-kas', en: 'the ruler' },
+  { id: 'ksystra',  word: 'η ξύστρα',   translit: 'i ksí-stra',   en: 'the sharpener' },
+];
+let s4FoundIds = new Set();
+
+function initStage4() {
+  s4FoundIds = new Set();
+  const tracker = document.getElementById('objectTracker');
+  tracker.innerHTML = '';
+  STAGE4_OBJECTS.forEach((o) => {
+    const el = document.createElement('div');
+    el.className = 'tracker-item';
+    el.dataset.id = o.id;
+    el.innerHTML = `
+      <div class="label">${o.word}</div>
+      <div class="translit">[${o.translit}] — ${o.en}</div>
+      <button class="tts-btn" data-text="${o.word}" style="margin-top:6px;">🔊</button>
+    `;
+    el.querySelector('.tts-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      speakGreek(o.word, e.currentTarget);
+    });
+    tracker.appendChild(el);
+  });
+  // Reset hotspot states
+  document.querySelectorAll('#stage-4 .hotspot').forEach(h => h.classList.remove('found'));
+  // Hint: encourage exploration
+  document.getElementById('targetWord').textContent = '4 αντικείμενα · 4 items';
+}
+
+function findObject(elem, id) {
+  if (elem.classList.contains('found')) return;
+  if (s4FoundIds.has(id)) return;
+  const obj = STAGE4_OBJECTS.find(o => o.id === id);
+  if (!obj) return;
+  elem.classList.add('found');
+  document.querySelector(`.tracker-item[data-id="${id}"]`).classList.add('found');
+  speakGreek(obj.word);
+  toast(praise(), 'good');
+  s4FoundIds.add(id);
+  const remaining = STAGE4_OBJECTS.length - s4FoundIds.size;
+  document.getElementById('targetWord').textContent = remaining > 0
+    ? `${remaining} ${remaining === 1 ? 'ακόμα · more' : 'ακόμα · more'}`
+    : '✓ Τέλεια!';
+  if (s4FoundIds.size === STAGE4_OBJECTS.length) {
+    setTimeout(() => {
+      showReward(4, STAGE_REWARDS[4],
+        'All hidden objects found! You unlocked <strong>three</strong> letters: <span class="greek">Α, Β, Ο</span> 🔓');
+    }, 800);
+  }
+}
+
+/* ===========================================
+   STAGE 5 — Final code
+=========================================== */
+let s5Slots = [null, null, null, null, null, null];
+let s5BankOrder = [];
+
+function initStage5() {
+  s5Slots = [null, null, null, null, null, null];
+  const letters = state.collectedLetters.length === 6
+    ? state.collectedLetters.slice()
+    : ['Μ','Π','Ρ','Α','Β','Ο'];
+  s5BankOrder = shuffle(letters);
+  renderDoor();
+}
+
+function renderDoor() {
+  // Slots
+  document.querySelectorAll('#doorSlots .slot').forEach((s, i) => {
+    if (s5Slots[i]) {
+      s.textContent = s5Slots[i];
+      s.classList.add('filled');
+    } else {
+      s.textContent = '';
+      s.classList.remove('filled');
+    }
+    s.onclick = () => removeFromSlot(i);
+  });
+  // Bank (stable order, mark used)
+  const bank = document.getElementById('letterBank');
+  bank.innerHTML = '';
+  // Count how many of each letter is currently placed
+  const placedCounts = {};
+  s5Slots.forEach(L => { if (L) placedCounts[L] = (placedCounts[L] || 0) + 1; });
+  // Count availability per letter total
+  const totalCounts = {};
+  s5BankOrder.forEach(L => { totalCounts[L] = (totalCounts[L] || 0) + 1; });
+  // For each letter in bank, decide if "used" (all instances placed)
+  const seenInBank = {};
+  s5BankOrder.forEach((L) => {
+    const b = document.createElement('button');
+    b.className = 'bank-letter';
+    b.textContent = L;
+    seenInBank[L] = (seenInBank[L] || 0) + 1;
+    // This bank instance is "used" if its index (1-based) is <= number of placed copies
+    if (seenInBank[L] <= (placedCounts[L] || 0)) {
+      b.classList.add('used');
+    }
+    b.onclick = () => placeLetter(L);
+    bank.appendChild(b);
+  });
+}
+
+function placeLetter(L) {
+  // Check that not all copies are already placed
+  const placed = s5Slots.filter(x => x === L).length;
+  const total = s5BankOrder.filter(x => x === L).length;
+  if (placed >= total) return;
+  const firstEmpty = s5Slots.indexOf(null);
+  if (firstEmpty === -1) {
+    toast('Όλα γεμάτα! · All full!', 'error');
+    return;
+  }
+  s5Slots[firstEmpty] = L;
+  renderDoor();
+}
+
+function removeFromSlot(i) {
+  if (!s5Slots[i]) return;
+  s5Slots[i] = null;
+  renderDoor();
+}
+
+function clearSlots() {
+  s5Slots = [null, null, null, null, null, null];
+  renderDoor();
+}
+
+function tryDoor() {
+  const attempt = s5Slots.join('');
+  if (s5Slots.includes(null)) {
+    toast('Συμπλήρωσε όλα! · Fill all slots!', 'error');
+    return;
+  }
+  if (attempt === FINAL_CODE) {
+    state.stagesDone[4] = true;
+    updateProgressDots();
+    // Big victory!
+    document.querySelectorAll('.stage.active').forEach(s => s.classList.remove('active'));
+    document.getElementById('victory').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Speak the magic phrase
+    setTimeout(() => speakGreek('Μπράβο! Βγήκες από την τάξη!'), 400);
+    // Confetti!
+    fireConfetti();
+  } else {
+    toast('Δοκίμασε ξανά! · Try again!', 'error');
+    // shake door
+    const door = document.querySelector('.door-frame');
+    door.style.animation = 'shake 0.45s';
+    setTimeout(() => door.style.animation = '', 500);
+  }
+}
+
+/* ===========================================
+   CONFETTI
+=========================================== */
+const confettiCanvas = document.getElementById('confetti');
+const ctx = confettiCanvas.getContext('2d');
+function resizeCanvas() {
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const CONFETTI_COLORS = ['#F4B942', '#D85A6C', '#2A6F97', '#5A9C6E', '#D4744A', '#C9A961', '#1A2840', '#FAF5EC'];
+let particles = [];
+let confettiRunning = false;
+
+function fireConfetti() {
+  particles = [];
+  for (let i = 0; i < 220; i++) {
+    particles.push({
+      x: Math.random() * confettiCanvas.width,
+      y: -20 - Math.random() * confettiCanvas.height,
+      vx: (Math.random() - 0.5) * 4,
+      vy: 2 + Math.random() * 4,
+      size: 6 + Math.random() * 8,
+      color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.3,
+      shape: Math.random() > 0.5 ? 'rect' : 'circle',
+    });
+  }
+  if (!confettiRunning) {
+    confettiRunning = true;
+    animateConfetti();
+  }
+  // Second burst from sides
+  setTimeout(() => {
+    for (let i = 0; i < 80; i++) {
+      particles.push({
+        x: i % 2 === 0 ? -10 : confettiCanvas.width + 10,
+        y: confettiCanvas.height * 0.4 + Math.random() * 100,
+        vx: i % 2 === 0 ? 5 + Math.random() * 4 : -(5 + Math.random() * 4),
+        vy: -6 + Math.random() * 2,
+        size: 6 + Math.random() * 8,
+        color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+        rot: Math.random() * Math.PI * 2,
+        vr: (Math.random() - 0.5) * 0.3,
+        shape: Math.random() > 0.5 ? 'rect' : 'circle',
+      });
+    }
+  }, 400);
+}
+
+function animateConfetti() {
+  ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.12; // gravity
+    p.rot += p.vr;
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    if (p.shape === 'rect') {
+      ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+    } else {
+      ctx.beginPath();
+      ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  particles = particles.filter(p => p.y < confettiCanvas.height + 50);
+  if (particles.length > 0) {
+    requestAnimationFrame(animateConfetti);
+  } else {
+    confettiRunning = false;
+    ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+  }
+}
+
+/* ===========================================
+   INIT
+=========================================== */
+updateInventory();
+updateProgressDots();
+</script>
+</body>
+</html>
