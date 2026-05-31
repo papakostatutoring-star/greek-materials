@@ -1,1 +1,764 @@
-Add thematic vocabulary exercises
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thematic Vocabulary — Modern Greek Exercises</title>
+<style>
+  :root{
+    --bg:#f4ecda;
+    --paper:#fffdf6;
+    --ink:#2c2519;
+    --muted:#7c715c;
+    --aegean:#236b88;
+    --aegean-deep:#184f66;
+    --terra:#c3592c;
+    --terra-soft:#e8b79a;
+    --olive:#6f7b3f;
+    --gold:#c39526;
+    --green:#3f8c52;
+    --green-bg:#e4f1e4;
+    --red:#b23b32;
+    --red-bg:#f6e1de;
+    --line:#e3d7bd;
+    --shadow:0 10px 30px -12px rgba(44,37,25,.35);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 12% 8%, rgba(195,89,44,.07), transparent 45%),
+      radial-gradient(circle at 88% 92%, rgba(35,107,136,.08), transparent 45%),
+      var(--bg);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:28px 20px 80px}
+
+  /* ---- masthead ---- */
+  header.top{text-align:center;margin-bottom:26px;position:relative}
+  .keypill{display:inline-block;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--terra);font-weight:700;margin-bottom:8px}
+  header.top h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,5vw,2.9rem);
+    line-height:1.02;color:var(--aegean-deep)}
+  header.top h1 em{font-style:italic;color:var(--terra)}
+  header.top p{color:var(--muted);margin-top:6px;font-size:.95rem}
+  .rule{height:3px;width:64px;margin:16px auto 0;
+    background:linear-gradient(90deg,var(--terra),var(--gold));border-radius:3px}
+
+  /* ---- theme grid ---- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px}
+  .theme{
+    cursor:pointer;background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:18px 16px 16px;text-align:left;position:relative;overflow:hidden;
+    transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease;
+  }
+  .theme::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--terra),var(--gold))}
+  .theme:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--terra-soft)}
+  .theme .ic{font-size:1.7rem;line-height:1}
+  .theme .en{font-family:var(--serif);font-size:1.15rem;color:var(--aegean-deep);margin-top:10px}
+  .theme .gr{color:var(--terra);font-weight:600;font-size:.98rem}
+  .theme .ct{color:var(--muted);font-size:.78rem;margin-top:6px;letter-spacing:.02em}
+
+  /* ---- generic buttons ---- */
+  button{font-family:inherit}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;
+    border-radius:10px;padding:11px 18px;font-size:.95rem;font-weight:600;transition:filter .15s,transform .1s}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--aegean);color:#fff}
+  .btn-primary:hover{filter:brightness(1.07)}
+  .btn-terra{background:var(--terra);color:#fff}
+  .btn-terra:hover{filter:brightness(1.07)}
+  .btn-ghost{background:transparent;color:var(--aegean-deep);border:1px solid var(--line)}
+  .btn-ghost:hover{background:#fff}
+  .back{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;
+    display:inline-flex;align-items:center;gap:6px;padding:6px 2px;margin-bottom:14px}
+  .back:hover{color:var(--terra)}
+
+  /* ---- theme menu ---- */
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;
+    padding:26px;box-shadow:var(--shadow)}
+  .panel h2{font-family:var(--serif);font-size:1.7rem;color:var(--aegean-deep);font-weight:600}
+  .panel h2 .gr{color:var(--terra);font-style:italic}
+  .panel .sub{color:var(--muted);font-size:.9rem;margin-top:2px;margin-bottom:22px}
+  .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+  .mode{cursor:pointer;text-align:left;border:1px solid var(--line);background:#fff;
+    border-radius:13px;padding:18px;transition:border-color .15s,transform .15s,box-shadow .15s}
+  .mode:hover{border-color:var(--aegean);transform:translateY(-2px);box-shadow:var(--shadow)}
+  .mode .mic{font-size:1.5rem}
+  .mode h3{font-family:var(--serif);font-size:1.2rem;margin:8px 0 4px;color:var(--ink)}
+  .mode p{color:var(--muted);font-size:.85rem}
+
+  /* ---- exercise frame ---- */
+  .exhead{display:flex;justify-content:space-between;align-items:flex-end;
+    flex-wrap:wrap;gap:10px;margin-bottom:18px}
+  .exhead .lbl{font-family:var(--serif);font-size:1.4rem;color:var(--aegean-deep)}
+  .exhead .lbl small{display:block;font-family:var(--sans);font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.04em}
+  .meter{flex:1;min-width:160px}
+  .meter .track{height:8px;background:var(--line);border-radius:6px;overflow:hidden}
+  .meter .fill{height:100%;width:0;background:linear-gradient(90deg,var(--aegean),var(--olive));transition:width .3s}
+  .meter .info{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-top:5px}
+
+  .prompt{font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);font-weight:700;margin-bottom:6px}
+  .word{font-family:var(--serif);font-size:clamp(2rem,7vw,3rem);color:var(--ink);line-height:1.1}
+  .phon{color:var(--muted);font-style:italic;margin-top:4px;font-size:1rem}
+
+  /* MCQ options */
+  .opts{display:grid;gap:11px;margin-top:24px}
+  .opt{text-align:left;border:1px solid var(--line);background:#fff;border-radius:11px;
+    padding:14px 16px;font-size:1.02rem;cursor:pointer;transition:border-color .12s,background .12s;
+    display:flex;align-items:center;gap:12px}
+  .opt .key{width:26px;height:26px;flex:none;border-radius:7px;background:var(--bg);
+    display:grid;place-items:center;font-weight:700;font-size:.85rem;color:var(--muted)}
+  .opt:hover:not(:disabled){border-color:var(--aegean)}
+  .opt:disabled{cursor:default}
+  .opt.correct{background:var(--green-bg);border-color:var(--green)}
+  .opt.correct .key{background:var(--green);color:#fff}
+  .opt.wrong{background:var(--red-bg);border-color:var(--red)}
+  .opt.wrong .key{background:var(--red);color:#fff}
+
+  /* feedback banner */
+  .fb{margin-top:20px;border-radius:11px;padding:13px 16px;font-size:.95rem;display:none}
+  .fb.show{display:block}
+  .fb.ok{background:var(--green-bg);color:#2c5d39;border:1px solid #bcdcc0}
+  .fb.no{background:var(--red-bg);color:#8e2f28;border:1px solid #e7c4c0}
+  .fb b{font-family:var(--serif)}
+  .fb .note{display:block;color:var(--muted);font-size:.84rem;margin-top:3px;font-style:italic}
+
+  .exfoot{margin-top:22px;display:flex;justify-content:flex-end;gap:10px}
+
+  /* Fill in the gap */
+  .gapfield{margin-top:22px}
+  .gapin{width:100%;font-family:var(--serif);font-size:1.6rem;text-align:center;
+    padding:14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+  .gapin:focus{outline:none;border-color:var(--aegean)}
+  .gapin.ok{border-color:var(--green);background:var(--green-bg)}
+  .gapin.no{border-color:var(--red);background:var(--red-bg)}
+  .keys{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:12px}
+  .keys button{border:1px solid var(--line);background:#fff;border-radius:8px;width:40px;height:40px;
+    font-family:var(--serif);font-size:1.15rem;cursor:pointer;color:var(--aegean-deep)}
+  .keys button:hover{background:var(--bg)}
+  .gaptools{display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .tinybtn{background:none;border:1px dashed var(--line);color:var(--muted);border-radius:8px;
+    padding:7px 12px;font-size:.82rem;cursor:pointer}
+  .tinybtn:hover{color:var(--terra);border-color:var(--terra-soft)}
+
+  /* Matching */
+  .match{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+  .col{display:grid;gap:10px}
+  .colhead{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:center}
+  .tile{border:1px solid var(--line);background:#fff;border-radius:10px;padding:13px 12px;
+    cursor:pointer;text-align:center;font-size:1rem;transition:all .12s;min-height:50px;
+    display:grid;place-items:center}
+  .tile.gr{font-family:var(--serif);font-size:1.12rem;color:var(--ink)}
+  .tile:hover:not(.done){border-color:var(--aegean)}
+  .tile.sel{border-color:var(--terra);background:#fbeee6;box-shadow:0 0 0 2px var(--terra-soft) inset}
+  .tile.done{background:var(--green-bg);border-color:var(--green);color:#2c5d39;cursor:default;opacity:.85}
+  .tile.flash{animation:nope .4s}
+  @keyframes nope{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+  /* results */
+  .result{text-align:center;padding:14px 0}
+  .scorebig{font-family:var(--serif);font-size:3.4rem;color:var(--aegean-deep);line-height:1}
+  .scorebig span{color:var(--terra)}
+  .result .msg{font-size:1.05rem;margin:10px 0 4px}
+  .result .pct{color:var(--muted);font-size:.9rem}
+  .result .acts{margin-top:24px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+
+  footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:40px}
+  footer span{color:var(--terra)}
+  .hidden{display:none}
+  @media(max-width:520px){
+    .match{gap:9px}.tile{padding:11px 8px;font-size:.92rem}
+    .panel{padding:20px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="keypill">Glossomathia · Play — Listen — Learn</div>
+    <h1>Thematic Vocabulary<br><em>Modern Greek Exercises</em></h1>
+    <p id="subline">By Marg Papakostas · Choose a theme, then practise with three kinds of exercise.</p>
+    <div class="rule"></div>
+  </header>
+
+  <!-- HOME -->
+  <section id="home">
+    <div class="grid" id="themeGrid"></div>
+  </section>
+
+  <!-- THEME MENU -->
+  <section id="menu" class="hidden">
+    <button class="back" data-go="home">← All themes</button>
+    <div class="panel">
+      <h2 id="menuTitle"></h2>
+      <div class="sub" id="menuSub"></div>
+      <div class="modes">
+        <button class="mode" data-mode="mcq">
+          <div class="mic">🎯</div><h3>Multiple Choice</h3>
+          <p>See the Greek word, pick its meaning in English.</p>
+        </button>
+        <button class="mode" data-mode="match">
+          <div class="mic">🔗</div><h3>Matching</h3>
+          <p>Pair each Greek word with its English meaning.</p>
+        </button>
+        <button class="mode" data-mode="gap">
+          <div class="mic">✍️</div><h3>Fill the Gap</h3>
+          <p>Read the meaning, type the Greek word from memory.</p>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXERCISE -->
+  <section id="exercise" class="hidden">
+    <button class="back" data-go="menu">← Back to exercises</button>
+    <div class="panel">
+      <div class="exhead">
+        <div class="lbl" id="exLabel">Multiple Choice<small id="exTheme"></small></div>
+        <div class="meter">
+          <div class="track"><div class="fill" id="meterFill"></div></div>
+          <div class="info"><span id="meterPos"></span><span id="meterScore"></span></div>
+        </div>
+      </div>
+      <div id="exBody"></div>
+    </div>
+  </section>
+
+  <footer>Vocabulary from <span>Thematic Vocabulary — Modern Greek</span> by Marg Papakostas · Glossomathia · Interactive practice deck</footer>
+</div>
+
+<script>
+/* ============================================================
+   VOCABULARY DATA  —  {gr: Greek, en: English meaning, ph: hint, note?: extra}
+   ============================================================ */
+const VOCAB = {
+ animals:{en:"Animals",gr:"Ζώα",ic:"🦊",items:[
+  {gr:"Κότα",en:"Chicken",ph:"Kóta"},{gr:"Γάτα",en:"Cat",ph:"Gáta"},
+  {gr:"Σκύλος",en:"Dog",ph:"Skílos"},{gr:"Χήνα",en:"Goose",ph:"Chína"},
+  {gr:"Αγελάδα",en:"Cow",ph:"Agheláda"},{gr:"Γουρούνι",en:"Pig",ph:"Gourúni"},
+  {gr:"Πάπια",en:"Duck",ph:"Pápia"},{gr:"Πρόβατο",en:"Sheep",ph:"Prováto"},
+  {gr:"Αλεπού",en:"Fox",ph:"Alepú"},{gr:"Ελέφαντας",en:"Elephant",ph:"Elefándas"},
+  {gr:"Αρκούδα",en:"Bear",ph:"Arkúda"},{gr:"Πιγκουίνος",en:"Penguin",ph:"Pingúinos"},
+  {gr:"Ιαγουάρος",en:"Jaguar",ph:"Jagúaros"},{gr:"Παπαγάλος",en:"Parrot",ph:"Papagálos"},
+  {gr:"Λαγός",en:"Rabbit",ph:"Lagós"},{gr:"Βάτραχος",en:"Frog",ph:"Vátrachos"},
+  {gr:"Σκατζόχοιρος",en:"Porcupine",ph:"Skatzóchiros"},{gr:"Ελάφι",en:"Deer",ph:"Eláfi"},
+  {gr:"Καμηλοπάρδαλη",en:"Giraffe",ph:"Kamilopardáli"},{gr:"Ρινόκερος",en:"Rhino",ph:"Rinókeros"},
+  {gr:"Ιπποπόταμος",en:"Hippo",ph:"Ippopótamos"},{gr:"Άλογο",en:"Horse",ph:"Álogo"},
+  {gr:"Ρακούν",en:"Raccoon",ph:"Rakún"},{gr:"Ιγκουάνα",en:"Iguana",ph:"Iguána"},
+  {gr:"Κουκουβάγια",en:"Owl",ph:"Koukouváya"},{gr:"Πάντα",en:"Panda",ph:"Pánta"},
+  {gr:"Πελεκάνος",en:"Pelican",ph:"Pelekános"},{gr:"Στρουθοκάμηλος",en:"Ostrich",ph:"Strouthokámilos"},
+  {gr:"Χελώνα",en:"Turtle",ph:"Chelóna"},{gr:"Σκίουρος",en:"Squirrel",ph:"Skíouros"},
+  {gr:"Μαϊμού",en:"Monkey",ph:"Maïmoú"},{gr:"Ινδικό χοιρίδιο",en:"Guinea pig",ph:"Indikó chirídio"}
+ ]},
+ sea:{en:"Sea Animals",gr:"Θαλάσσια Ζώα",ic:"🐙",items:[
+  {gr:"Ψάρι",en:"Fish",ph:"psári"},{gr:"Ιππόκαμπος",en:"Seahorse",ph:"ippókampos"},
+  {gr:"Αστερίας",en:"Starfish",ph:"asterías"},{gr:"Κοράλια",en:"Corals",ph:"korália"},
+  {gr:"Θαλάσσια χελώνα",en:"Sea turtle",ph:"thalássia chelóna"},{gr:"Χταπόδι",en:"Octopus",ph:"chtapódi"},
+  {gr:"Γαρίδα",en:"Shrimp",ph:"garída"},{gr:"Δελφίνι",en:"Dolphin",ph:"delfíni"},
+  {gr:"Ξιφίας",en:"Swordfish",ph:"xifías"},{gr:"Φώκια",en:"Seal",ph:"fókia"},
+  {gr:"Καρχαρίας",en:"Shark",ph:"karcharías"},{gr:"Όστρακο",en:"Shell",ph:"óstrako"},
+  {gr:"Φάλαινα",en:"Whale",ph:"fálena"},{gr:"Καλαμάρι",en:"Squid",ph:"kalamári"},
+  {gr:"Κάβουρας",en:"Crab",ph:"kávouras"},{gr:"Σαλιγκάρι",en:"Snail",ph:"saligári"},
+  {gr:"Μύδια",en:"Clams",ph:"mídia"},{gr:"Χέλι",en:"Eel",ph:"chéli"},
+  {gr:"Τσούχτρα",en:"Jellyfish",ph:"tsoúchtra"}
+ ]},
+ food:{en:"Greek Food",gr:"Ελληνικά Φαγητά",ic:"🍽️",items:[
+  {gr:"Γιουβαρλάκια",en:"Meatball soup",ph:"yiouvarlákia"},{gr:"Παϊδάκια",en:"Ribs",ph:"païdákia"},
+  {gr:"Ντολμαδάκια",en:"Dolmades (stuffed leaves)",ph:"dolmadákia"},{gr:"Μαγειρίτσα",en:"Easter intestine soup",ph:"mayirítsa"},
+  {gr:"Μπριάμ",en:"Briam (baked veg)",ph:"briám"},{gr:"Φασολάδα",en:"Bean soup",ph:"fasoláda"},
+  {gr:"Φάβα",en:"Fava (split pea purée)",ph:"fáva"},{gr:"Ρεβύθια",en:"Chickpeas",ph:"revíthia"},
+  {gr:"Σπανακόρυζο",en:"Spinach rice",ph:"spanakórizo"},{gr:"Σουτζουκάκια",en:"Soutzoukakia (meatballs)",ph:"soutzoukákia"},
+  {gr:"Τυροκαυτερή",en:"Tirokafteri (spicy cheese dip)",ph:"tirokafterí"},{gr:"Σουβλάκι",en:"Souvlaki",ph:"souvláki"},
+  {gr:"Μπακαλιάρος σκορδαλιά",en:"Cod with garlic sauce",ph:"bakaliáros skordaliá"},{gr:"Μουσακάς",en:"Moussaka",ph:"mousakás"},
+  {gr:"Παστίτσιο",en:"Pastitsio",ph:"pastítsio"},{gr:"Παπουτσάκια",en:"Eggplant with meat sauce",ph:"papoutsákia"},
+  {gr:"Ψαρόσουπα",en:"Fish soup",ph:"psarósoupa"},{gr:"Καλαμαράκια",en:"Small fried squid",ph:"kalamarákia"},
+  {gr:"Τζατζίκι",en:"Tzatziki",ph:"tzatzíki"},{gr:"Γεμιστά",en:"Stuffed vegetables",ph:"yemistá"},
+  {gr:"Χταπόδι κοκκινιστό",en:"Octopus in red sauce",ph:"chtapódi kokkinistó"},{gr:"Χταπόδι στα κάρβουνα",en:"Grilled octopus",ph:"chtapódi sta kárvouna"}
+ ]},
+ vegetables:{en:"Vegetables",gr:"Λαχανικά",ic:"🥕",items:[
+  {gr:"Καρότο",en:"Carrot",ph:"karóto"},{gr:"Λάχανο",en:"Cabbage",ph:"láchano"},
+  {gr:"Λεμόνι",en:"Lemon",ph:"lemóni"},{gr:"Ντομάτα",en:"Tomato",ph:"domáta"},
+  {gr:"Αγγούρι",en:"Cucumber",ph:"angoúri"},{gr:"Αγκινάρα",en:"Artichoke",ph:"aginára"},
+  {gr:"Κρεμμύδι",en:"Onion",ph:"kremmídi"},{gr:"Μπρόκολο",en:"Broccoli",ph:"brókolo"},
+  {gr:"Κουνουπίδι",en:"Cauliflower",ph:"kounoupídi"},{gr:"Πιπεριά",en:"Pepper",ph:"piperiá"},
+  {gr:"Μαρούλι",en:"Lettuce",ph:"maroúli"},{gr:"Παντζάρι",en:"Beet",ph:"pantzári"},
+  {gr:"Φασολάκια",en:"Green beans",ph:"fasolákia"},{gr:"Μπάμιες",en:"Okra",ph:"bámies"},
+  {gr:"Μανιτάρια",en:"Mushrooms",ph:"manitária"},{gr:"Κολοκύθι",en:"Squash / courgette",ph:"kolokíthi"},
+  {gr:"Καλαμπόκι",en:"Corn",ph:"kalampóki"},{gr:"Μελιτζάνες",en:"Eggplants",ph:"melitzánes"},
+  {gr:"Ραπανάκια",en:"Radishes",ph:"rapanákia"},{gr:"Σέλινο",en:"Celery",ph:"sélino"},
+  {gr:"Σπανάκι",en:"Spinach",ph:"spanáki"},{gr:"Πράσο",en:"Leek",ph:"práso"},
+  {gr:"Άνηθος",en:"Dill",ph:"ánithos"},{gr:"Μαϊντανός",en:"Parsley",ph:"maïdanós"},
+  {gr:"Σπαράγγια",en:"Asparagus",ph:"sparángia"},{gr:"Πατάτες",en:"Potatoes",ph:"patátes"},
+  {gr:"Λαχανάκια Βρυξελλών",en:"Brussels sprouts",ph:"lachanákia Vrixellón"}
+ ]},
+ school:{en:"School Items",gr:"Σχολικά",ic:"🎒",items:[
+  {gr:"Μολύβι",en:"Pencil",ph:"molívi"},{gr:"Χάρακας",en:"Ruler",ph:"chárakas"},
+  {gr:"Ψαλίδι",en:"Scissors",ph:"psalídi"},{gr:"Διαβήτης",en:"Compass (drawing)",ph:"diavítis"},
+  {gr:"Κασετίνα",en:"Pencil case",ph:"kasetína"},{gr:"Γόμα",en:"Eraser",ph:"góma"},
+  {gr:"Ξυλομπογιές",en:"Colour pencils",ph:"xilompoyés"},{gr:"Μαρκαδόροι",en:"Markers",ph:"markadóri"},
+  {gr:"Στυλό",en:"Pen",ph:"stiló"},{gr:"Νερομπογιές",en:"Watercolours",ph:"nerompoyés"},
+  {gr:"Πινέλο",en:"Brush",ph:"pinélo"},{gr:"Συρραπτικό",en:"Stapler",ph:"sirraptikó"},
+  {gr:"Συνδετήρες",en:"Paper clips",ph:"sindetíres"},{gr:"Βιβλίο",en:"Book",ph:"vivlío"},
+  {gr:"Τετράδιο",en:"Notebook",ph:"tetrádio"},{gr:"Ξύστρα",en:"Sharpener",ph:"xístra"},
+  {gr:"Σχολική τσάντα",en:"School bag",ph:"scholikí tsánta"},{gr:"Κόλλα",en:"Glue",ph:"kólla"},
+  {gr:"Αριθμομηχανή",en:"Calculator",ph:"arithmomichaní"},{gr:"Χάρτης",en:"Map",ph:"chártis"},
+  {gr:"Τάξη",en:"Classroom",ph:"táxi"},{gr:"Λεξικό",en:"Dictionary",ph:"lexikó"},
+  {gr:"Διορθωτικό",en:"White-out",ph:"diorthotikó"},{gr:"Παγουρίνο",en:"Water bottle",ph:"pagouríno"}
+ ]},
+ baking:{en:"Baking & Pastry",gr:"Προϊόντα Αρτοποιίας",ic:"🥐",items:[
+  {gr:"Βουτήματα",en:"Dunking biscuits",ph:"voutímata"},{gr:"Κουλουράκια",en:"Easter cookies",ph:"koulourákia"},
+  {gr:"Κρουασάν",en:"Croissant",ph:"krouasán"},{gr:"Κουλούρι",en:"Sesame bread ring",ph:"kouloúri"},
+  {gr:"Τσουρέκι",en:"Easter sweet bread",ph:"tsouréki"},{gr:"Μπακλαβάς",en:"Baklava",ph:"baklavás"},
+  {gr:"Ψωμί",en:"Bread",ph:"psomí"},{gr:"Τυρόπιτα",en:"Cheese pie",ph:"tirópita"},
+  {gr:"Σπανακόπιτα",en:"Spinach pie",ph:"spanakópita"},{gr:"Πιροσκί",en:"Meat pie (piroski)",ph:"piroskí"},
+  {gr:"Κέικ",en:"Cake",ph:"kéik"},{gr:"Καρβέλι ψωμί",en:"Loaf of bread",ph:"karvéli psomí"},
+  {gr:"Μπουγάτσα",en:"Bougatsa (custard pastry)",ph:"bougátsa"},{gr:"Μπαγκέτα",en:"Baguette",ph:"bagéta"},
+  {gr:"Κανταΐφι",en:"Kataifi (shredded pastry)",ph:"kantaḯfi"},{gr:"Τουλουμπάκι",en:"Touloumba (syrup dessert)",ph:"touloumpáki"},
+  {gr:"Μελομακάρονο",en:"Honey-walnut cookie",ph:"melomakárono",note:"A Christmas favourite."},
+  {gr:"Κουραμπιές",en:"Butter cookie",ph:"kourabiés",note:"A Christmas favourite, dusted with icing sugar."},
+  {gr:"Ραβανί",en:"Semolina syrup cake",ph:"ravaní"},{gr:"Πάστα φλώρα",en:"Jam tart",ph:"pásta flóra"},
+  {gr:"Σταφιδόψωμο",en:"Raisin bread",ph:"stafidópsomo"},{gr:"Πορτοκαλόπιτα",en:"Orange cake",ph:"portokalópita"},
+  {gr:"Γαλακτομπούρεκο",en:"Custard phyllo pie",ph:"galaktoboúreko"},{gr:"Λαγάνα",en:"Clean Monday flatbread",ph:"lagána"},
+  {gr:"Χαλβάς",en:"Halva (tahini sweet)",ph:"chalvás"}
+ ]},
+ fruits:{en:"Fruits",gr:"Φρούτα",ic:"🍓",items:[
+  {gr:"Φράουλες",en:"Strawberries",ph:"fráoules"},{gr:"Πεπόνι",en:"Melon",ph:"pepóni"},
+  {gr:"Καρπούζι",en:"Watermelon",ph:"karpoúzi"},{gr:"Καρύδα",en:"Coconut",ph:"karída"},
+  {gr:"Ροδάκινο",en:"Peach",ph:"rodákino"},{gr:"Βερίκοκο",en:"Apricot",ph:"veríkoko"},
+  {gr:"Δαμάσκηνο",en:"Plum",ph:"damáskino"},{gr:"Μπανάνα",en:"Banana",ph:"banána"},
+  {gr:"Κεράσια",en:"Cherries",ph:"kerásia"},{gr:"Μήλα",en:"Apples",ph:"míla"},
+  {gr:"Μανταρίνια",en:"Tangerines",ph:"mandarínia"},{gr:"Πορτοκάλι",en:"Orange",ph:"portokáli"},
+  {gr:"Σμέουρα",en:"Raspberries",ph:"sméoura"},{gr:"Μύρτιλλα",en:"Blueberries",ph:"mírtilla"},
+  {gr:"Βατόμουρα",en:"Blackberries",ph:"vatómoura"},{gr:"Σταφύλια",en:"Grapes",ph:"stafília"},
+  {gr:"Ακτινίδια",en:"Kiwi",ph:"aktinídia"},{gr:"Μάνγκο",en:"Mango",ph:"mángo"},
+  {gr:"Νεκταρίνια",en:"Nectarines",ph:"nektarínia"},{gr:"Ρόδι",en:"Pomegranate",ph:"ródi"},
+  {gr:"Παπάγια",en:"Papaya",ph:"papáya"},{gr:"Αχλάδι",en:"Pear",ph:"achládi"},
+  {gr:"Μοσχολέμονο",en:"Lime",ph:"moscholémono"},{gr:"Λεμόνι",en:"Lemon",ph:"lemóni"},
+  {gr:"Αβοκάντο",en:"Avocado",ph:"avokádo"},{gr:"Ανανάς",en:"Pineapple",ph:"ananás"},
+  {gr:"Γκρέιπφρουτ",en:"Grapefruit",ph:"gréipfrout"}
+ ]},
+ easter:{en:"Easter",gr:"Πάσχα",ic:"🐣",items:[
+  {gr:"Πάσχα",en:"Easter",ph:"Páscha"},{gr:"Λαμπρή Εβδομάδα",en:"Holy Week",ph:"Lamprí Evdomáda"},
+  {gr:"Ανάσταση",en:"Resurrection",ph:"Anástasi"},{gr:"Ανάσταση του Χριστού",en:"Resurrection of Christ",ph:"Anástasi tou Christoú"},
+  {gr:"Λαμπρός",en:"Bright",ph:"Lamprós"},{gr:"Αγάπη",en:"Love",ph:"Agápi"},
+  {gr:"Μεγάλη Τρίτη",en:"Holy Tuesday",ph:"Megáli Tríti"},{gr:"Μεγάλη Τετάρτη",en:"Holy Wednesday",ph:"Megáli Tetárti"},
+  {gr:"Μεγάλη Πέμπτη",en:"Holy Thursday",ph:"Megáli Pémpti"},{gr:"Μεγάλη Παρασκευή",en:"Good Friday",ph:"Megáli Paraskeví"},
+  {gr:"Ανάσταση του Λαζάρου",en:"Resurrection of Lazarus",ph:"Anástasi tou Lazárou"},{gr:"Επιτάφιος",en:"Epitaph (bier of Christ)",ph:"Epitáfios"},
+  {gr:"Πασχαλινό αυγό",en:"Easter egg",ph:"Paschalinó avgó"},{gr:"Κατάβαση της Σταύρωσης",en:"Descent from the Cross",ph:"Katávasi tis Stávrosis"}
+ ]},
+ christmas:{en:"Christmas",gr:"Χριστούγεννα",ic:"🎄",items:[
+  {gr:"Χριστούγεννα",en:"Christmas",ph:"Christoúgenna"},{gr:"Χριστιανική γιορτή",en:"Christian holiday",ph:"Christianikí yiortí"},
+  {gr:"Χριστουγεννιάτικο δέντρο",en:"Christmas tree",ph:"Christouyenniátiko déntro"},{gr:"Χριστουγεννιάτικα φώτα",en:"Christmas lights",ph:"Christouyenniátika fóta"},
+  {gr:"Κάλαντα",en:"Christmas carols",ph:"Kálanta"},{gr:"Χριστουγεννιάτικη κάρτα",en:"Christmas card",ph:"Christouyenniátiki kárta"},
+  {gr:"Άγιος Βασίλης",en:"Santa Claus",ph:"Áyios Vasílis"},{gr:"Κέρασμα",en:"Holiday treats",ph:"Kérasma"},
+  {gr:"Δώρα",en:"Gifts",ph:"Dóra"},{gr:"Χριστουγεννιάτικο καλάθι",en:"Christmas basket",ph:"Christouyenniátiko kaláthi"},
+  {gr:"Λαμπάκια",en:"Tree lights",ph:"Lampákia"},{gr:"Πρωτοχρονιά",en:"New Year's Day",ph:"Protochroniá"},
+  {gr:"Χριστουγεννιάτικο έλκηθρο",en:"Christmas sleigh",ph:"Christouyenniátiko élkithro"}
+ ]},
+ colors:{en:"Colours",gr:"Χρώματα",ic:"🎨",items:[
+  {gr:"Άσπρο",en:"White",ph:"áspro"},{gr:"Μαύρο",en:"Black",ph:"mávro"},
+  {gr:"Κόκκινο",en:"Red",ph:"kókkino"},{gr:"Πράσινο",en:"Green",ph:"prásino"},
+  {gr:"Μπλε",en:"Blue",ph:"ble"},{gr:"Κίτρινο",en:"Yellow",ph:"kítrino"},
+  {gr:"Πορτοκαλί",en:"Orange",ph:"portokalí"},{gr:"Ροζ",en:"Pink",ph:"roz"},
+  {gr:"Μωβ",en:"Purple",ph:"mov"},{gr:"Γκρι",en:"Gray",ph:"gri"},
+  {gr:"Καφέ",en:"Brown",ph:"kafé"},{gr:"Χρυσαφί",en:"Gold",ph:"chrisafí"},
+  {gr:"Ασημί",en:"Silver",ph:"asimí"},{gr:"Μπεζ",en:"Beige",ph:"bez"}
+ ]},
+ furniture:{en:"House Furniture",gr:"Έπιπλα Σπιτιού",ic:"🛋️",items:[
+  {gr:"Κρεβάτι",en:"Bed",ph:"kreváti"},{gr:"Στρώμα",en:"Mattress",ph:"stróma"},
+  {gr:"Κομοδίνο",en:"Nightstand",ph:"komodíno"},{gr:"Ντουλάπι",en:"Wardrobe",ph:"doulápi"},
+  {gr:"Καναπές",en:"Sofa",ph:"kanapés"},{gr:"Τραπεζάκι σαλονιού",en:"Coffee table",ph:"trapezáki salonioú"},
+  {gr:"Τραπέζι",en:"Dining table",ph:"trapézi"},{gr:"Βιβλιοθήκη",en:"Bookcase",ph:"vivliothíki"},
+  {gr:"Γραφείο",en:"Desk",ph:"grafío"},{gr:"Βάζο",en:"Vase",ph:"vázo"},
+  {gr:"Κουρτίνα",en:"Curtain",ph:"kourtína"},{gr:"Καθρέφτης",en:"Mirror",ph:"kathréftis"},
+  {gr:"Σκαμπό",en:"Stool",ph:"skampó"},{gr:"Πολυθρόνα",en:"Armchair",ph:"polythróna"},
+  {gr:"Καρέκλα",en:"Chair",ph:"karékla"}
+ ]},
+ planets:{en:"Planets",gr:"Πλανήτες",ic:"🪐",items:[
+  {gr:"Ερμής",en:"Mercury",ph:"Ermís"},{gr:"Αφροδίτη",en:"Venus",ph:"Afrodíti"},
+  {gr:"Γη",en:"Earth",ph:"Yi"},{gr:"Άρης",en:"Mars",ph:"Áris"},
+  {gr:"Δίας",en:"Jupiter",ph:"Días"},{gr:"Κρόνος",en:"Saturn",ph:"Krónos"},
+  {gr:"Ουρανός",en:"Uranus",ph:"Ouranós"},{gr:"Ποσειδώνας",en:"Neptune",ph:"Poseidónas"},
+  {gr:"Πλούτωνας",en:"Pluto",ph:"Ploútonas"}
+ ]},
+ summer:{en:"Summer",gr:"Καλοκαίρι",ic:"☀️",items:[
+  {gr:"Καλοκαίρι",en:"Summer",ph:"kalokáiri"},{gr:"Θάλασσα",en:"Sea",ph:"thálassa"},
+  {gr:"Παραλία",en:"Beach",ph:"paralía"},{gr:"Αντηλιά",en:"Sun glare",ph:"antiliá"},
+  {gr:"Ακτή",en:"Shore",ph:"aktí"},{gr:"Αναψυχή",en:"Recreation",ph:"anapsychí"},
+  {gr:"Ξαπλώστρα",en:"Sunbed",ph:"xaplóstra"},{gr:"Κολύμβηση",en:"Swimming",ph:"kolímvisi"},
+  {gr:"Φρούτα",en:"Fruits",ph:"froúta"},{gr:"Παγωτό",en:"Ice cream",ph:"pagotó"},
+  {gr:"Σαγιονάρες",en:"Flip-flops",ph:"sayonáres"},{gr:"Ανεμιστήρας",en:"Fan",ph:"anemistíras"},
+  {gr:"Καλοκαιρινό φόρεμα",en:"Summer dress",ph:"kalokairinó fórema"}
+ ]},
+ olympians:{en:"The 12 Olympians",gr:"Οι 12 Θεοί του Ολύμπου",ic:"⚡",items:[
+  {gr:"Δίας",en:"Zeus",ph:"Días",note:"King of the gods — sky and thunder."},
+  {gr:"Ποσειδώνας",en:"Poseidon",ph:"Poseidónas",note:"God of the sea, earthquakes and horses."},
+  {gr:"Ήφαιστος",en:"Hephaestus",ph:"Ífestos",note:"God of fire and metalworking."},
+  {gr:"Απόλλωνας",en:"Apollo",ph:"Apóllonas",note:"God of the sun, music and healing."},
+  {gr:"Άρτεμις",en:"Artemis",ph:"Ártemis",note:"Goddess of the hunt and wilderness."},
+  {gr:"Εστία",en:"Hestia",ph:"Estía",note:"Goddess of the hearth and home."},
+  {gr:"Αθηνά",en:"Athena",ph:"Athiná",note:"Goddess of wisdom and warfare."},
+  {gr:"Δήμητρα",en:"Demeter",ph:"Dímitra",note:"Goddess of the harvest and agriculture."},
+  {gr:"Ερμής",en:"Hermes",ph:"Ermís",note:"God of trade and messenger of the gods."},
+  {gr:"Αφροδίτη",en:"Aphrodite",ph:"Afrodíti",note:"Goddess of love and beauty."},
+  {gr:"Ήρα",en:"Hera",ph:"Íra",note:"Queen of the gods — marriage and childbirth."},
+  {gr:"Άρης",en:"Ares",ph:"Áris",note:"God of war."}
+ ]},
+ athletics:{en:"Athletics",gr:"Αθλητισμός",ic:"🏃",items:[
+  {gr:"Ομάδα",en:"Team",ph:"omáda"},{gr:"Αγωνίζομαι",en:"To compete",ph:"agonízomai"},
+  {gr:"Ατομικός αγώνας",en:"Individual competition",ph:"atomikós agónas"},{gr:"Ομαδικός αγώνας",en:"Team competition",ph:"omadikós agónas"},
+  {gr:"Στίβος",en:"Track and field",ph:"stívos"},{gr:"Κολύμβηση",en:"Swimming",ph:"kolímvisi"},
+  {gr:"Ποδόσφαιρο",en:"Football (soccer)",ph:"podósfero"},{gr:"Μπάσκετ",en:"Basketball",ph:"básket"},
+  {gr:"Αθλητισμός",en:"Athletics",ph:"athlitismós"},{gr:"Αθλητής / Αθλήτρια",en:"Athlete (m/f)",ph:"athlitís / athlítria"},
+  {gr:"Αγώνας",en:"Competition",ph:"agónas"},{gr:"Στάδιο",en:"Stadium",ph:"stádio"},
+  {gr:"Αγωνιστική περίοδος",en:"Competitive season",ph:"agonistikí períodos"},{gr:"Προπόνηση",en:"Training",ph:"propónisi"},
+  {gr:"Ανταγωνιστής / Ανταγωνίστρια",en:"Competitor (m/f)",ph:"antagonistís / antagonístria"}
+ ]},
+ traveling:{en:"Traveling",gr:"Ταξιδεύοντας",ic:"✈️",items:[
+  {gr:"Ταξίδι",en:"Travel / trip",ph:"taxídi"},{gr:"Τουρισμός",en:"Tourism",ph:"tourismós"},
+  {gr:"Προορισμός",en:"Destination",ph:"proorismós"},{gr:"Ταξιδιωτικό γραφείο",en:"Travel agency",ph:"taxidiotikó grafío"},
+  {gr:"Αεροπορική εταιρεία",en:"Airline",ph:"aeroporikí etairía"},{gr:"Αεροπλάνο",en:"Airplane",ph:"aeropláno"},
+  {gr:"Αεροδρόμιο",en:"Airport",ph:"aerodrómio"},{gr:"Ξενοδοχείο",en:"Hotel",ph:"xenodochío"},
+  {gr:"Κράτηση",en:"Reservation",ph:"krátisi"},{gr:"Αναχώρηση",en:"Departure",ph:"anachórisi"},
+  {gr:"Άφιξη",en:"Arrival",ph:"áfixi"},{gr:"Εισιτήριο",en:"Ticket",ph:"eisitírio"},
+  {gr:"Πτήση",en:"Flight",ph:"ptísi"},{gr:"Ξενάγηση",en:"Guided tour",ph:"xenáyisi"}
+ ]},
+ computers:{en:"Computers",gr:"Υπολογιστές",ic:"💻",items:[
+  {gr:"Υπολογιστής",en:"Computer",ph:"ipoloyistís"},{gr:"Οθόνη",en:"Monitor / screen",ph:"othóni"},
+  {gr:"Πληκτρολόγιο",en:"Keyboard",ph:"pliktrolóyio"},{gr:"Ποντίκι",en:"Mouse",ph:"pontíki"},
+  {gr:"Εκτυπωτής",en:"Printer",ph:"ektipotís"},{gr:"Ηχεία",en:"Speakers",ph:"ichía"},
+  {gr:"Σκληρός δίσκος",en:"Hard disk",ph:"sklirós dískos"},{gr:"Μνήμη",en:"Memory",ph:"mními"},
+  {gr:"Επεξεργαστής",en:"Processor",ph:"epexergastís"},{gr:"Λειτουργικό σύστημα",en:"Operating system",ph:"leitouryikó sístima"},
+  {gr:"Πρόγραμμα",en:"Software / program",ph:"prógramma"},{gr:"Υλικό",en:"Hardware",ph:"ilikó"},
+  {gr:"Δίκτυο",en:"Network",ph:"díktio"},{gr:"Ιστός",en:"Web / internet",ph:"istós"},
+  {gr:"Αρχείο",en:"File",ph:"archío"}
+ ]},
+ spring:{en:"Spring",gr:"Άνοιξη",ic:"🌸",items:[
+  {gr:"Άνοιξη",en:"Spring",ph:"ánoixi"},{gr:"Λουλούδια",en:"Flowers",ph:"louloúdia"},
+  {gr:"Βλαστός",en:"Sprout",ph:"vlastós"},{gr:"Ανθοφορία",en:"Blossoming",ph:"anthoforía"},
+  {gr:"Βατομουριά",en:"Raspberry bush",ph:"vatomouriá"},{gr:"Λιβάδι",en:"Meadow",ph:"livádi"},
+  {gr:"Πεταλούδα",en:"Butterfly",ph:"petaloúda"},{gr:"Ηλιοτρόπιο",en:"Sunflower",ph:"iliotrópio"},
+  {gr:"Πικνίκ",en:"Picnic",ph:"pikník"}
+ ]},
+ clothing:{en:"Clothing",gr:"Ρούχα",ic:"🧥",items:[
+  {gr:"Μπότες",en:"Boots",ph:"bótes"},{gr:"Σανδάλια",en:"Sandals",ph:"sandália"},
+  {gr:"Παντόφλες",en:"Slippers",ph:"pantófles"},{gr:"Καπέλο",en:"Hat",ph:"kapélo"},
+  {gr:"Κασκόλ",en:"Scarf",ph:"kaskól"},{gr:"Γάντια",en:"Gloves",ph:"gántia"},
+  {gr:"Ζώνη",en:"Belt",ph:"zóni"},{gr:"Γυαλιά ηλίου",en:"Sunglasses",ph:"yaliá ilíou"},
+  {gr:"Εσώρουχα",en:"Underwear",ph:"esóroucha"},{gr:"Σουτιέν",en:"Bra",ph:"soutién"},
+  {gr:"Κάλτσες",en:"Socks",ph:"káltses"},{gr:"Πιτζάμες",en:"Pyjamas",ph:"pitzámes"},
+  {gr:"Μαγιό",en:"Swimsuit",ph:"mayó"},{gr:"Σκούφος",en:"Beanie",ph:"skoúfos"},
+  {gr:"Μπουφάν",en:"Jacket / coat",ph:"boufán"},{gr:"Γαλότσες",en:"Rain boots",ph:"galótses"},
+  {gr:"Παντελόνι",en:"Trousers",ph:"pantelóni"},{gr:"Πουλόβερ",en:"Pullover",ph:"poulóver"},
+  {gr:"Μπλούζα",en:"Top / blouse",ph:"bloúza"}
+ ]}
+};
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const $=s=>document.querySelector(s);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
+const norm=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+   .replace(/ς/g,"σ").replace(/[\/().]/g,"").replace(/\s+/g," ").trim();
+const sample=(arr,n,exclude)=>shuffle(arr.filter(x=>x!==exclude)).slice(0,n);
+const MAXQ=10, MATCH_SET=5;
+
+let cur=null;          // current theme key
+let st={};             // exercise state
+
+function show(view){
+  ["home","menu","exercise"].forEach(v=>$("#"+v).classList.toggle("hidden",v!==view));
+  $("#subline").style.display = view==="home"?"block":"none";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ---- build home grid ---- */
+function buildHome(){
+  const g=$("#themeGrid");g.innerHTML="";
+  Object.entries(VOCAB).forEach(([key,t])=>{
+    const b=document.createElement("button");
+    b.className="theme";
+    b.innerHTML=`<div class="ic">${t.ic}</div>
+      <div class="en">${t.en}</div>
+      <div class="gr">${t.gr}</div>
+      <div class="ct">${t.items.length} words</div>`;
+    b.onclick=()=>openMenu(key);
+    g.appendChild(b);
+  });
+}
+
+function openMenu(key){
+  cur=key;const t=VOCAB[key];
+  $("#menuTitle").innerHTML=`${t.ic} ${t.en} <span class="gr">· ${t.gr}</span>`;
+  $("#menuSub").textContent=`${t.items.length} words in this set. Pick how you'd like to practise.`;
+  show("menu");
+}
+
+/* navigation buttons */
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{
+  const d=b.dataset.go;
+  if(d==="home")show("home");
+  if(d==="menu")openMenu(cur);
+});
+document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>startMode(b.dataset.mode));
+
+/* ---- meter ---- */
+function setMeter(pos,total,score){
+  $("#meterFill").style.width=(total?Math.round(pos/total*100):0)+"%";
+  $("#meterPos").textContent=`Question ${Math.min(pos+1,total)} of ${total}`;
+  $("#meterScore").textContent=`Score ${score}`;
+}
+
+/* ============================================================
+   MODE LAUNCHER
+   ============================================================ */
+function startMode(mode){
+  const t=VOCAB[cur];
+  $("#exTheme").textContent=`${t.en} · ${t.gr}`;
+  $("#exLabel").firstChild.textContent =
+    mode==="mcq"?"Multiple Choice":mode==="match"?"Matching":"Fill the Gap";
+  show("exercise");
+  if(mode==="mcq")startMCQ();
+  if(mode==="match")startMatch();
+  if(mode==="gap")startGap();
+}
+
+/* ============================================================
+   1) MULTIPLE CHOICE  (Greek -> English)
+   ============================================================ */
+function startMCQ(){
+  const items=shuffle(VOCAB[cur].items).slice(0,MAXQ);
+  st={items,i:0,score:0,answered:false};
+  renderMCQ();
+}
+function renderMCQ(){
+  const{items,i,score}=st;
+  setMeter(i,items.length,score);
+  const q=items[i];
+  const distract=sample(VOCAB[cur].items.map(x=>x.en).filter((v,k,a)=>a.indexOf(v)===k),3,q.en);
+  const opts=shuffle([q.en,...distract]);
+  const letters=["A","B","C","D"];
+  $("#exBody").innerHTML=`
+    <div class="prompt">What does this mean?</div>
+    <div class="word">${q.gr}</div>
+    <div class="phon">${q.ph}</div>
+    <div class="opts" id="opts"></div>
+    <div class="fb" id="fb"></div>
+    <div class="exfoot"><button class="btn btn-primary hidden" id="next">Next →</button></div>`;
+  const wrap=$("#opts");
+  opts.forEach((o,k)=>{
+    const b=document.createElement("button");
+    b.className="opt";
+    b.innerHTML=`<span class="key">${letters[k]}</span><span>${o}</span>`;
+    b.onclick=()=>chooseMCQ(b,o,q);
+    wrap.appendChild(b);
+  });
+  st.answered=false;
+}
+function chooseMCQ(btn,choice,q){
+  if(st.answered)return;st.answered=true;
+  const correct=choice===q.en;
+  [...$("#opts").children].forEach(b=>{
+    b.disabled=true;
+    const txt=b.querySelector("span:last-child").textContent;
+    if(txt===q.en)b.classList.add("correct");
+    else if(b===btn)b.classList.add("wrong");
+  });
+  if(correct)st.score++;
+  const fb=$("#fb");
+  fb.className="fb show "+(correct?"ok":"no");
+  fb.innerHTML=correct
+    ?`✓ Correct — <b>${q.gr}</b> means “${q.en}”.${q.note?`<span class="note">${q.note}</span>`:""}`
+    :`✗ Not quite. <b>${q.gr}</b> means “${q.en}”.${q.note?`<span class="note">${q.note}</span>`:""}`;
+  const nx=$("#next");nx.classList.remove("hidden");
+  nx.textContent = st.i+1<st.items.length?"Next →":"See results →";
+  nx.onclick=()=>{st.i++; st.i<st.items.length?renderMCQ():results("mcq");};
+}
+
+/* ============================================================
+   2) MATCHING  (sets of 5 pairs)
+   ============================================================ */
+function startMatch(){
+  const all=shuffle(VOCAB[cur].items);
+  const sets=[];
+  for(let k=0;k<all.length;k+=MATCH_SET)sets.push(all.slice(k,k+MATCH_SET));
+  st={sets,si:0,score:0,attempts:0,totalPairs:all.length};
+  renderMatch();
+}
+function renderMatch(){
+  const set=st.sets[st.si];
+  const lefts=set.map(x=>x); // greek
+  const rights=shuffle(set.map(x=>x)); // english order shuffled
+  st.matched=0;st.sel=null;
+  $("#meterFill").style.width=Math.round(st.si/st.sets.length*100)+"%";
+  $("#meterPos").textContent=`Set ${st.si+1} of ${st.sets.length}`;
+  $("#meterScore").textContent=`Matched ${st.score}/${st.totalPairs}`;
+  $("#exBody").innerHTML=`
+    <div class="prompt">Tap a Greek word, then its meaning</div>
+    <div class="match">
+      <div class="col"><div class="colhead">Ελληνικά</div><div id="colL" class="col"></div></div>
+      <div class="col"><div class="colhead">English</div><div id="colR" class="col"></div></div>
+    </div>
+    <div class="fb" id="fb"></div>
+    <div class="exfoot"><button class="btn btn-primary hidden" id="next">Next set →</button></div>`;
+  const L=$("#colL"),R=$("#colR");
+  lefts.forEach(it=>{
+    const t=document.createElement("button");
+    t.className="tile gr";t.textContent=it.gr;t.dataset.gr=it.gr;
+    t.onclick=()=>pickLeft(t,it);L.appendChild(t);
+  });
+  rights.forEach(it=>{
+    const t=document.createElement("button");
+    t.className="tile";t.textContent=it.en;t.dataset.gr=it.gr;
+    t.onclick=()=>pickRight(t,it);R.appendChild(t);
+  });
+}
+function pickLeft(tile,it){
+  if(tile.classList.contains("done"))return;
+  [...$("#colL").children].forEach(c=>c.classList.remove("sel"));
+  tile.classList.add("sel");st.sel={tile,it};
+}
+function pickRight(tile,it){
+  if(tile.classList.contains("done")||!st.sel)return;
+  st.attempts++;
+  const ok=st.sel.it.gr===it.gr;
+  if(ok){
+    st.sel.tile.classList.remove("sel");
+    st.sel.tile.classList.add("done");tile.classList.add("done");
+    st.score++;st.matched++;
+    $("#meterScore").textContent=`Matched ${st.score}/${st.totalPairs}`;
+    if(st.matched===st.sets[st.si].length){
+      const fb=$("#fb");fb.className="fb show ok";
+      fb.innerHTML="✓ Set complete!";
+      const nx=$("#next");nx.classList.remove("hidden");
+      nx.textContent = st.si+1<st.sets.length?"Next set →":"See results →";
+      nx.onclick=()=>{st.si++; st.si<st.sets.length?renderMatch():results("match");};
+    }
+  }else{
+    tile.classList.add("flash");
+    const sel=st.sel.tile;sel.classList.add("flash");
+    setTimeout(()=>{tile.classList.remove("flash");sel.classList.remove("flash","sel");},420);
+    const fb=$("#fb");fb.className="fb show no";
+    fb.innerHTML=`✗ <b>${it.en}</b> isn't the match for <b>${st.sel.it.gr}</b>. Try again.`;
+  }
+  st.sel=null;
+}
+
+/* ============================================================
+   3) FILL THE GAP  (English -> type Greek)
+   ============================================================ */
+const ACCENTS=["ά","έ","ή","ί","ό","ύ","ώ","ϊ","ϋ","ΐ","ΰ"];
+function startGap(){
+  const items=shuffle(VOCAB[cur].items).slice(0,MAXQ);
+  st={items,i:0,score:0,answered:false,hinted:false};
+  renderGap();
+}
+function renderGap(){
+  const{items,i,score}=st;setMeter(i,items.length,score);
+  const q=items[i];
+  $("#exBody").innerHTML=`
+    <div class="prompt">Type the Greek word for</div>
+    <div class="word" style="color:var(--terra)">${q.en}</div>
+    <div class="phon">sounds like: ${q.ph}</div>
+    <div class="gapfield">
+      <input class="gapin" id="gapin" type="text" autocomplete="off" autocorrect="off"
+             spellcheck="false" placeholder="…" aria-label="Greek answer">
+      <div class="keys" id="keys"></div>
+      <div class="gaptools">
+        <button class="tinybtn" id="hint">💡 Reveal first letter</button>
+        <button class="tinybtn" id="reveal">👁 Show answer</button>
+      </div>
+    </div>
+    <div class="fb" id="fb"></div>
+    <div class="exfoot">
+      <button class="btn btn-primary" id="check">Check</button>
+      <button class="btn btn-primary hidden" id="next">Next →</button>
+    </div>`;
+  const keys=$("#keys");
+  ACCENTS.forEach(ch=>{
+    const b=document.createElement("button");b.textContent=ch;
+    b.onclick=()=>insertAtCursor($("#gapin"),ch);keys.appendChild(b);
+  });
+  const inp=$("#gapin");
+  inp.focus();
+  inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();
+    st.answered?$("#next").click():checkGap(q);}});
+  $("#check").onclick=()=>checkGap(q);
+  $("#hint").onclick=()=>{if(!st.answered){inp.value=q.gr[0];inp.focus();st.hinted=true;}};
+  $("#reveal").onclick=()=>{if(!st.answered)gradeGap(q,false,true);};
+  st.answered=false;st.hinted=false;
+}
+function insertAtCursor(inp,ch){
+  const s=inp.selectionStart,e=inp.selectionEnd;
+  inp.value=inp.value.slice(0,s)+ch+inp.value.slice(e);
+  inp.selectionStart=inp.selectionEnd=s+ch.length;inp.focus();
+}
+function checkGap(q){
+  if(st.answered)return;
+  const val=$("#gapin").value;
+  if(!val.trim())return;
+  gradeGap(q, norm(val)===norm(q.gr), false);
+}
+function gradeGap(q,correct,revealed){
+  st.answered=true;
+  const inp=$("#gapin");inp.disabled=true;
+  inp.classList.add(correct?"ok":"no");
+  if(correct&&!revealed)st.score++;
+  const fb=$("#fb");
+  if(revealed){
+    inp.value=q.gr;fb.className="fb show no";
+    fb.innerHTML=`The answer is <b>${q.gr}</b> — “${q.en}”.${q.note?`<span class="note">${q.note}</span>`:""}`;
+  }else if(correct){
+    fb.className="fb show ok";
+    fb.innerHTML=`✓ Correct — <b>${q.gr}</b>.${st.hinted?' <span class="note">(with a hint)</span>':""}${q.note?`<span class="note">${q.note}</span>`:""}`;
+  }else{
+    fb.className="fb show no";
+    fb.innerHTML=`✗ Close! The correct spelling is <b>${q.gr}</b>.${q.note?`<span class="note">${q.note}</span>`:""}`;
+  }
+  $("#check").classList.add("hidden");
+  $("#hint").disabled=true;$("#reveal").disabled=true;
+  const nx=$("#next");nx.classList.remove("hidden");
+  nx.textContent = st.i+1<st.items.length?"Next →":"See results →";
+  nx.onclick=()=>{st.i++; st.i<st.items.length?renderGap():results("gap");};
+}
+
+/* ============================================================
+   RESULTS
+   ============================================================ */
+function results(mode){
+  let score,total,line;
+  if(mode==="match"){score=st.score;total=st.totalPairs;
+    line=`You matched every pair across ${st.sets.length} set${st.sets.length>1?"s":""}.`;}
+  else{score=st.score;total=st.items.length;}
+  const pct=Math.round(score/total*100);
+  const msg = pct===100?"Τέλεια! Perfect score.":pct>=80?"Πολύ καλά! Strong work.":
+              pct>=60?"Μπράβο! Good progress.":pct>=40?"Καλή προσπάθεια — keep going.":
+              "Συνέχισε την εξάσκηση — practice makes it stick.";
+  $("#exBody").innerHTML=`
+    <div class="result">
+      <div class="scorebig">${score}<span>/${total}</span></div>
+      <div class="msg">${msg}</div>
+      <div class="pct">${pct}% correct${mode==="match"?` · ${st.attempts} taps`:""}</div>
+      <div class="acts">
+        <button class="btn btn-terra" id="again">↻ Try again</button>
+        <button class="btn btn-ghost" id="other">Other exercises</button>
+      </div>
+    </div>`;
+  $("#again").onclick=()=>{mode==="mcq"?startMCQ():mode==="match"?startMatch():startGap();};
+  $("#other").onclick=()=>openMenu(cur);
+}
+
+buildHome();
+show("home");
+</script>
+</body>
+</html>
