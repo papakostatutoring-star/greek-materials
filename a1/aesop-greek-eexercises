@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greek Fables Exercises</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#fdf6f0;color:#2d2d2d;padding:2rem 1rem}
+.wrap{max-width:700px;margin:0 auto;background:#fff;border-radius:16px;padding:2rem;border:1px solid #f0e6d8;box-shadow:0 2px 12px rgba(0,0,0,0.05)}
+.title{font-size:20px;font-weight:700;color:#5a3e6b}
+.sub{font-size:13px;color:#a08080;margin-top:4px}
+.tabs{display:flex;border-bottom:2px solid #f0e0f0;margin:1.5rem 0}
+.tab{padding:8px 18px;font-size:13px;font-weight:600;color:#b09ab0;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab.active{color:#5a3e6b;border-bottom-color:#c9a8e0}
+.tab:hover:not(.active){color:#5a3e6b}
+.score-bar{display:flex;align-items:center;justify-content:space-between;background:#fef3fb;border-radius:10px;padding:10px 16px;margin-bottom:1.5rem;border:1px solid #f0d8f0}
+.score-label{color:#b09ab0;font-size:13px}
+.score-num{font-weight:700;color:#5a3e6b;font-size:16px}
+.btn{background:#fff;border:1.5px solid #d8c8e8;border-radius:10px;padding:7px 14px;font-size:13px;cursor:pointer;color:#5a3e6b;font-weight:600}
+.btn:hover{background:#fef3fb}
+.btn.primary{background:#c9a8e0;color:#fff;border-color:#c9a8e0}
+.btn.primary:hover{background:#b890d0}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.match-col{display:flex;flex-direction:column;gap:8px}
+.match-label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#c9a8e0;margin-bottom:6px}
+.match-item{padding:10px 14px;border:1.5px solid #f0ddf8;border-radius:10px;font-size:14px;cursor:pointer;background:#fdf6ff;color:#5a3e6b;transition:all 0.15s}
+.match-item:hover:not(.matched):not(.selected){background:#f5e8ff;border-color:#c9a8e0}
+.match-item.selected{border-color:#a0c8a0;background:#eef8ee;color:#2d6b2d}
+.match-item.matched{border-color:#a0c8a0;background:#eef8ee;color:#2d6b2d;cursor:default;opacity:0.75}
+.match-item.wrong{border-color:#f4a8a8;background:#fff0f0;color:#8b3030}
+.fill-card{border:1.5px solid #fde8d0;border-radius:12px;padding:1.25rem;margin-bottom:1rem;background:#fffaf5}
+.fill-source{font-size:11px;color:#c0a080;margin-bottom:8px;font-style:italic}
+.fill-sentence{font-size:15px;color:#2d2d2d;line-height:1.8;margin-bottom:12px}
+.fill-hint{font-size:12px;color:#c0a080;margin-top:6px;margin-bottom:10px}
+.fill-input{border:1.5px solid #f0d0b8;border-radius:8px;padding:7px 12px;font-size:14px;width:200px;color:#2d2d2d;background:#fff}
+.fill-input:focus{outline:none;border-color:#e0a878}
+.fill-input.correct{border-color:#a0c8a0;background:#eef8ee;color:#2d6b2d}
+.fill-input.wrong{border-color:#f4a8a8;background:#fff0f0;color:#8b3030}
+.fill-actions{display:flex;align-items:center;gap:8px;margin-top:10px}
+.feedback{font-size:13px;margin-top:6px;font-weight:600}
+.feedback.ok{color:#3a8a3a}
+.feedback.no{color:#c04040}
+.mc-card{border:1.5px solid #d8eef8;border-radius:12px;padding:1.25rem;margin-bottom:1rem;background:#f5faff}
+.mc-source{font-size:11px;color:#90b8d0;margin-bottom:10px;font-style:italic}
+.mc-q{font-size:15px;font-weight:700;color:#2d5070;margin-bottom:14px}
+.mc-options{display:flex;flex-direction:column;gap:8px}
+.mc-opt{padding:10px 14px;border:1.5px solid #c8e0f4;border-radius:10px;font-size:14px;cursor:pointer;background:#fff;color:#2d5070;transition:all 0.15s}
+.mc-opt:hover:not(.disabled){background:#e8f4ff;border-color:#90c0e8}
+.mc-opt.correct{border-color:#a0c8a0;background:#eef8ee;color:#2d6b2d;font-weight:600}
+.mc-opt.wrong{border-color:#f4a8a8;background:#fff0f0;color:#8b3030}
+.mc-opt.disabled{cursor:default}
+.section{display:none}
+.section.active{display:block}
+.progress{font-size:12px;color:#b0a0c0;margin-bottom:1rem;font-weight:600}
+.nav-btns{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+.round-label{font-size:12px;color:#b0a0c0;margin-bottom:10px;font-style:italic}
+.match-feedback{font-size:13px;margin-top:12px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="title">🌿 Ασκήσεις · Exercises</p>
+<p class="sub">All 14 Aesop fables · Greek vocabulary practice</p>
+
+<div class="score-bar" style="margin-top:1.2rem">
+  <span class="score-label">Score</span>
+  <span class="score-num" id="score-display">0 / 0</span>
+  <button class="btn" onclick="resetAll()">Reset all</button>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('match',this)">Match</div>
+  <div class="tab" onclick="showTab('fill',this)">Fill in the blank</div>
+  <div class="tab" onclick="showTab('mc',this)">Multiple choice</div>
+</div>
+
+<div class="section active" id="tab-match">
+  <p class="progress" id="match-progress"></p>
+  <div class="nav-btns">
+    <button class="btn" onclick="prevMatch()">← Prev</button>
+    <button class="btn" onclick="nextMatch()">Next →</button>
+    <button class="btn primary" style="margin-left:auto" onclick="newMatchRound()">New round</button>
+  </div>
+  <div class="round-label" id="match-round-label"></div>
+  <div class="match-grid">
+    <div><div class="match-label">Greek</div><div class="match-col" id="match-left"></div></div>
+    <div><div class="match-label">English</div><div class="match-col" id="match-right"></div></div>
+  </div>
+  <div class="match-feedback" id="match-feedback"></div>
+</div>
+
+<div class="section" id="tab-fill">
+  <p class="progress" id="fill-progress"></p>
+  <div class="nav-btns">
+    <button class="btn" onclick="prevFill()">← Prev</button>
+    <button class="btn" onclick="nextFill()">Next →</button>
+  </div>
+  <div id="fill-container"></div>
+</div>
+
+<div class="section" id="tab-mc">
+  <p class="progress" id="mc-progress"></p>
+  <div class="nav-btns">
+    <button class="btn" onclick="prevMC()">← Prev</button>
+    <button class="btn" onclick="nextMC()">Next →</button>
+  </div>
+  <div id="mc-container"></div>
+</div>
+
+</div>
+<script>
+const vocab=[
+  {gr:"λαγός",en:"hare / rabbit",story:"The Hare and the Tortoise"},
+  {gr:"χελώνα",en:"tortoise",story:"The Hare and the Tortoise"},
+  {gr:"αγώνας",en:"race / contest",story:"The Hare and the Tortoise"},
+  {gr:"νίκη",en:"victory",story:"The Hare and the Tortoise"},
+  {gr:"ταχύτητα",en:"speed",story:"The Hare and the Tortoise"},
+  {gr:"πλήθος",en:"crowd",story:"The Hare and the Tortoise"},
+  {gr:"αποκοιμιέμαι",en:"to fall asleep",story:"The Hare and the Tortoise"},
+  {gr:"επιμονή",en:"persistence",story:"The Hare and the Tortoise"},
+  {gr:"αλαζονεία",en:"arrogance",story:"The Hare and the Tortoise"},
+  {gr:"τεμπελιά",en:"laziness",story:"The Hare and the Tortoise"},
+  {gr:"λύκος",en:"wolf",story:"The Wolf and the Lamb"},
+  {gr:"αρνί",en:"lamb",story:"The Wolf and the Lamb"},
+  {gr:"ποτάμι",en:"river",story:"The Wolf and the Lamb"},
+  {gr:"δικαιολογία",en:"excuse",story:"The Wolf and the Lamb"},
+  {gr:"τύραννος",en:"tyrant",story:"The Wolf and the Lamb"},
+  {gr:"αδύναμος",en:"weak / powerless",story:"The Wolf and the Lamb"},
+  {gr:"αγρότης",en:"farmer",story:"The Farmer and His Children"},
+  {gr:"αμπέλι",en:"vineyard",story:"The Farmer and His Children"},
+  {gr:"θησαυρός",en:"treasure",story:"The Farmer and His Children"},
+  {gr:"σοδειά",en:"harvest",story:"The Farmer and His Children"},
+  {gr:"σταφύλια",en:"grapes",story:"The Farmer and His Children"},
+  {gr:"κόρακας",en:"crow / raven",story:"The Crow and the Fox"},
+  {gr:"αλεπού",en:"fox",story:"The Crow and the Fox"},
+  {gr:"τυρί",en:"cheese",story:"The Crow and the Fox"},
+  {gr:"υπερηφάνεια",en:"pride",story:"The Crow and the Fox"},
+  {gr:"ράμφος",en:"beak",story:"The Crow and the Fox"},
+  {gr:"κόλακας",en:"flatterer",story:"The Crow and the Fox"},
+  {gr:"τζιτζίκι",en:"grasshopper / cicada",story:"The Grasshopper and the Ant"},
+  {gr:"μυρμήγκι",en:"ant",story:"The Grasshopper and the Ant"},
+  {gr:"φωλιά",en:"nest",story:"The Grasshopper and the Ant"},
+  {gr:"ανέμελος",en:"carefree",story:"The Grasshopper and the Ant"},
+  {gr:"βοσκός",en:"shepherd",story:"The Shepherd and the Wolf"},
+  {gr:"πρόβατα",en:"sheep",story:"The Shepherd and the Wolf"},
+  {gr:"ψεύτης",en:"liar",story:"The Shepherd and the Wolf"},
+  {gr:"εμπιστοσύνη",en:"trust",story:"The Shepherd and the Wolf"},
+  {gr:"αετός",en:"eagle",story:"The Eagle and the Tortoise"},
+  {gr:"φτερά",en:"wings",story:"The Eagle and the Tortoise"},
+  {gr:"νύχια",en:"talons / claws",story:"The Eagle and the Tortoise"},
+  {gr:"σκύλος",en:"dog",story:"The Dog and His Shadow"},
+  {gr:"κόκαλο",en:"bone",story:"The Dog and His Shadow"},
+  {gr:"γέφυρα",en:"bridge",story:"The Dog and His Shadow"},
+  {gr:"σκιά",en:"shadow / reflection",story:"The Dog and His Shadow"},
+  {gr:"απληστία",en:"greed",story:"The Dog and His Shadow"},
+  {gr:"ήλιος",en:"sun",story:"The Sun and the North Wind"},
+  {gr:"βοριάς",en:"north wind",story:"The Sun and the North Wind"},
+  {gr:"ταξιδιώτης",en:"traveller",story:"The Sun and the North Wind"},
+  {gr:"παλτό",en:"coat",story:"The Sun and the North Wind"},
+  {gr:"υπομονή",en:"patience",story:"The Sun and the North Wind"},
+  {gr:"ποντικός",en:"mouse",story:"The Mouse and the Lion"},
+  {gr:"λιοντάρι",en:"lion",story:"The Mouse and the Lion"},
+  {gr:"δίχτυ",en:"net / trap",story:"The Mouse and the Lion"},
+  {gr:"καλοσύνη",en:"kindness",story:"The Mouse and the Lion"},
+  {gr:"ταπεινοφροσύνη",en:"humility",story:"The Mouse and the Lion"},
+  {gr:"βάτραχος",en:"frog",story:"The Frog and the Ox"},
+  {gr:"βόδι",en:"ox / bull",story:"The Frog and the Ox"},
+  {gr:"λίμνη",en:"pond / lake",story:"The Frog and the Ox"},
+  {gr:"ασφάλεια",en:"safety / security",story:"The Town Mouse and Country Mouse"},
+  {gr:"ηρεμία",en:"peace / calm",story:"The Town Mouse and Country Mouse"},
+  {gr:"πλούτος",en:"wealth / riches",story:"The Town Mouse and Country Mouse"},
+  {gr:"αμπελώνας",en:"vineyard",story:"The Fox and the Grapes"},
+  {gr:"περιφρόνηση",en:"contempt / disdain",story:"The Fox and the Grapes"},
+  {gr:"κουρούνα",en:"crow",story:"The Crow and the Pitcher"},
+  {gr:"στάμνα",en:"pitcher / jug",story:"The Crow and the Pitcher"},
+  {gr:"χαλίκι",en:"pebble",story:"The Crow and the Pitcher"},
+];
+
+const fills=[
+  {sentence:"Ο λαγός ήταν τόσο ___ που αποκοιμήθηκε κάτω από ένα δέντρο.",answer:"σίγουρος",hint:"adjective — certain",story:"The Hare and the Tortoise"},
+  {sentence:"Η χελώνα περπατούσε αργά αλλά ___ χωρίς ποτέ να σταματήσει.",answer:"σταθερά",hint:"adverb — steadily",story:"The Hare and the Tortoise"},
+  {sentence:"Ο λύκος ήθελε να βρει μια ___ για να φάει το αρνί.",answer:"δικαιολογία",hint:"noun — excuse",story:"The Wolf and the Lamb"},
+  {sentence:"Τα παιδιά έσκαψαν το ___ για να βρουν τον κρυμμένο θησαυρό.",answer:"αμπέλι",hint:"noun — vineyard",story:"The Farmer and His Children"},
+  {sentence:"Η αλεπού κολάκευσε τον κόρακα για να πέσει το ___ από το ράμφος του.",answer:"τυρί",hint:"noun — cheese",story:"The Crow and the Fox"},
+  {sentence:"Το μυρμήγκι ετοίμαζε τη ___ του για τον χειμώνα.",answer:"φωλιά",hint:"noun — nest",story:"The Grasshopper and the Ant"},
+  {sentence:"Ο βοσκός φώναξε «Λύκος!» αλλά ήταν ___ και κανείς δεν τον πίστεψε.",answer:"ψεύτης",hint:"noun — liar",story:"The Shepherd and the Wolf"},
+  {sentence:"Ο αετός άρπαξε τη χελώνα με τα ___ του και την ανέβασε ψηλά.",answer:"νύχια",hint:"noun — talons",story:"The Eagle and the Tortoise"},
+  {sentence:"Ο σκύλος είδε τη ___ του στο νερό και νόμισε ότι ήταν άλλος σκύλος.",answer:"σκιά",hint:"noun — shadow",story:"The Dog and His Shadow"},
+  {sentence:"Ο ήλιος άρχισε να λάμπει με ___ και ο ταξιδιώτης έβγαλε το παλτό του.",answer:"υπομονή",hint:"noun — patience",story:"The Sun and the North Wind"},
+  {sentence:"Η κουρούνα έριχνε ___ μέσα στη στάμνα για να ανέβει το νερό.",answer:"χαλίκια",hint:"noun plural — pebbles",story:"The Crow and the Pitcher"},
+  {sentence:"Η αλεπού δεν μπόρεσε να φτάσει τα σταφύλια και είπε ότι ήταν ξινά.",answer:"ξινά",hint:"adjective — sour",story:"The Fox and the Grapes"},
+  {sentence:"Ο ποντικός της εξοχής προτίμησε την ___ από τον πλούτο με φόβο.",answer:"ηρεμία",hint:"noun — peace / calm",story:"The Town Mouse and Country Mouse"},
+  {sentence:"Ο ποντικός μάσησε τα σχοινιά του ___ και ελευθέρωσε το λιοντάρι.",answer:"διχτυού",hint:"noun genitive — net",story:"The Mouse and the Lion"},
+];
+
+const mcqs=[
+  {q:"Τι σημαίνει «αλαζονεία»;",options:["laziness","arrogance","patience","wisdom"],ans:1,story:"The Hare and the Tortoise"},
+  {q:"Τι σημαίνει «ταχύτητα»;",options:["strength","height","speed","distance"],ans:2,story:"The Hare and the Tortoise"},
+  {q:"Ποια λέξη σημαίνει «wolf»;",options:["αρνί","κόρακας","λύκος","αετός"],ans:2,story:"The Wolf and the Lamb"},
+  {q:"Τι σημαίνει «δικαιολογία»;",options:["punishment","excuse","judgment","question"],ans:1,story:"The Wolf and the Lamb"},
+  {q:"Ποια λέξη σημαίνει «harvest»;",options:["θησαυρός","αμπέλι","σοδειά","σπόρος"],ans:2,story:"The Farmer and His Children"},
+  {q:"Τι σημαίνει «ράμφος»;",options:["wing","feather","beak","tail"],ans:2,story:"The Crow and the Fox"},
+  {q:"Ποια λέξη σημαίνει «flatterer»;",options:["ψεύτης","κόλακας","τύραννος","βοσκός"],ans:1,story:"The Crow and the Fox"},
+  {q:"Τι σημαίνει «ανέμελος»;",options:["hardworking","carefree","hungry","tired"],ans:1,story:"The Grasshopper and the Ant"},
+  {q:"Ποια λέξη σημαίνει «trust»;",options:["εμπιστοσύνη","επιμονή","σταθερότητα","νίκη"],ans:0,story:"The Shepherd and the Wolf"},
+  {q:"Τι σημαίνει «νύχια»;",options:["feathers","eyes","talons / claws","wings"],ans:2,story:"The Eagle and the Tortoise"},
+  {q:"Ποια λέξη σημαίνει «greed»;",options:["σκιά","γέφυρα","απληστία","κόκαλο"],ans:2,story:"The Dog and His Shadow"},
+  {q:"Τι σημαίνει «βοριάς»;",options:["south wind","east wind","north wind","storm"],ans:2,story:"The Sun and the North Wind"},
+  {q:"Ποια λέξη σημαίνει «humility»;",options:["καλοσύνη","ταπεινοφροσύνη","δύναμη","χαρά"],ans:1,story:"The Mouse and the Lion"},
+  {q:"Τι σημαίνει «λίμνη»;",options:["river","sea","pond / lake","stream"],ans:2,story:"The Frog and the Ox"},
+  {q:"Ποια λέξη σημαίνει «safety»;",options:["ηρεμία","πλούτος","ασφάλεια","χαρά"],ans:2,story:"The Town Mouse and Country Mouse"},
+  {q:"Τι σημαίνει «περιφρόνηση»;",options:["admiration","contempt","curiosity","hunger"],ans:1,story:"The Fox and the Grapes"},
+  {q:"Ποια λέξη σημαίνει «pitcher»;",options:["κουρούνα","χαλίκι","στάμνα","ποτάμι"],ans:2,story:"The Crow and the Pitcher"},
+  {q:"Τι σημαίνει «χαλίκι»;",options:["stone wall","pebble","sand","mud"],ans:1,story:"The Crow and the Pitcher"},
+];
+
+let scores={match:0,fill:0,mc:0};
+let totals={match:0,fill:0,mc:0};
+function updateScore(){
+  document.getElementById('score-display').textContent=(scores.match+scores.fill+scores.mc)+' / '+(totals.match+totals.fill+totals.mc);
+}
+function showTab(id,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// MATCH
+let matchPage=0,matchPairs=[],matchSelected=null,matchMatched=[];
+const MATCH_PER=6;
+function shuffle(a){return[...a].sort(()=>Math.random()-0.5)}
+function buildMatch(){
+  const start=matchPage*MATCH_PER;
+  matchPairs=shuffle(vocab).slice(start,start+MATCH_PER);
+  matchSelected=null;matchMatched=[];
+  const left=shuffle(matchPairs),right=shuffle(matchPairs);
+  document.getElementById('match-left').innerHTML='';
+  document.getElementById('match-right').innerHTML='';
+  document.getElementById('match-feedback').textContent='';
+  document.getElementById('match-round-label').textContent='From: '+[...new Set(matchPairs.map(p=>p.story))].join(', ');
+  document.getElementById('match-progress').textContent='Round '+(matchPage+1)+' of '+Math.ceil(vocab.length/MATCH_PER)+' · '+MATCH_PER+' pairs';
+  left.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='match-item';d.textContent=p.gr;d.dataset.gr=p.gr;
+    d.onclick=()=>selectMatch(d);
+    document.getElementById('match-left').appendChild(d);
+  });
+  right.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='match-item';d.textContent=p.en;d.dataset.gr=p.gr;
+    d.onclick=()=>selectMatch(d);
+    document.getElementById('match-right').appendChild(d);
+  });
+}
+function selectMatch(el){
+  if(el.classList.contains('matched'))return;
+  if(!matchSelected){matchSelected=el;el.classList.add('selected');return;}
+  if(el===matchSelected){matchSelected.classList.remove('selected');matchSelected=null;return;}
+  const a=matchSelected,b=el;matchSelected=null;
+  if(a.dataset.gr===b.dataset.gr){
+    a.classList.remove('selected');a.classList.add('matched');b.classList.add('matched');
+    matchMatched.push(a.dataset.gr);scores.match++;totals.match++;
+    const fb=document.getElementById('match-feedback');
+    fb.textContent='Correct! ✓';fb.style.color='#3a8a3a';
+    if(matchMatched.length===MATCH_PER)setTimeout(()=>{fb.textContent='Round complete! Click "New round" for more.';},300);
+  } else {
+    a.classList.remove('selected');a.classList.add('wrong');b.classList.add('wrong');
+    totals.match++;
+    const fb=document.getElementById('match-feedback');fb.textContent='Not quite — try again';fb.style.color='#c04040';
+    setTimeout(()=>{a.classList.remove('wrong');b.classList.remove('wrong');},800);
+  }
+  updateScore();
+}
+function prevMatch(){if(matchPage>0){matchPage--;buildMatch();}}
+function nextMatch(){if((matchPage+1)*MATCH_PER<vocab.length){matchPage++;buildMatch();}}
+function newMatchRound(){matchPage=Math.floor(Math.random()*(Math.ceil(vocab.length/MATCH_PER)));buildMatch();}
+
+// FILL
+let fillIdx=0,fillState={};
+function buildFill(){
+  const q=fills[fillIdx];
+  document.getElementById('fill-progress').textContent='Question '+(fillIdx+1)+' of '+fills.length;
+  const state=fillState[fillIdx]||{answered:false};
+  const c=document.getElementById('fill-container');c.innerHTML='';
+  const card=document.createElement('div');card.className='fill-card';
+  const src=document.createElement('div');src.className='fill-source';src.textContent='Story: '+q.story;
+  const sent=document.createElement('div');sent.className='fill-sentence';sent.textContent=q.sentence;
+  const hint=document.createElement('div');hint.className='fill-hint';hint.textContent='Hint: '+q.hint;
+  const inp=document.createElement('input');inp.className='fill-input';inp.placeholder='Type your answer…';
+  if(state.answered){inp.value=state.val;inp.classList.add(state.correct?'correct':'wrong');inp.disabled=true;}
+  const actions=document.createElement('div');actions.className='fill-actions';
+  const checkBtn=document.createElement('button');checkBtn.className='btn primary';checkBtn.textContent='Check';
+  const fb=document.createElement('div');fb.className='feedback';
+  if(state.answered){fb.textContent=state.correct?'Correct! ✓':'Answer: '+q.answer;fb.className='feedback '+(state.correct?'ok':'no');}
+  checkBtn.onclick=()=>{
+    if(state.answered)return;
+    const val=inp.value.trim().toLowerCase();
+    const correct=val===q.answer.toLowerCase();
+    state.answered=true;state.val=inp.value.trim();state.correct=correct;
+    fillState[fillIdx]=state;
+    inp.classList.add(correct?'correct':'wrong');inp.disabled=true;
+    fb.textContent=correct?'Correct! ✓':'Answer: '+q.answer;
+    fb.className='feedback '+(correct?'ok':'no');
+    if(correct)scores.fill++;totals.fill++;updateScore();
+  };
+  actions.appendChild(checkBtn);
+  card.appendChild(src);card.appendChild(sent);card.appendChild(hint);card.appendChild(inp);card.appendChild(actions);card.appendChild(fb);
+  c.appendChild(card);
+}
+function prevFill(){if(fillIdx>0){fillIdx--;buildFill();}}
+function nextFill(){if(fillIdx<fills.length-1){fillIdx++;buildFill();}}
+
+// MC
+let mcIdx=0,mcState={};
+function buildMC(){
+  const q=mcqs[mcIdx];
+  document.getElementById('mc-progress').textContent='Question '+(mcIdx+1)+' of '+mcqs.length;
+  const state=mcState[mcIdx]||{answered:false};
+  const c=document.getElementById('mc-container');c.innerHTML='';
+  const card=document.createElement('div');card.className='mc-card';
+  const src=document.createElement('div');src.className='mc-source';src.textContent='Story: '+q.story;
+  const qEl=document.createElement('div');qEl.className='mc-q';qEl.textContent=q.q;
+  const opts=document.createElement('div');opts.className='mc-options';
+  q.options.forEach((opt,i)=>{
+    const btn=document.createElement('div');btn.className='mc-opt';btn.textContent=opt;
+    if(state.answered){
+      btn.classList.add('disabled');
+      if(i===q.ans)btn.classList.add('correct');
+      else if(i===state.chosen)btn.classList.add('wrong');
+    }
+    btn.onclick=()=>{
+      if(state.answered)return;
+      state.answered=true;state.chosen=i;mcState[mcIdx]=state;
+      if(i===q.ans)scores.mc++;totals.mc++;updateScore();
+      opts.querySelectorAll('.mc-opt').forEach((b,j)=>{
+        b.classList.add('disabled');
+        if(j===q.ans)b.classList.add('correct');
+        else if(j===i)b.classList.add('wrong');
+      });
+    };
+    opts.appendChild(btn);
+  });
+  card.appendChild(src);card.appendChild(qEl);card.appendChild(opts);
+  c.appendChild(card);
+}
+function prevMC(){if(mcIdx>0){mcIdx--;buildMC();}}
+function nextMC(){if(mcIdx<mcqs.length-1){mcIdx++;buildMC();}}
+
+function resetAll(){
+  scores={match:0,fill:0,mc:0};totals={match:0,fill:0,mc:0};
+  fillState={};mcState={};fillIdx=0;mcIdx=0;matchPage=0;
+  updateScore();buildMatch();buildFill();buildMC();
+}
+
+buildMatch();buildFill();buildMC();updateScore();
+</script>
+</body>
+</html>
