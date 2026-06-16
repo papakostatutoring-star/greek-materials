@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Το Τελευταίο Καράβι · Glossomathia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#5b3a5b;
+    --slate:#44505e;
+    --lavender:#e9e4f0;
+    --paper:#faf7f2;
+    --ink:#3a3340;
+    --purple:#8e7cc3;   /* Παραλία  */
+    --blue:#7aa6b9;     /* Ταβέρνα  */
+    --green:#7faa86;    /* Δωμάτιο  */
+    --rose:#c98ba0;     /* Λιμάνι   */
+    --gold:#e0b15a;
+    --sky-top:#bcd6e6;
+    --sky-bot:#f6dcc0;
+    --line:rgba(91,58,91,.16);
+    --shadow:0 14px 40px -18px rgba(58,51,64,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Poppins',sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #fdeede 0%, transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, var(--lavender) 0%, transparent 55%),
+      var(--paper);
+    min-height:100%;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .greek{font-family:'Cormorant Garamond',serif;}
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
+
+  /* ---------- Sunset / sky signature ---------- */
+  .sky{
+    position:relative;height:140px;border-radius:20px;overflow:hidden;
+    background:linear-gradient(to bottom,var(--sky-top),var(--sky-bot));
+    box-shadow:var(--shadow);margin-bottom:22px;
+  }
+  .sun{
+    position:absolute;left:50%;width:84px;height:84px;border-radius:50%;
+    transform:translateX(-50%);
+    background:radial-gradient(circle at 35% 35%,#fff3c4,var(--gold));
+    box-shadow:0 0 50px 14px rgba(224,177,90,.55);
+    bottom:62px;transition:bottom 1.1s cubic-bezier(.4,0,.2,1),filter 1.1s;
+  }
+  .sea{
+    position:absolute;left:0;right:0;bottom:0;height:54px;
+    background:linear-gradient(to bottom,#7aa6b9,#5b8499);
+    box-shadow:inset 0 3px 8px rgba(255,255,255,.25);
+  }
+  .sea::before{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(255,255,255,.18) 18px 20px);
+  }
+  .boat{
+    position:absolute;bottom:42px;font-size:26px;transition:left 1.1s ease, opacity .6s;
+    left:-12%;filter:drop-shadow(0 4px 4px rgba(0,0,0,.2));
+  }
+
+  /* ---------- Masthead ---------- */
+  .mast{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .flower{color:var(--purple);font-size:26px;line-height:1}
+  .brand b{font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--slate)}
+  .tag{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--purple);font-weight:500}
+  h1.title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(34px,7vw,58px);
+    color:var(--plum);line-height:1.02;margin:10px 0 4px}
+  h1.title small{display:block;font-size:.4em;letter-spacing:.05em;color:var(--slate);font-style:italic;font-weight:500}
+  .lede{max-width:62ch;color:var(--slate);font-size:15px;margin-bottom:18px}
+
+  /* ---------- Ticket / digit tray ---------- */
+  .tray{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:14px 18px;box-shadow:var(--shadow);margin-bottom:26px}
+  .tray .lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);font-weight:600}
+  .stubs{display:flex;gap:10px}
+  .stub{width:42px;height:54px;border-radius:8px;border:2px dashed var(--line);
+    display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;
+    color:var(--plum);background:repeating-linear-gradient(45deg,#fff,#fff 6px,#faf6ef 6px,#faf6ef 12px)}
+  .stub.got{border-style:solid;animation:pop .4s ease}
+  @keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+  /* ---------- Zone cards ---------- */
+  .zones{display:grid;gap:18px}
+  .zone{background:#fff;border-radius:18px;border:1px solid var(--line);
+    box-shadow:var(--shadow);overflow:hidden;border-top:5px solid var(--ac)}
+  .zone[data-ac="purple"]{--ac:var(--purple)}
+  .zone[data-ac="blue"]{--ac:var(--blue)}
+  .zone[data-ac="green"]{--ac:var(--green)}
+  .zone[data-ac="rose"]{--ac:var(--rose)}
+  .zhead{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none}
+  .znum{flex:none;width:38px;height:38px;border-radius:50%;background:var(--ac);color:#fff;
+    display:grid;place-items:center;font-weight:600;font-size:15px;box-shadow:0 6px 14px -6px var(--ac)}
+  .ztitle{flex:1}
+  .ztitle .gk{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--plum);line-height:1}
+  .ztitle .en{font-size:12px;letter-spacing:.04em;color:var(--slate)}
+  .zstate{font-size:12px;font-weight:600;color:var(--slate);display:flex;align-items:center;gap:6px}
+  .zstate.done{color:var(--green)}
+  .lock{font-size:18px}
+  .zbody{padding:0 20px 22px;display:none}
+  .zone.open .zbody{display:block}
+  .zone.locked .zhead{opacity:.55;cursor:not-allowed}
+  .prompt{color:var(--slate);font-size:14px;margin:2px 0 16px}
+
+  /* ---------- shared word/listen ---------- */
+  .listen{border:none;background:var(--lavender);color:var(--plum);border-radius:50%;
+    width:30px;height:30px;cursor:pointer;font-size:14px;flex:none;transition:.15s}
+  .listen:hover{background:var(--purple);color:#fff;transform:scale(1.08)}
+  .listen:active{transform:scale(.92)}
+
+  /* Match game */
+  .match{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .col{display:flex;flex-direction:column;gap:10px}
+  .colhd{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);font-weight:600;text-align:center}
+  .tok{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:12px;
+    padding:9px 12px;background:#fff;cursor:pointer;transition:.15s;font-size:15px}
+  .tok .gk{font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--ink);font-weight:600}
+  .tok .emo{font-size:24px;line-height:1}
+  .tok:hover{border-color:var(--ac);transform:translateY(-1px)}
+  .tok.sel{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,#fff);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent)}
+  .tok.matched{border-color:var(--green);background:#eef6ef;color:#3a3340;cursor:default;opacity:.7}
+  .tok.matched:hover{transform:none}
+  .tok.wrong{animation:shake .35s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  /* Quiz game */
+  .qcard{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+  .qhead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .qemo{font-size:34px}
+  .qen{font-size:14px;color:var(--slate)}
+  .qen b{display:block;font-size:17px;color:var(--ink);font-weight:600}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .opt{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--ink);
+    border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;background:#fff;cursor:pointer;transition:.15s;text-align:center}
+  .opt:hover{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 8%,#fff)}
+  .opt.ok{border-color:var(--green);background:#eef6ef}
+  .opt.no{border-color:var(--rose);background:#fbeef1;opacity:.7}
+
+  /* Builder game */
+  .build{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+  .bclue{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .bclue .emo{font-size:30px}
+  .bclue .en{font-size:14px;color:var(--slate)} .bclue .en b{color:var(--ink);font-size:16px;display:block}
+  .slot{min-height:48px;border:2px dashed var(--line);border-radius:10px;display:flex;gap:6px;
+    padding:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;background:#fcfbf8}
+  .slot.full{border-style:solid;border-color:var(--green);background:#eef6ef}
+  .slot.bad{border-color:var(--rose);background:#fbeef1;animation:shake .35s}
+  .bank{display:flex;gap:6px;flex-wrap:wrap}
+  .tile{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--plum);
+    min-width:38px;height:44px;padding:0 6px;border:1.5px solid var(--line);border-radius:9px;background:#fff;
+    cursor:pointer;transition:.12s;display:grid;place-items:center}
+  .tile:hover{border-color:var(--ac);transform:translateY(-2px)}
+  .tile.used{opacity:.25;pointer-events:none}
+  .tile.placed{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 10%,#fff)}
+  .undo{font-size:12px;border:none;background:none;color:var(--slate);text-decoration:underline;cursor:pointer;padding:0}
+
+  /* Listen game */
+  .lcard{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;text-align:center}
+  .bighear{border:none;background:var(--ac);color:#fff;border-radius:14px;padding:12px 22px;font-size:15px;
+    font-weight:500;cursor:pointer;display:inline-flex;gap:8px;align-items:center;box-shadow:0 8px 18px -8px var(--ac)}
+  .bighear:hover{filter:brightness(1.05)}
+  .lword{font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--plum);font-weight:600;margin:12px 0 4px;
+    letter-spacing:.5px}
+  .lword.hidden{filter:blur(7px);user-select:none}
+  .reveal{font-size:12px;background:none;border:none;color:var(--slate);text-decoration:underline;cursor:pointer}
+
+  .zdone{display:flex;align-items:center;gap:12px;background:#eef6ef;border:1px solid #cfe3d4;
+    border-radius:12px;padding:12px 16px;margin-top:6px;font-size:14px;color:var(--slate)}
+  .zdone b{color:var(--green)}
+  .digit{font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--plum);font-weight:700;
+    background:#fff;border:2px solid var(--green);border-radius:8px;width:42px;height:48px;display:grid;place-items:center}
+
+  /* ---------- Final lock ---------- */
+  .finale{margin-top:26px;background:linear-gradient(135deg,#fff,#fbf6ef);
+    border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:24px;text-align:center;
+    opacity:.5;pointer-events:none;transition:.4s}
+  .finale.ready{opacity:1;pointer-events:auto}
+  .finale h2{font-family:'Cormorant Garamond',serif;color:var(--plum);font-size:30px;font-weight:600}
+  .finale p{color:var(--slate);font-size:14px;max-width:48ch;margin:6px auto 18px}
+  .codein{display:flex;gap:10px;justify-content:center;margin-bottom:14px}
+  .codein input{width:54px;height:64px;text-align:center;font-family:'Cormorant Garamond',serif;font-size:34px;
+    font-weight:700;color:var(--plum);border:2px solid var(--line);border-radius:12px;background:#fff}
+  .codein input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(224,177,90,.25)}
+  .go{border:none;background:var(--plum);color:#fff;border-radius:12px;padding:12px 30px;font-size:15px;
+    font-weight:500;cursor:pointer;box-shadow:0 10px 22px -10px var(--plum)}
+  .go:hover{filter:brightness(1.08)} .go:disabled{opacity:.4;cursor:not-allowed}
+  .err{color:var(--rose);font-size:13px;font-weight:500;min-height:18px;margin-top:8px}
+
+  /* ---------- Victory ---------- */
+  .victory{position:fixed;inset:0;background:rgba(58,51,64,.55);backdrop-filter:blur(4px);
+    display:none;place-items:center;padding:20px;z-index:50}
+  .victory.show{display:grid}
+  .vcard{background:var(--paper);border-radius:22px;max-width:560px;width:100%;padding:30px;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,.5);max-height:90vh;overflow:auto}
+  .vcard h2{font-family:'Cormorant Garamond',serif;color:var(--plum);font-size:38px;font-weight:700;text-align:center}
+  .vcard .sub{text-align:center;color:var(--slate);font-style:italic;margin-bottom:18px}
+  .recap{display:grid;gap:6px;margin:14px 0}
+  .recap .r{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;background:#fff;border:1px solid var(--line)}
+  .recap .emo{font-size:22px}.recap .gk{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--plum);flex:1}
+  .recap .en{font-size:13px;color:var(--slate)}
+  .vbtns{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+  .vbtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 18px;font-size:14px;cursor:pointer;color:var(--slate)}
+  .vbtn.primary{background:var(--plum);color:#fff;border-color:var(--plum)}
+
+  .footer{text-align:center;margin-top:34px;color:var(--slate);font-size:12px}
+  .footer .flower{font-size:16px;vertical-align:middle}
+  .reset{background:none;border:none;color:var(--slate);text-decoration:underline;cursor:pointer;font-size:12px}
+
+  @media(max-width:560px){
+    .match{grid-template-columns:1fr 1fr;gap:12px}
+    .opts{grid-template-columns:1fr}
+    .codein input{width:46px;height:56px;font-size:28px}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- sunset signature -->
+  <div class="sky" aria-hidden="true">
+    <div class="sun" id="sun"></div>
+    <div class="sea"></div>
+    <div class="boat" id="boat">⛴️</div>
+  </div>
+
+  <header>
+    <div class="mast">
+      <div class="brand"><span class="flower">❀</span><b>Glossomathia</b></div>
+      <span class="tag">Play · Listen · Learn</span>
+    </div>
+    <h1 class="title greek">Το Τελευταίο Καράβι<small>The Last Ferry — a summer-vocabulary escape room</small></h1>
+    <p class="lede">It is the last evening of summer on the island. The final ferry to the mainland sails at sunset — and your ticket code has scattered across four places. Visit each one, solve its Greek-word puzzle, and collect a digit. Gather all four to board <span class="greek" style="font-size:1.1em;color:var(--plum)">πριν φύγει το καράβι</span> — before the boat leaves. 🌿</p>
+  </header>
+
+  <!-- digit tray -->
+  <div class="tray">
+    <span class="lbl">Ticket code</span>
+    <div class="stubs" id="stubs">
+      <div class="stub" data-i="0">?</div>
+      <div class="stub" data-i="1">?</div>
+      <div class="stub" data-i="2">?</div>
+      <div class="stub" data-i="3">?</div>
+    </div>
+  </div>
+
+  <main class="zones" id="zones"></main>
+
+  <!-- finale -->
+  <section class="finale" id="finale">
+    <h2 class="greek">Το Λιμάνι — the harbour gate</h2>
+    <p>The gangway officer wants your four-digit ticket code. Enter the digits in the order you collected them.</p>
+    <div class="codein" id="codein">
+      <input maxlength="1" inputmode="numeric" data-i="0" aria-label="digit 1">
+      <input maxlength="1" inputmode="numeric" data-i="1" aria-label="digit 2">
+      <input maxlength="1" inputmode="numeric" data-i="2" aria-label="digit 3">
+      <input maxlength="1" inputmode="numeric" data-i="3" aria-label="digit 4">
+    </div>
+    <button class="go" id="go">Board the ferry</button>
+    <div class="err" id="err"></div>
+  </section>
+
+  <div class="footer">
+    <span class="flower">❀</span> Glossomathia · Papakosta Tutoring &nbsp;·&nbsp;
+    <button class="reset" id="reset">start over</button>
+  </div>
+</div>
+
+<!-- victory -->
+<div class="victory" id="victory">
+  <div class="vcard">
+    <h2 class="greek">Καλό ταξίδι! ⛴️</h2>
+    <p class="sub">You made the last ferry. Here is everything you learned along the way.</p>
+    <div class="recap" id="recap"></div>
+    <div class="vbtns">
+      <button class="vbtn primary" id="again">Play again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- data ---------- */
+const ZONES = [
+  {
+    id:"beach", ac:"purple", gk:"Η Παραλία", en:"The Beach", type:"match", digit:7,
+    prompt:"Tap a Greek word, then tap the thing it names. Match all six to find your first digit.",
+    pairs:[
+      {gk:"η θάλασσα", emo:"🌊", en:"the sea"},
+      {gk:"η ομπρέλα", emo:"⛱️", en:"the umbrella"},
+      {gk:"το καπέλο", emo:"👒", en:"the hat"},
+      {gk:"τα γυαλιά ηλίου", emo:"🕶️", en:"the sunglasses"},
+      {gk:"η σαγιονάρα", emo:"🩴", en:"the flip-flop"},
+      {gk:"το αντηλιακό", emo:"🧴", en:"the sunscreen"}
+    ]
+  },
+  {
+    id:"taverna", ac:"blue", gk:"Η Ταβέρνα", en:"The Taverna", type:"quiz", digit:3,
+    prompt:"Order from the menu: choose the Greek word for each item.",
+    qs:[
+      {emo:"🍉", en:"watermelon", ans:"το καρπούζι", opts:["το καρπούζι","το παγωτό","η φέτα"]},
+      {emo:"☕", en:"frappé", ans:"ο φραπές", opts:["το ψάρι","ο φραπές","η σαλάτα"]},
+      {emo:"🥗", en:"salad", ans:"η σαλάτα", opts:["η σαλάτα","το καρπούζι","ο φραπές"]},
+      {emo:"🍦", en:"ice cream", ans:"το παγωτό", opts:["η φέτα","το ψάρι","το παγωτό"]},
+      {emo:"🐟", en:"fish", ans:"το ψάρι", opts:["το ψάρι","το παγωτό","το καρπούζι"]}
+    ]
+  },
+  {
+    id:"room", ac:"green", gk:"Το Δωμάτιο", en:"The Hotel Room", type:"build", digit:9,
+    prompt:"Pack your bag. Tap the letters in order to spell each Greek word from its clue.",
+    words:[
+      {emo:"🧳", en:"suitcase", gk:"βαλίτσα"},
+      {emo:"🛂", en:"passport", gk:"διαβατήριο"},
+      {emo:"🔑", en:"key", gk:"κλειδί"},
+      {emo:"🎫", en:"ticket", gk:"εισιτήριο"}
+    ]
+  },
+  {
+    id:"port", ac:"rose", gk:"Το Λιμάνι", en:"The Harbour", type:"listen", digit:1,
+    prompt:"Press play, listen to the Greek, and choose its meaning. The word stays hidden until you guess.",
+    items:[
+      {gk:"το νησί", ans:"the island", opts:["the island","the harbour","the journey"]},
+      {gk:"το πλοίο", ans:"the ship", opts:["the ticket","the ship","the beach"]},
+      {gk:"η αναχώρηση", ans:"the departure", opts:["the arrival","the departure","the sea"]},
+      {gk:"το ταξίδι", ans:"the journey", opts:["the journey","the suitcase","the harbour"]}
+    ]
+  }
+];
+const CODE = ZONES.map(z=>z.digit); // 7,3,9,1
+
+/* ---------- state + persistence ---------- */
+const KEY="glosso_summer_escape_v1";
+let state = load() || {done:[false,false,false,false]};
+function load(){ try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null} }
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){} }
+
+/* ---------- speech (Listen) ---------- */
+let voice=null;
+function pickVoice(){
+  const vs=speechSynthesis.getVoices();
+  voice=vs.find(v=>/el(-|_)?/i.test(v.lang))||vs.find(v=>/greek/i.test(v.name))||null;
+}
+if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/^(η|ο|το|τα|οι) /,''));
+  u.lang='el-GR'; if(voice)u.voice=voice; u.rate=.85;
+  speechSynthesis.speak(u);
+}
+
+/* ---------- build UI ---------- */
+const zonesEl=document.getElementById('zones');
+ZONES.forEach((z,zi)=>{
+  const sec=document.createElement('section');
+  sec.className='zone'; sec.dataset.ac=z.ac; sec.dataset.zi=zi;
+  sec.innerHTML=`
+    <div class="zhead">
+      <div class="znum">${zi+1}</div>
+      <div class="ztitle"><div class="gk greek">${z.gk}</div><div class="en">${z.en}</div></div>
+      <div class="zstate"><span class="lock">🔒</span><span class="txt">Locked</span></div>
+    </div>
+    <div class="zbody"><p class="prompt">${z.prompt}</p><div class="game"></div></div>`;
+  zonesEl.appendChild(sec);
+  sec.querySelector('.zhead').addEventListener('click',()=>toggle(zi));
+});
+
+function toggle(zi){
+  const sec=zonesEl.children[zi];
+  if(sec.classList.contains('locked'))return;
+  const open=sec.classList.contains('open');
+  [...zonesEl.children].forEach(s=>s.classList.remove('open'));
+  if(!open){ sec.classList.add('open'); }
+}
+
+function refresh(){
+  ZONES.forEach((z,zi)=>{
+    const sec=zonesEl.children[zi];
+    const unlocked = zi===0 || state.done[zi-1];
+    sec.classList.toggle('locked',!unlocked);
+    const st=sec.querySelector('.zstate');
+    if(state.done[zi]){
+      st.classList.add('done');
+      st.querySelector('.lock').textContent='✓';
+      st.querySelector('.txt').textContent='Solved';
+    }else if(unlocked){
+      st.querySelector('.lock').textContent='🔓';
+      st.querySelector('.txt').textContent='Open';
+    }else{
+      st.querySelector('.lock').textContent='🔒';
+      st.querySelector('.txt').textContent='Locked';
+    }
+    // stubs
+    const stub=document.querySelector(`.stub[data-i="${zi}"]`);
+    if(state.done[zi]){ stub.textContent=z.digit; stub.classList.add('got'); }
+    else { stub.textContent='?'; stub.classList.remove('got'); }
+  });
+  // sun + boat
+  const n=state.done.filter(Boolean).length;
+  document.getElementById('sun').style.bottom=(62-n*16)+'px';
+  document.getElementById('sun').style.filter=`saturate(${1+n*.15}) brightness(${1-n*.04})`;
+  document.getElementById('boat').style.left=(-12+n*4)+'%';
+  // finale
+  const fin=document.getElementById('finale');
+  fin.classList.toggle('ready', n===4);
+  save();
+}
+
+function solveZone(zi){
+  if(state.done[zi])return;
+  state.done[zi]=true; refresh();
+  const sec=zonesEl.children[zi];
+  const game=sec.querySelector('.game');
+  game.insertAdjacentHTML('beforeend',
+    `<div class="zdone"><span class="digit">${ZONES[zi].digit}</span>
+     <span>Solved! Your digit <b>${ZONES[zi].digit}</b> is on the ticket stub above.
+     ${zi<3?'The next place is now open.':'All four collected — head to the harbour gate below.'}</span></div>`);
+  // auto-advance
+  setTimeout(()=>{ if(zi<3){toggle(zi+1);sec.classList.remove('open');zonesEl.children[zi+1].classList.add('open');}
+                   else{document.getElementById('finale').scrollIntoView({behavior:'smooth'});} },700);
+}
+
+/* ---------- game renderers ---------- */
+function renderAll(){
+  ZONES.forEach((z,zi)=>{
+    const game=zonesEl.children[zi].querySelector('.game');
+    game.innerHTML='';
+    if(state.done[zi]){
+      game.innerHTML=`<div class="zdone"><span class="digit">${z.digit}</span><span>Already solved — digit <b>${z.digit}</b>.</span></div>`;
+      return;
+    }
+    if(z.type==='match') renderMatch(z,zi,game);
+    if(z.type==='quiz') renderQuiz(z,zi,game);
+    if(z.type==='build') renderBuild(z,zi,game);
+    if(z.type==='listen') renderListen(z,zi,game);
+  });
+}
+const shuffle=a=>a.map(x=>[Math.random(),x]).sort((m,n)=>m[0]-n[0]).map(p=>p[1]);
+
+/* MATCH */
+function renderMatch(z,zi,root){
+  const left=shuffle(z.pairs), right=shuffle(z.pairs);
+  let sel=null, done=0;
+  root.innerHTML=`<div class="match">
+    <div class="col"><div class="colhd">Λέξεις · words</div></div>
+    <div class="col"><div class="colhd">Εικόνες · pictures</div></div></div>`;
+  const cols=root.querySelectorAll('.col');
+  left.forEach(p=>{
+    const t=document.createElement('div'); t.className='tok'; t.dataset.gk=p.gk;
+    t.innerHTML=`<button class="listen" title="Listen">🔊</button><span class="gk greek">${p.gk}</span>`;
+    t.querySelector('.listen').addEventListener('click',e=>{e.stopPropagation();speak(p.gk)});
+    t.addEventListener('click',()=>{ if(t.classList.contains('matched'))return;
+      cols[0].querySelectorAll('.tok').forEach(x=>x.classList.remove('sel'));
+      t.classList.add('sel'); sel=t; });
+    cols[0].appendChild(t);
+  });
+  right.forEach(p=>{
+    const t=document.createElement('div'); t.className='tok'; t.dataset.gk=p.gk;
+    t.innerHTML=`<span class="emo">${p.emo}</span><span class="en" style="font-size:13px;color:var(--slate)">${p.en}</span>`;
+    t.addEventListener('click',()=>{ if(t.classList.contains('matched')||!sel)return;
+      if(sel.dataset.gk===p.gk){
+        t.classList.add('matched'); sel.classList.add('matched'); sel.classList.remove('sel');
+        speak(p.gk); sel=null; done++; if(done===z.pairs.length) solveZone(zi);
+      }else{ t.classList.add('wrong'); const s=sel; s.classList.add('wrong');
+        setTimeout(()=>{t.classList.remove('wrong');s.classList.remove('wrong')},350); }
+    });
+    cols[1].appendChild(t);
+  });
+}
+
+/* QUIZ */
+function renderQuiz(z,zi,root){
+  let done=0;
+  z.qs.forEach(q=>{
+    const card=document.createElement('div'); card.className='qcard';
+    card.innerHTML=`<div class="qhead"><span class="qemo">${q.emo}</span>
+      <span class="qen">you want…<b>${q.en}</b></span></div><div class="opts"></div>`;
+    const opts=card.querySelector('.opts');
+    shuffle(q.opts).forEach(o=>{
+      const b=document.createElement('button'); b.className='opt greek'; b.textContent=o;
+      b.addEventListener('click',()=>{
+        if(card.dataset.lock)return;
+        if(o===q.ans){ b.classList.add('ok'); card.dataset.lock=1; speak(q.ans);
+          done++; if(done===z.qs.length) solveZone(zi);
+        }else{ b.classList.add('no'); setTimeout(()=>b.classList.remove('no'),500); }
+      });
+      opts.appendChild(b);
+    });
+    root.appendChild(card);
+  });
+}
+
+/* BUILD (tap letters) */
+function renderBuild(z,zi,root){
+  let done=0;
+  z.words.forEach(w=>{
+    const card=document.createElement('div'); card.className='build';
+    card.innerHTML=`<div class="bclue"><span class="emo">${w.emo}</span>
+      <span class="en">spell…<b>${w.en}</b></span>
+      <button class="listen" title="Listen" style="margin-left:auto">🔊</button></div>
+      <div class="slot" aria-label="your spelling"></div>
+      <div class="bank"></div>
+      <button class="undo">↺ clear</button>`;
+    card.querySelector('.listen').addEventListener('click',()=>speak(w.gk));
+    const slot=card.querySelector('.slot'), bank=card.querySelector('.bank');
+    const letters=[...w.gk];
+    let placed=[];
+    shuffle(letters).forEach((ch,idx)=>{
+      const tl=document.createElement('button'); tl.className='tile greek'; tl.textContent=ch; tl.dataset.idx=idx;
+      tl.addEventListener('click',()=>{
+        if(tl.classList.contains('used')||card.dataset.lock)return;
+        tl.classList.add('used'); placed.push({ch,tile:tl});
+        const p=document.createElement('span'); p.className='tile placed greek'; p.textContent=ch;
+        slot.appendChild(p);
+        check();
+      });
+      bank.appendChild(tl);
+    });
+    function check(){
+      const cur=placed.map(p=>p.ch).join('');
+      if(cur.length===letters.length){
+        if(cur===w.gk){ slot.classList.add('full'); card.dataset.lock=1; speak(w.gk);
+          done++; if(done===z.words.length) solveZone(zi);
+        }else{ slot.classList.add('bad'); setTimeout(()=>{slot.classList.remove('bad');clear()},450); }
+      }
+    }
+    function clear(){ placed.forEach(p=>p.tile.classList.remove('used')); placed=[]; slot.innerHTML=''; slot.classList.remove('full','bad'); }
+    card.querySelector('.undo').addEventListener('click',()=>{ if(!card.dataset.lock) clear(); });
+    root.appendChild(card);
+  });
+}
+
+/* LISTEN */
+function renderListen(z,zi,root){
+  let done=0;
+  z.items.forEach(it=>{
+    const card=document.createElement('div'); card.className='lcard';
+    card.innerHTML=`<button class="bighear">🔊 <span>Play</span></button>
+      <div class="lword greek hidden">${it.gk}</div>
+      <button class="reveal">show the word</button>
+      <div class="opts" style="margin-top:12px"></div>`;
+    const word=card.querySelector('.lword');
+    card.querySelector('.bighear').addEventListener('click',()=>speak(it.gk));
+    card.querySelector('.reveal').addEventListener('click',e=>{ word.classList.toggle('hidden');
+      e.target.textContent=word.classList.contains('hidden')?'show the word':'hide the word'; });
+    const opts=card.querySelector('.opts');
+    shuffle(it.opts).forEach(o=>{
+      const b=document.createElement('button'); b.className='opt'; b.style.fontFamily='Poppins'; b.style.fontSize='15px'; b.textContent=o;
+      b.addEventListener('click',()=>{
+        if(card.dataset.lock)return;
+        if(o===it.ans){ b.classList.add('ok'); card.dataset.lock=1; word.classList.remove('hidden');
+          done++; if(done===z.items.length) solveZone(zi);
+        }else{ b.classList.add('no'); setTimeout(()=>b.classList.remove('no'),500); }
+      });
+      opts.appendChild(b);
+    });
+    root.appendChild(card);
+  });
+}
+
+/* ---------- finale ---------- */
+const inputs=[...document.querySelectorAll('.codein input')];
+inputs.forEach((inp,i)=>{
+  inp.addEventListener('input',()=>{ inp.value=inp.value.replace(/\D/g,''); if(inp.value&&i<3)inputs[i+1].focus(); });
+  inp.addEventListener('keydown',e=>{ if(e.key==='Backspace'&&!inp.value&&i>0)inputs[i-1].focus(); });
+});
+document.getElementById('go').addEventListener('click',()=>{
+  const guess=inputs.map(i=>i.value).join('');
+  const err=document.getElementById('err');
+  if(guess.length<4){ err.textContent='Enter all four digits.'; return; }
+  if(guess===CODE.join('')){ err.textContent=''; win(); }
+  else{ err.textContent='Όχι ακόμα — that code won’t open the gate. Check the ticket stubs.'; }
+});
+
+function win(){
+  const recap=document.getElementById('recap'); recap.innerHTML='';
+  ZONES.forEach(z=>{
+    const items = z.pairs||z.qs?.map(q=>({gk:q.ans,emo:q.emo,en:q.en}))||z.words||z.items?.map(it=>({gk:it.gk,emo:'🔊',en:it.ans}));
+    items.forEach(it=>{
+      const r=document.createElement('div'); r.className='r';
+      r.innerHTML=`<span class="emo">${it.emo||'•'}</span><span class="gk greek">${it.gk}</span><span class="en">${it.en}</span>`;
+      r.addEventListener('click',()=>speak(it.gk));
+      recap.appendChild(r);
+    });
+  });
+  document.getElementById('victory').classList.add('show');
+}
+document.getElementById('again').addEventListener('click',reset);
+document.getElementById('reset').addEventListener('click',reset);
+function reset(){ state={done:[false,false,false,false]}; save();
+  document.getElementById('victory').classList.remove('show');
+  inputs.forEach(i=>i.value=''); document.getElementById('err').textContent='';
+  renderAll(); refresh(); zonesEl.children[0].classList.add('open'); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- init ---------- */
+renderAll(); refresh();
+// open the first unsolved unlocked zone
+const firstOpen = state.done.findIndex((d,i)=>!d && (i===0||state.done[i-1]));
+if(firstOpen>=0) zonesEl.children[firstOpen].classList.add('open');
+</script>
+</body>
+</html>
