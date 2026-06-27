@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Στην Ταβέρνα · A Greek Food & Ordering Escape Room · Glossomathia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Poppins:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap&subset=greek,latin" rel="stylesheet">
+<style>
+:root{
+  /* Brand base */
+  --plum:#46395A;
+  --plum-deep:#33284A;
+  --slate:#5C6B7A;
+  --lavender:#ECE6F4;
+  --lavender-soft:#F5F1FA;
+  --cream:#FBF8F3;
+  --ink:#3A3247;
+  /* Four cycling accents */
+  --a-purple:#8E7CC3;
+  --a-blue:#7AA6B9;
+  --a-green:#6FAE84;
+  --a-rose:#C98BB0;
+  /* Festival gold (from the laurel + clasp) */
+  --gold:#E0A93A;
+  --gold-soft:#F2D89A;
+  --white:#ffffff;
+  --shadow:0 18px 50px -22px rgba(51,40,74,.55);
+  --shadow-sm:0 8px 24px -14px rgba(51,40,74,.5);
+  --accent:var(--a-purple);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Poppins','Nunito',sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(1100px 600px at 12% -8%, #F3ECFB 0%, transparent 55%),
+    radial-gradient(1000px 700px at 100% 0%, #EAF2F4 0%, transparent 50%),
+    linear-gradient(180deg, var(--cream) 0%, #F4EFF8 100%);
+  min-height:100vh;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.greek{font-family:'Cormorant Garamond','Nunito',serif;}
+
+/* ---------- Greek-key meander signature ---------- */
+.meander{
+  height:16px;width:100%;
+  background-image:
+    repeating-linear-gradient(90deg, var(--accent) 0 4px, transparent 4px 28px);
+  -webkit-mask:
+    linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+          mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  opacity:.5;border-radius:2px;
+  position:relative;
+}
+.meander svg{display:block;width:100%;height:18px}
+
+/* ---------- Layout shell ---------- */
+.wrap{max-width:1000px;margin:0 auto;padding:22px 18px 70px;}
+.screen{display:none;animation:fadeUp .5s ease both}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Top bar / keys ---------- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;margin-bottom:14px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:11px}
+.brand .mark{
+  width:42px;height:42px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff 0 30%, var(--lavender) 70%);
+  display:grid;place-items:center;font-size:24px;box-shadow:var(--shadow-sm);
+  border:2px solid #fff;
+}
+.brand b{font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--plum);font-size:1.35rem;letter-spacing:.3px;line-height:1}
+.brand span{display:block;font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--slate);margin-top:2px;font-weight:600}
+.keys{display:flex;gap:6px;align-items:center;background:#fff;padding:8px 12px;border-radius:30px;box-shadow:var(--shadow-sm)}
+.keys .k{font-size:1.15rem;filter:grayscale(1);opacity:.3;transition:.4s;transform:scale(.9)}
+.keys .k.on{filter:none;opacity:1;transform:scale(1.05);text-shadow:0 0 10px var(--gold-soft)}
+
+/* ---------- Intro ---------- */
+.hero{
+  background:linear-gradient(160deg,#fff 0%, var(--lavender-soft) 100%);
+  border-radius:30px;padding:0;overflow:hidden;box-shadow:var(--shadow);
+  border:1px solid rgba(142,124,195,.18);
+}
+.hero-top{
+  position:relative;padding:40px 30px 18px;text-align:center;
+  background:
+    radial-gradient(420px 220px at 50% -40%, rgba(224,169,58,.20), transparent 70%);
+}
+.hero-owl{width:172px;height:172px;object-fit:contain;margin:0 auto;display:block;filter:drop-shadow(0 14px 22px rgba(51,40,74,.28))}
+.eyebrow{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:var(--a-purple);font-weight:700;margin-bottom:8px}
+.hero h1{
+  font-family:'Cormorant Garamond',serif;font-weight:700;
+  font-size:clamp(2.1rem,6vw,3.5rem);color:var(--plum-deep);line-height:1.02;margin:6px 0 4px;
+}
+.hero h1 em{color:var(--gold);font-style:italic}
+.hero .sub{color:var(--slate);font-size:1.02rem;max-width:560px;margin:8px auto 0;font-weight:500}
+.story{
+  padding:24px 32px 8px;max-width:720px;margin:0 auto;
+}
+.story p{margin:0 0 13px;color:#4a4357;font-size:1.02rem}
+.story p .gr{font-family:'Cormorant Garamond',serif;color:var(--plum);font-weight:600;font-size:1.12em}
+.scroll-quote{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;
+  color:var(--plum);text-align:center;padding:14px 20px;margin:6px auto 18px;max-width:600px;
+  border-top:1px solid rgba(142,124,195,.25);border-bottom:1px solid rgba(142,124,195,.25);
+}
+.howto{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;
+  padding:6px 32px 10px;max-width:760px;margin:0 auto;
+}
+.howto .h{background:#fff;border-radius:16px;padding:14px;text-align:center;box-shadow:var(--shadow-sm);border:1px solid rgba(142,124,195,.12)}
+.howto .h .i{font-size:1.6rem}
+.howto .h b{display:block;color:var(--plum);font-size:.92rem;margin:4px 0 2px;font-weight:600}
+.howto .h small{color:var(--slate);font-size:.78rem;line-height:1.3;display:block}
+.hero-cta{text-align:center;padding:10px 20px 40px}
+
+/* ---------- Buttons ---------- */
+.btn{
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:1.02rem;
+  border:none;cursor:pointer;border-radius:40px;padding:15px 36px;color:#fff;
+  background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent),#000 14%));
+  box-shadow:0 12px 26px -10px color-mix(in srgb,var(--accent),#000 25%);
+  transition:transform .15s ease, box-shadow .2s ease;letter-spacing:.2px;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.gold{background:linear-gradient(135deg,var(--gold),#C98B22);box-shadow:0 12px 26px -10px rgba(201,139,34,.6)}
+.btn.ghost{background:#fff;color:var(--plum);box-shadow:var(--shadow-sm);border:1.5px solid rgba(142,124,195,.3)}
+.btn.sm{padding:10px 20px;font-size:.9rem}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+/* ---------- Map ---------- */
+.map-head{text-align:center;margin:6px 0 22px}
+.map-head h2{font-family:'Cormorant Garamond',serif;color:var(--plum-deep);font-size:2.1rem;font-weight:700}
+.map-head p{color:var(--slate);max-width:560px;margin:6px auto 0}
+.chambers{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.chamber{
+  position:relative;background:#fff;border-radius:22px;padding:22px;box-shadow:var(--shadow-sm);
+  border:1px solid rgba(142,124,195,.14);overflow:hidden;cursor:pointer;
+  transition:transform .18s ease, box-shadow .25s ease;
+}
+.chamber:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.chamber.locked{cursor:not-allowed;filter:grayscale(.35);opacity:.7}
+.chamber.locked:hover{transform:none;box-shadow:var(--shadow-sm)}
+.chamber .num{
+  font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:700;line-height:.8;
+  color:var(--c,#8E7CC3);opacity:.28;position:absolute;top:10px;right:16px;
+}
+.chamber .ico{font-size:2rem;margin-bottom:8px}
+.chamber h3{font-family:'Cormorant Garamond',serif;font-size:1.55rem;color:var(--plum-deep);font-weight:700;line-height:1}
+.chamber .grk{font-family:'Cormorant Garamond',serif;color:var(--c,#8E7CC3);font-weight:600;font-size:1.05rem;margin:2px 0 8px}
+.chamber p{color:var(--slate);font-size:.85rem;min-height:34px}
+.chamber .state{display:flex;align-items:center;gap:6px;margin-top:12px;font-weight:600;font-size:.82rem}
+.chamber.locked .state{color:var(--slate)}
+.chamber.done .state{color:var(--a-green)}
+.chamber .bar{height:5px;border-radius:5px;background:var(--lavender);margin-top:10px;overflow:hidden}
+.chamber .bar i{display:block;height:100%;width:0;background:var(--c,#8E7CC3);transition:width .5s ease}
+
+/* ---------- Room view ---------- */
+.room{background:#fff;border-radius:26px;box-shadow:var(--shadow);overflow:hidden;border:1px solid rgba(142,124,195,.16)}
+.room-head{
+  padding:26px 28px 20px;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent),#000 22%));
+}
+.room-head::after{
+  content:"";position:absolute;inset:0;opacity:.16;
+  background-image:repeating-linear-gradient(90deg,#fff 0 3px,transparent 3px 22px);
+  -webkit-mask:linear-gradient(180deg,transparent 60%,#000);mask:linear-gradient(180deg,transparent 60%,#000);
+}
+.room-head .back{position:relative;z-index:2;background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:30px;padding:8px 16px;font-weight:600;cursor:pointer;font-size:.85rem;font-family:inherit}
+.room-head .back:hover{background:rgba(255,255,255,.32)}
+.room-head h2{position:relative;z-index:2;font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;margin:12px 0 0;line-height:1}
+.room-head .grk{position:relative;z-index:2;font-family:'Cormorant Garamond',serif;font-size:1.3rem;opacity:.92;font-weight:600}
+.room-head .tag{position:relative;z-index:2;display:inline-block;margin-top:10px;background:rgba(255,255,255,.22);padding:5px 13px;border-radius:20px;font-size:.78rem;font-weight:600}
+.room-body{padding:24px 26px 30px}
+
+.story-strip{display:flex;gap:14px;align-items:flex-start;background:var(--lavender-soft);border-radius:18px;padding:16px 18px;margin-bottom:22px;border:1px solid rgba(142,124,195,.14)}
+.story-strip img{width:64px;height:64px;object-fit:contain;flex:none;filter:drop-shadow(0 6px 8px rgba(51,40,74,.2))}
+.story-strip p{color:#4a4357;font-size:.95rem}
+.story-strip p .gr{font-family:'Cormorant Garamond',serif;color:var(--plum);font-weight:600;font-size:1.08em}
+
+.stage-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.stage-tabs .t{
+  flex:1;min-width:120px;background:var(--lavender-soft);border-radius:14px;padding:10px 8px;text-align:center;
+  font-weight:600;font-size:.82rem;color:var(--slate);border:1.5px solid transparent;position:relative;transition:.2s;
+}
+.stage-tabs .t.active{background:#fff;color:var(--plum);border-color:var(--accent);box-shadow:var(--shadow-sm)}
+.stage-tabs .t.cleared{color:var(--a-green)}
+.stage-tabs .t .s{font-size:1.05rem;display:block}
+
+.stage{display:none}
+.stage.active{display:block;animation:fadeUp .35s ease both}
+
+/* ---------- Learn cards ---------- */
+.learn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-bottom:18px}
+.card{
+  background:linear-gradient(160deg,#fff, var(--lavender-soft));border-radius:16px;padding:14px 15px 12px;
+  box-shadow:var(--shadow-sm);border:1px solid rgba(142,124,195,.16);position:relative;display:flex;flex-direction:column;
+}
+.card .emoji{position:absolute;top:10px;right:12px;font-size:1.3rem;opacity:.85}
+.card .gr{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--plum-deep);line-height:1.05;padding-right:26px}
+.card .tr{color:var(--accent);font-weight:600;font-size:.82rem;font-style:italic;margin:2px 0 1px}
+.card .en{color:var(--slate);font-size:.9rem;margin-bottom:10px}
+.card .say{
+  margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:6px;
+  background:#fff;border:1.5px solid var(--accent);color:var(--accent);border-radius:30px;
+  padding:6px 13px;font-weight:600;font-size:.8rem;cursor:pointer;font-family:inherit;transition:.15s;
+}
+.card .say:hover{background:var(--accent);color:#fff}
+.card .say.playing{background:var(--accent);color:#fff;animation:pulse .8s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+.stage-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:8px;flex-wrap:wrap}
+.hint{color:var(--slate);font-size:.86rem;display:flex;align-items:center;gap:8px}
+
+/* ---------- Match puzzle ---------- */
+.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
+.match-col{display:flex;flex-direction:column;gap:10px}
+.match-col h4{font-size:.74rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--slate);text-align:center;margin-bottom:2px;font-weight:700}
+.tile{
+  border:2px solid rgba(142,124,195,.25);background:#fff;border-radius:14px;padding:13px 12px;cursor:pointer;
+  font-family:inherit;transition:.15s;text-align:center;box-shadow:var(--shadow-sm);position:relative;
+}
+.tile.pic{font-size:2rem;line-height:1}
+.tile.phr{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.18rem;color:var(--plum-deep);line-height:1.1}
+.tile.phr small{display:block;font-family:'Poppins';font-style:italic;font-weight:500;color:var(--accent);font-size:.7rem;margin-top:2px}
+.tile:hover{border-color:var(--accent);transform:translateY(-1px)}
+.tile.sel{border-color:var(--gold);background:#FFF9EC;box-shadow:0 0 0 3px var(--gold-soft)}
+.tile.done{border-color:var(--a-green);background:#EEF8F1;cursor:default;pointer-events:none}
+.tile.done::after{content:"✓";position:absolute;top:4px;right:8px;color:var(--a-green);font-weight:800;font-size:.9rem}
+.tile.wrong{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+/* ---------- MCQ ---------- */
+.mcq{max-width:560px;margin:0 auto}
+.mcq-prog{text-align:center;color:var(--slate);font-weight:600;font-size:.82rem;margin-bottom:10px}
+.mcq-q{background:linear-gradient(160deg,#fff,var(--lavender-soft));border-radius:18px;padding:22px 20px;text-align:center;box-shadow:var(--shadow-sm);border:1px solid rgba(142,124,195,.16);margin-bottom:14px}
+.mcq-q .gr{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:700;color:var(--plum-deep);line-height:1.05}
+.mcq-q .tr{color:var(--accent);font-style:italic;font-weight:600;font-size:.9rem;margin-top:2px}
+.mcq-q .say{margin-top:12px;display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:#fff;border:none;border-radius:30px;padding:9px 18px;font-weight:600;cursor:pointer;font-family:inherit;font-size:.9rem}
+.mcq-q .ask{color:var(--slate);font-size:.85rem;margin-top:10px;font-weight:600}
+.mcq-opts{display:grid;gap:10px}
+.opt{
+  background:#fff;border:2px solid rgba(142,124,195,.22);border-radius:14px;padding:14px 16px;cursor:pointer;
+  font-family:inherit;font-size:1rem;font-weight:500;color:var(--ink);text-align:left;transition:.15s;box-shadow:var(--shadow-sm);
+}
+.opt:hover{border-color:var(--accent);transform:translateY(-1px)}
+.opt.correct{border-color:var(--a-green);background:#EEF8F1;color:#2f7d52;font-weight:700}
+.opt.incorrect{border-color:var(--a-rose);background:#FBEEF4;color:#a64f7e}
+.opt:disabled{cursor:default}
+
+.feedback{text-align:center;margin-top:14px;min-height:26px;font-weight:600}
+.feedback.good{color:var(--a-green)}
+.feedback.bad{color:var(--a-rose)}
+
+/* ---------- Door / unlocked ---------- */
+.door{text-align:center;padding:18px 10px}
+.door .lock{font-size:3.2rem;animation:wob 2s ease infinite}
+@keyframes wob{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.door h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--plum-deep);margin:6px 0}
+.door p{color:var(--slate);max-width:440px;margin:0 auto 16px}
+
+/* ---------- Finale ---------- */
+.finale{text-align:center;background:linear-gradient(165deg,#fff,var(--lavender-soft));border-radius:30px;padding:42px 26px 50px;box-shadow:var(--shadow);position:relative;overflow:hidden;border:1px solid rgba(224,169,58,.3)}
+.finale::before{content:"";position:absolute;inset:0;background:radial-gradient(500px 300px at 50% -10%,rgba(224,169,58,.22),transparent 70%)}
+.finale img{position:relative;width:min(420px,86%);margin:0 auto 8px;display:block;filter:drop-shadow(0 16px 24px rgba(51,40,74,.25))}
+.finale .eyebrow{position:relative}
+.finale h1{position:relative;font-family:'Cormorant Garamond',serif;font-size:clamp(2.1rem,7vw,3.4rem);color:var(--plum-deep);font-weight:700;line-height:1.02;margin:4px 0}
+.finale h1 em{color:var(--gold);font-style:italic}
+.finale .grk{position:relative;font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--a-purple);font-weight:600;margin-bottom:8px}
+.finale p{position:relative;color:var(--slate);max-width:540px;margin:0 auto 8px}
+.finale .stats{position:relative;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:20px 0 24px}
+.finale .stat{background:#fff;border-radius:18px;padding:16px 22px;box-shadow:var(--shadow-sm);border:1px solid rgba(142,124,195,.16)}
+.finale .stat b{display:block;font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--gold);font-weight:700;line-height:1}
+.finale .stat span{font-size:.78rem;color:var(--slate);font-weight:600;text-transform:uppercase;letter-spacing:1px}
+
+/* ---------- Footer ---------- */
+.foot{text-align:center;margin-top:34px;color:var(--slate);font-size:.82rem;font-weight:600;letter-spacing:.5px}
+.foot .dot{color:var(--gold);margin:0 6px}
+
+/* confetti */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:9999}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120px);background:var(--plum-deep);color:#fff;padding:13px 22px;border-radius:30px;font-weight:600;box-shadow:var(--shadow);z-index:10000;transition:transform .4s cubic-bezier(.2,1.4,.4,1);max-width:90vw;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:560px){
+  .match-wrap{gap:10px}
+  .tile.phr{font-size:1.02rem}
+  .room-body{padding:18px 14px 24px}
+  .hero-top{padding:30px 18px 14px}
+  .story{padding:18px 18px 4px}
+  .howto{padding:6px 14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001s !important;transition-duration:.05s !important}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div id="toast"></div>
+
+<div class="wrap">
+  <!-- TOP BAR -->
+  <div class="topbar" id="topbar" style="display:none">
+    <div class="brand">
+      <div class="mark">🦉</div>
+      <div><b>Glossomathia</b><span>Play · Listen · Learn</span></div>
+    </div>
+    <div class="keys" id="keybar" title="Keys to the Feast">
+      <span class="k" data-k="0">🗝️</span><span class="k" data-k="1">🗝️</span>
+      <span class="k" data-k="2">🗝️</span><span class="k" data-k="3">🗝️</span>
+      <span class="k" data-k="4">🗝️</span><span class="k" data-k="5">🗝️</span>
+    </div>
+  </div>
+
+  <!-- INTRO SCREEN -->
+  <section class="screen active" id="screen-intro">
+    <div class="hero">
+      <div class="hero-top">
+        <img class="hero-owl" id="introOwl" alt="Socrates the owl in a taverna apron, welcoming you in">
+        <div class="eyebrow">A Glossomathia Escape Room</div>
+        <h1>Στην <em>Ταβέρνα</em></h1>
+        <p class="sub greek">Καλώς ήρθες! Order your way through a Greek taverna — one phrase at a time, no menu-pointing required.</p>
+      </div>
+      <div class="meander" id="introMeander"></div>
+      <div class="story">
+        <p>The sun is setting over the harbour and your stomach is growling. Down a narrow lane, lanterns glow over a little taverna where old <span class="gr">Σωκράτης</span> the owl is tying on his apron, ready to feed every hungry traveller who wanders in.</p>
+        <p>But the owl serves his feast in <strong>six courses</strong>, and each is locked until you can ask for it — in Greek. Not perfect grammar. Not flawless spelling. Just the warm, everyday words a traveller needs to sit down, order well, and eat like a local.</p>
+        <div class="scroll-quote">"Μη ντρέπεσαι. Don't be embarrassed —<br>stumbling over the words <em>is</em> half the fun of the meal."</div>
+        <p>Behind each course, a small puzzle. Listen to the owl speak, match the dishes to their words, choose the meaning — and earn a <strong>golden key</strong>. Collect all six, and the whole table is yours: 66 essential phrases for eating out in Greece. <span class="gr">Πάμε;</span> Shall we go?</p>
+      </div>
+      <div class="howto">
+        <div class="h"><div class="i">🔊</div><b>Listen</b><small>Tap any phrase to hear the owl say it aloud in Greek.</small></div>
+        <div class="h"><div class="i">🧩</div><b>Match</b><small>Pair each dish with its Greek words — no typing, ever.</small></div>
+        <div class="h"><div class="i">✨</div><b>Choose</b><small>Pick the right meaning and earn your key to the course.</small></div>
+      </div>
+      <div class="hero-cta">
+        <button class="btn gold" id="beginBtn">🍽️ Step Inside</button>
+        <div style="margin-top:10px;color:var(--slate);font-size:.78rem">🔈 Sound uses your device's Greek voice — turn it up!</div>
+      </div>
+    </div>
+    <div class="foot">Play <span class="dot">·</span> Listen <span class="dot">·</span> Learn <span class="dot">·</span> glossomathia.com</div>
+  </section>
+
+  <!-- MAP SCREEN -->
+  <section class="screen" id="screen-map">
+    <div class="map-head">
+      <h2 class="greek">The Six Courses</h2>
+      <p>Each course serves up the Greek you need for that part of the meal. Open them in order — your table is waiting.</p>
+    </div>
+    <div class="chambers" id="chambers"></div>
+    <div class="foot">Play <span class="dot">·</span> Listen <span class="dot">·</span> Learn <span class="dot">·</span> glossomathia.com</div>
+  </section>
+
+  <!-- ROOM SCREEN -->
+  <section class="screen" id="screen-room">
+    <div class="room" id="roomEl"></div>
+    <div class="foot">Play <span class="dot">·</span> Listen <span class="dot">·</span> Learn <span class="dot">·</span> glossomathia.com</div>
+  </section>
+
+  <!-- FINALE SCREEN -->
+  <section class="screen" id="screen-finale">
+    <div class="finale">
+      <img id="finaleOwl" alt="Socrates the owl and friends gathered around a full taverna table">
+      <div class="eyebrow">The Gates Are Open</div>
+      <h1>Καλή <em>όρεξη!</em></h1>
+      <div class="grk">Enjoy your meal!</div>
+      <p>You ordered your way through all six courses — table, drinks, mezze, mains, special requests, and the bill. The table is full, the owls are toasting, and 66 Greek phrases are yours to keep. <strong>Μπράβο!</strong> 🎉</p>
+      <div class="stats">
+        <div class="stat"><b>66</b><span>Phrases met</span></div>
+        <div class="stat"><b>6 / 6</b><span>Courses served</span></div>
+        <div class="stat"><b>🗝️×6</b><span>Golden keys</span></div>
+      </div>
+      <p class="greek" style="font-size:1.15rem;color:var(--plum);font-weight:600">Καλή όρεξη! 🥂 Now go order one out loud at a real taverna — that's the bravest puzzle of all.</p>
+      <div style="margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn gold" id="celebrateBtn">🎊 Celebrate again</button>
+        <button class="btn ghost" id="replayBtn">↺ Revisit the gates</button>
+      </div>
+    </div>
+    <div class="foot">Play <span class="dot">·</span> Listen <span class="dot">·</span> Learn <span class="dot">·</span> glossomathia.com</div>
+  </section>
+</div>
+
+<script>
+/* ============================================================
+   IMAGE WIRING — your three owl PNGs.
+   Keep these files in the SAME folder as this HTML on GitHub Pages.
+   If a file is missing, a friendly on-brand SVG owl shows instead.
+   ============================================================ */
+const OWL_FILES = {
+  socrates: "OwlSocrates.png",
+  professor: "OwlProfessor.png",
+  children: "OwlSocratesTeachingChildren.png"
+};
+</script>
+<script>
+/* ===== Glossomathia Taverna Escape Room — engine (inlined) ===== */
+/* =====================================================================
+   STIN TAVERNA — A Greek Food & Ordering Escape Room
+   Glossomathia · Play · Listen · Learn
+   Essential restaurant & market Greek for travellers.
+   ===================================================================== */
+
+/* ---------- 100 PHRASES, grouped into 6 gates ---------- */
+/* r = gate index (0–5) · gr Greek · tr transliteration · en meaning · e emoji (for picture puzzles) */
+/* ---------- 66 PHRASES, grouped into 6 courses (gates) ---------- */
+/* r = course index (0-5) · gr Greek · tr transliteration · en meaning · e emoji (for picture puzzles) */
+const PHRASES = [
+  /* COURSE 1 — A Table, Please (getting seated) */
+  {r:0, gr:"Καλησπέρα σας",      tr:"ka-li-SPÉ-ra sas",      en:"Good evening (polite)", e:"🌆"},
+  {r:0, gr:"Μια θέση, παρακαλώ",  tr:"mia THÉ-si pa-ra-ka-LÓ", en:"A table, please", e:"🪑"},
+  {r:0, gr:"Ένα τραπέζι για δύο", tr:"É-na tra-PÉ-zi ya DÍ-o",  en:"A table for two", e:"🍽️"},
+  {r:0, gr:"Έχετε τραπέζι;",      tr:"É-he-te tra-PÉ-zi",      en:"Do you have a table?", e:"❓"},
+  {r:0, gr:"Για πόσα άτομα;",     tr:"ya PÓ-sa Á-to-ma",       en:"For how many people?", e:"👥"},
+  {r:0, gr:"Το μενού, παρακαλώ",  tr:"to me-NÚ pa-ra-ka-LÓ",   en:"The menu, please", e:"📋"},
+  {r:0, gr:"Έξω, παρακαλώ",       tr:"É-kso pa-ra-ka-LÓ",      en:"Outside, please", e:"☀️"},
+  {r:0, gr:"Είμαστε έτοιμοι",     tr:"Í-ma-ste É-ti-mi",       en:"We're ready (to order)", e:"✅"},
+  {r:0, gr:"Μια στιγμή",          tr:"mia sti-GHMÍ",           en:"One moment", e:"⏳"},
+  {r:0, gr:"Τι μας προτείνετε;",  tr:"ti mas pro-TÍ-ne-te",    en:"What do you recommend?", e:"🤔"},
+  {r:0, gr:"Παρακαλώ",            tr:"pa-ra-ka-LÓ",            en:"Please / you're welcome"},
+
+  /* COURSE 2 — Something to Drink */
+  {r:1, gr:"Νερό, παρακαλώ",      tr:"ne-RÓ pa-ra-ka-LÓ",      en:"Water, please", e:"💧"},
+  {r:1, gr:"Ένα μπουκάλι νερό",   tr:"É-na boo-KÁ-li ne-RÓ",   en:"A bottle of water", e:"🍾"},
+  {r:1, gr:"Ένα κρασί",           tr:"É-na kra-SÍ",            en:"A wine", e:"🍷"},
+  {r:1, gr:"Μία μπύρα",           tr:"MÍ-a BÍ-ra",             en:"A beer", e:"🍺"},
+  {r:1, gr:"Έναν καφέ",           tr:"É-nan ka-FÉ",            en:"A coffee", e:"☕"},
+  {r:1, gr:"Έναν χυμό",           tr:"É-nan hi-MÓ",            en:"A juice", e:"🧃"},
+  {r:1, gr:"Ένα ούζο",            tr:"É-na Ú-zo",              en:"An ouzo", e:"🥃"},
+  {r:1, gr:"Ένα ποτήρι",          tr:"É-na po-TÍ-ri",          en:"A glass", e:"🥛"},
+  {r:1, gr:"Λευκό ή κόκκινο;",     tr:"lef-KÓ i KÓ-ki-no",      en:"White or red (wine)?"},
+  {r:1, gr:"Για μένα…",           tr:"ya MÉ-na",               en:"For me…"},
+  {r:1, gr:"Στην υγειά μας!",     tr:"stin i-YÁ mas",          en:"Cheers! (to our health)", e:"🥂"},
+
+  /* COURSE 3 — Little Plates (mezze & starters) */
+  {r:2, gr:"Ψωμί",                tr:"pso-MÍ",                 en:"Bread", e:"🍞"},
+  {r:2, gr:"Τζατζίκι",            tr:"dza-DZÍ-ki",             en:"Tzatziki (yogurt dip)", e:"🥒"},
+  {r:2, gr:"Ελιές",               tr:"e-LIÉS",                 en:"Olives", e:"🫒"},
+  {r:2, gr:"Φέτα",                tr:"FÉ-ta",                  en:"Feta cheese", e:"🧀"},
+  {r:2, gr:"Ελληνική σαλάτα",     tr:"e-li-ni-KÍ sa-LÁ-ta",    en:"Greek salad", e:"🥗"},
+  {r:2, gr:"Πατάτες τηγανητές",   tr:"pa-TÁ-tes ti-gha-ni-TÉS", en:"French fries", e:"🍟"},
+  {r:2, gr:"Μια μερίδα",          tr:"mia me-RÍ-da",           en:"A portion", e:"🍴"},
+  {r:2, gr:"Θα πάρουμε…",         tr:"tha PÁ-roo-me",          en:"We'll have…"},
+  {r:2, gr:"Τυρί",                tr:"ti-RÍ",                  en:"Cheese"},
+  {r:2, gr:"Μου αρέσει",          tr:"moo a-RÉ-si",            en:"I like it", e:"👍"},
+  {r:2, gr:"Είναι νόστιμο!",      tr:"Í-ne NÓ-sti-mo",         en:"It's delicious!", e:"😋"},
+
+  /* COURSE 4 — The Main Event */
+  {r:3, gr:"Θα ήθελα…",           tr:"tha Í-the-la",           en:"I would like…"},
+  {r:3, gr:"Σουβλάκι",            tr:"soo-VLÁ-ki",             en:"Souvlaki (skewer)", e:"🍢"},
+  {r:3, gr:"Γύρο",                tr:"YÍ-ro",                  en:"Gyro (wrap)", e:"🌯"},
+  {r:3, gr:"Μουσακά",             tr:"moo-sa-KÁ",              en:"Moussaka", e:"🍆"},
+  {r:3, gr:"Ψάρι",                tr:"PSÁ-ri",                 en:"Fish", e:"🐟"},
+  {r:3, gr:"Κοτόπουλο",           tr:"ko-TÓ-poo-lo",           en:"Chicken", e:"🍗"},
+  {r:3, gr:"Κρέας",               tr:"KRÉ-as",                 en:"Meat", e:"🥩"},
+  {r:3, gr:"Αρνί",                tr:"ar-NÍ",                  en:"Lamb"},
+  {r:3, gr:"Για μένα ένα…",       tr:"ya MÉ-na É-na",          en:"For me, one…"},
+  {r:3, gr:"Πεινάω πολύ",         tr:"pi-NÁ-o po-LÍ",          en:"I'm very hungry", e:"🍽️"},
+  {r:3, gr:"Καλή όρεξη!",         tr:"ka-LÍ Ó-re-ksi",         en:"Enjoy your meal!", e:"😄"},
+
+  /* COURSE 5 — Just for You (dietary needs & questions) */
+  {r:4, gr:"Είμαι χορτοφάγος",    tr:"Í-me hor-to-FÁ-ghos",    en:"I'm vegetarian", e:"🥦"},
+  {r:4, gr:"Έχω αλλεργία",        tr:"É-ho a-ler-YÍ-a",        en:"I have an allergy", e:"⚠️"},
+  {r:4, gr:"Χωρίς κρέας",         tr:"ho-RÍS KRÉ-as",          en:"Without meat", e:"🚫"},
+  {r:4, gr:"Χωρίς ζάχαρη",        tr:"ho-RÍS ZÁ-ha-ri",        en:"Without sugar"},
+  {r:4, gr:"Τι έχει μέσα;",       tr:"ti É-hi MÉ-sa",          en:"What's in it?", e:"🔍"},
+  {r:4, gr:"Είναι καυτερό;",      tr:"Í-ne kaf-te-RÓ",         en:"Is it spicy?", e:"🌶️"},
+  {r:4, gr:"Έχει γλουτένη;",      tr:"É-hi gloo-TÉ-ni",        en:"Does it have gluten?", e:"🌾"},
+  {r:4, gr:"Λίγο",                tr:"LÍ-gho",                 en:"A little", e:"🤏"},
+  {r:4, gr:"Πολύ",                tr:"po-LÍ",                  en:"A lot / very"},
+  {r:4, gr:"Ένα ακόμα, παρακαλώ", tr:"É-na a-KÓ-ma pa-ra-ka-LÓ", en:"One more, please", e:"➕"},
+  {r:4, gr:"Είμαι αλλεργικός",    tr:"Í-me a-ler-yi-KÓS",      en:"I'm allergic"},
+
+  /* COURSE 6 — Sweet & the Bill */
+  {r:5, gr:"Επιδόρπιο",           tr:"e-pi-DÓR-pio",           en:"Dessert", e:"🍮"},
+  {r:5, gr:"Μπακλαβά",            tr:"ba-kla-VÁ",              en:"Baklava", e:"🍯"},
+  {r:5, gr:"Παγωτό",              tr:"pa-gho-TÓ",              en:"Ice cream", e:"🍨"},
+  {r:5, gr:"Φρούτα",              tr:"FRÚ-ta",                 en:"Fruit", e:"🍇"},
+  {r:5, gr:"Χόρτασα!",            tr:"HÓR-ta-sa",              en:"I'm full!", e:"😌"},
+  {r:5, gr:"Ήταν υπέροχο",        tr:"Í-tan i-PÉ-ro-ho",       en:"It was wonderful", e:"✨"},
+  {r:5, gr:"Τον λογαριασμό, παρακαλώ", tr:"ton lo-gha-ria-SMÓ pa-ra-ka-LÓ", en:"The bill, please", e:"🧾"},
+  {r:5, gr:"Πόσο κάνει;",         tr:"PÓ-so KÁ-ni",            en:"How much is it?", e:"💶"},
+  {r:5, gr:"Κρατήστε τα ρέστα",   tr:"kra-TÍ-ste ta RÉ-sta",   en:"Keep the change", e:"🪙"},
+  {r:5, gr:"Ευχαριστούμε πολύ!",  tr:"ef-ha-ri-STÚ-me po-LÍ",  en:"Thank you very much!", e:"🙏"},
+  {r:5, gr:"Όλα ήταν τέλεια",     tr:"Ó-la Í-tan TÉ-li-a",     en:"Everything was perfect", e:"🌟"},
+];
+
+/* ---------- GATE METADATA ---------- */
+const ACCENTS = ["--a-purple","--a-blue","--a-green","--a-rose","--a-purple","--gold"];
+const ROOMS = [
+  {ico:"🪑", title:"A Table, Please", grk:"Μια Θέση",      blurb:"Greet the host. Get seated.",
+   story:"Evening light, the clatter of plates, the smell of grilled bread drifting from the kitchen. The owl <span class='gr'>Σωκράτης</span> ties on his apron and waves you in: <span class='gr'>«Καλησπέρα σας!»</span> Before you can eat, you must be seated — learn to greet the host and ask for a table."},
+  {ico:"🍷", title:"Something to Drink", grk:"Τα Ποτά",     blurb:"Water, wine, and a toast.",
+   story:"A jug of cold water lands on the table, beads of dew on the glass. <span class='gr'>«Τι θα πιείτε;»</span> asks the owl — what will you drink? Order something to sip and learn the most joyful word in any taverna: <span class='gr'>«Στην υγειά μας!»</span>"},
+  {ico:"🫒", title:"Little Plates", grk:"Οι Μεζέδες",       blurb:"Bread, dips, and small joys.",
+   story:"This is the Greek way: not one big plate, but many small ones to share. Warm bread, cool tzatziki, glistening olives, a brick of feta. The owl spreads them across the table: <span class='gr'>«Καλή όρεξη!»</span> Learn the mezédes and the lock will open."},
+  {ico:"🍢", title:"The Main Event", grk:"Το Κυρίως",        blurb:"Souvlaki, fish, the big plates.",
+   story:"Now the smoke and sizzle of the grill. Souvlaki on the skewer, fish fresh from the bay, moussaka golden from the oven. The owl sharpens a fork: <span class='gr'>«Θα ήθελα…»</span> — I would like. Say what you want, and the feast takes shape."},
+  {ico:"⚠️", title:"Just for You", grk:"Χωρίς, Παρακαλώ",     blurb:"Allergies, swaps, and questions.",
+   story:"Every traveller has their needs. Vegetarian? Allergic? Hate spicy? The owl nods kindly — a good guest knows how to ask. <span class='gr'>«Τι έχει μέσα;»</span> Learn to order safely and exactly the way you like it."},
+  {ico:"🧾", title:"Sweet & the Bill", grk:"Ο Λογαριασμός",  blurb:"Dessert, then settle up.",
+   story:"Baklava dripping with honey, a scoop of ice cream, and that happy, full feeling. Then the last ritual: <span class='gr'>«Τον λογαριασμό, παρακαλώ»</span> — the bill, please. Learn to finish a meal like a local, and the feast is yours."},
+];
+
+/* ---------- SVG fallback owls (shown if a PNG is missing) ---------- */
+function svgOwl(kind){
+  const body = '#7A6E63', dark='#5A4F46', belly='#F3EEE6', eye='#1F3A52', beak='#E8841E', gold='#E0A93A', toga='#F6F1E4';
+  if(kind==='children'){
+    return `data:image/svg+xml;utf8,`+encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'>
+      <g>${[40,120,200,280,330].map((x,i)=>`<g transform='translate(${x},${150+ (i%2?20:0)})'><ellipse cx='0' cy='40' rx='34' ry='40' fill='${body}'/><circle cx='-12' cy='20' r='13' fill='#fff'/><circle cx='12' cy='20' r='13' fill='#fff'/><circle cx='-12' cy='21' r='6' fill='${eye}'/><circle cx='12' cy='21' r='6' fill='${eye}'/><path d='M0 30 l-7 7 l7 4 l7 -4 z' fill='${beak}'/></g>`).join('')}</g>
+      <g transform='translate(200,20)'>
+        <path d='M-34 -8 q34 -22 68 0 l-8 14 q-26 -12 -52 0 z' fill='${gold}'/>
+        <ellipse cx='0' cy='70' rx='62' ry='70' fill='${body}'/>
+        <path d='M-30 95 q30 28 60 0 q-4 50 -30 60 q-26 -10 -30 -60z' fill='${toga}'/>
+        <circle cx='-22' cy='40' r='24' fill='#fff'/><circle cx='22' cy='40' r='24' fill='#fff'/>
+        <circle cx='-22' cy='42' r='11' fill='${eye}'/><circle cx='22' cy='42' r='11' fill='${eye}'/>
+        <circle cx='-25' cy='38' r='4' fill='#fff'/><circle cx='19' cy='38' r='4' fill='#fff'/>
+        <path d='M0 56 l-12 12 l12 7 l12 -7 z' fill='${beak}'/>
+        <circle cx='36' cy='86' r='8' fill='${gold}'/>
+      </g>
+    </svg>`);
+  }
+  const glasses = kind==='professor' ? `<circle cx='-26' cy='44' r='26' fill='none' stroke='#6b4f33' stroke-width='4'/><circle cx='26' cy='44' r='26' fill='none' stroke='#6b4f33' stroke-width='4'/><path d='M0 44 h0' stroke='#6b4f33' stroke-width='4'/>` : '';
+  const wreath = kind!=='professor' ? `<path d='M-40 -6 q40 -26 80 0 l-9 16 q-31 -14 -62 0 z' fill='${gold}'/>` : '';
+  return `data:image/svg+xml;utf8,`+encodeURIComponent(
+  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'>
+    <g transform='translate(120,110)'>
+      ${wreath}
+      <ellipse cx='0' cy='66' rx='74' ry='82' fill='${body}'/>
+      <path d='M-44 36 q-26 18 -18 60 q14 10 22 -6 z' fill='${dark}'/>
+      <path d='M44 36 q26 18 18 60 q-14 10 -22 -6 z' fill='${dark}'/>
+      <path d='M-34 70 q34 40 68 0 q-6 64 -34 74 q-28 -10 -34 -74z' fill='${belly}'/>
+      <circle cx='-30' cy='44' r='30' fill='#fff'/><circle cx='30' cy='44' r='30' fill='#fff'/>
+      <circle cx='-30' cy='46' r='14' fill='${eye}'/><circle cx='30' cy='46' r='14' fill='${eye}'/>
+      <circle cx='-34' cy='41' r='5' fill='#fff'/><circle cx='26' cy='41' r='5' fill='#fff'/>
+      ${glasses}
+      <path d='M0 62 l-14 14 l14 8 l14 -8 z' fill='${beak}'/>
+      <circle cx='44' cy='92' r='9' fill='${gold}'/>
+    </g>
+  </svg>`);
+}
+
+/* ---------- Image loader with graceful fallback ---------- */
+function setOwl(imgEl, key, fallbackKind){
+  if(!imgEl) return;
+  imgEl.onerror = ()=>{ imgEl.onerror=null; imgEl.src = svgOwl(fallbackKind); };
+  imgEl.src = OWL_FILES[key];
+}
+
+/* ---------- Speech (Greek pronunciation) ---------- */
+let greekVoice = null;
+function loadVoices(){
+  const vs = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  greekVoice = vs.find(v=>/^el/i.test(v.lang)) || vs.find(v=>/greek/i.test(v.name)) || null;
+}
+if('speechSynthesis' in window){
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){ toast("🔇 Your browser can't speak — read the spelling aloud!"); return; }
+  speechSynthesis.cancel();
+  const clean = text.replace(/[…]/g,'').trim();
+  const u = new SpeechSynthesisUtterance(clean);
+  u.lang = 'el-GR';
+  if(greekVoice) u.voice = greekVoice;
+  u.rate = 0.86; u.pitch = 1.0;
+  if(btn){ btn.classList.add('playing'); u.onend = ()=>btn.classList.remove('playing'); u.onerror=()=>btn.classList.remove('playing'); }
+  speechSynthesis.speak(u);
+}
+
+/* ---------- State ---------- */
+const state = { unlocked: 0, cleared: [false,false,false,false,false,false], current: 0 };
+
+/* ---------- Helpers ---------- */
+const $ = s=>document.querySelector(s);
+const byRoom = r=>PHRASES.filter(p=>p.r===r);
+const accentVal = r=>getComputedStyle(document.documentElement).getPropertyValue(ACCENTS[r]).trim();
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$('#'+id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function setRootAccent(r){document.documentElement.style.setProperty('--accent', accentVal(r));}
+
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
+
+/* ---------- Keys bar ---------- */
+function paintKeys(){document.querySelectorAll('#keybar .k').forEach((k,i)=>{k.classList.toggle('on', state.cleared[i]);});}
+
+/* =====================================================================
+   MAP
+   ===================================================================== */
+function renderMap(){
+  const wrap = $('#chambers'); wrap.innerHTML='';
+  ROOMS.forEach((room,i)=>{
+    const locked = i>state.unlocked;
+    const done = state.cleared[i];
+    const c = accentVal(i);
+    const el = document.createElement('div');
+    el.className = 'chamber'+(locked?' locked':'')+(done?' done':'');
+    el.style.setProperty('--c', c);
+    el.innerHTML = `
+      <div class="num">${i+1}</div>
+      <div class="ico">${room.ico}</div>
+      <h3>${room.title}</h3>
+      <div class="grk">${room.grk}</div>
+      <p>${room.blurb}</p>
+      <div class="state">${ locked ? '🔒 Locked' : done ? '🗝️ Key earned · revisit' : '✨ Open this gate'}</div>
+      <div class="bar"><i style="width:${done?100:0}%"></i></div>`;
+    if(!locked) el.addEventListener('click',()=>openRoom(i));
+    wrap.appendChild(el);
+  });
+  paintKeys();
+}
+
+/* =====================================================================
+   ROOM
+   ===================================================================== */
+function openRoom(r){
+  state.current = r;
+  setRootAccent(r);
+  const room = ROOMS[r];
+  const el = $('#roomEl');
+  el.innerHTML = `
+    <div class="room-head">
+      <button class="back" id="backBtn">← The Gates</button>
+      <h2>${room.ico} ${room.title}</h2>
+      <div class="grk">${room.grk}</div>
+      <div class="tag">Gate ${r+1} of 6 · ${byRoom(r).length} phrases</div>
+    </div>
+    <div class="room-body">
+      <div class="story-strip">
+        <img id="storyOwl" alt="The owl guide">
+        <p>${room.story}</p>
+      </div>
+      <div class="stage-tabs">
+        <div class="t active" data-st="learn"><span class="s">📖</span>Learn</div>
+        <div class="t" data-st="match"><span class="s">🧩</span>Match</div>
+        <div class="t" data-st="quiz"><span class="s">✨</span>Unlock</div>
+      </div>
+      <div class="stage active" id="stage-learn"></div>
+      <div class="stage" id="stage-match"></div>
+      <div class="stage" id="stage-quiz"></div>
+    </div>`;
+  setOwl($('#storyOwl'), 'professor', 'professor');
+  $('#backBtn').onclick = ()=>{ show('screen-map'); renderMap(); };
+  // tabs
+  el.querySelectorAll('.stage-tabs .t').forEach(t=>{
+    t.onclick = ()=>switchStage(t.dataset.st);
+  });
+  renderLearn(r);
+  buildMatch(r);
+  buildQuiz(r);
+  switchStage('learn');
+  show('screen-room');
+}
+
+function switchStage(st){
+  document.querySelectorAll('#roomEl .stage-tabs .t').forEach(t=>t.classList.toggle('active', t.dataset.st===st));
+  document.querySelectorAll('#roomEl .stage').forEach(s=>s.classList.remove('active'));
+  $('#stage-'+st).classList.add('active');
+}
+function markTabCleared(st){
+  const t = document.querySelector(`#roomEl .stage-tabs .t[data-st="${st}"]`);
+  if(t) t.classList.add('cleared');
+}
+
+/* ---------- STAGE: Learn ---------- */
+function renderLearn(r){
+  const stage = $('#stage-learn');
+  const cards = byRoom(r).map((p,i)=>`
+    <div class="card">
+      ${p.e?`<div class="emoji">${p.e}</div>`:''}
+      <div class="gr">${p.gr}</div>
+      <div class="tr">${p.tr}</div>
+      <div class="en">${p.en}</div>
+      <button class="say" data-say="${encodeURIComponent(p.gr)}">🔊 Hear it</button>
+    </div>`).join('');
+  stage.innerHTML = `
+    <div class="learn-grid">${cards}</div>
+    <div class="stage-foot">
+      <div class="hint">👂 Tap <b style="color:var(--accent)">🔊 Hear it</b> on each one. When you're ready, prove it.</div>
+      <button class="btn sm" id="toMatch">Try the puzzle →</button>
+    </div>`;
+  stage.querySelectorAll('.say').forEach(b=>{
+    b.onclick = ()=>speak(decodeURIComponent(b.dataset.say), b);
+  });
+  $('#toMatch').onclick = ()=>switchStage('match');
+}
+
+/* ---------- STAGE: Picture Match ---------- */
+function buildMatch(r){
+  const stage = $('#stage-match');
+  const pool = shuffle(byRoom(r).filter(p=>p.e)).slice(0,6);
+  let selectedPic = null, done = 0;
+  const pics = shuffle(pool), phrs = shuffle(pool);
+  stage.innerHTML = `
+    <p class="mcq-prog">🧩 Tap a picture, then tap its phrase. Match all ${pool.length} to open the lock.</p>
+    <div class="match-wrap">
+      <div class="match-col"><h4>Pictures</h4>${pics.map((p,i)=>`<button class="tile pic" data-gr="${encodeURIComponent(p.gr)}" data-side="pic">${p.e}</button>`).join('')}</div>
+      <div class="match-col"><h4>Phrases</h4>${phrs.map((p,i)=>`<button class="tile phr" data-gr="${encodeURIComponent(p.gr)}" data-side="phr">${p.gr}<small>${p.tr}</small></button>`).join('')}</div>
+    </div>
+    <div class="feedback" id="matchFb"></div>
+    <div class="stage-foot" style="justify-content:center;margin-top:14px">
+      <button class="btn" id="toQuiz" disabled>Ready to order →</button>
+    </div>`;
+
+  const fb = $('#matchFb');
+  function clearSel(){ stage.querySelectorAll('.tile.sel').forEach(t=>t.classList.remove('sel')); }
+
+  stage.querySelectorAll('.tile').forEach(tile=>{
+    tile.onclick = ()=>{
+      if(tile.classList.contains('done')) return;
+      const gr = tile.dataset.gr;
+      if(tile.dataset.side==='pic'){
+        clearSel(); selectedPic = tile; tile.classList.add('sel');
+        speak(decodeURIComponent(gr));
+        return;
+      }
+      // phrase tapped
+      if(!selectedPic){ fb.textContent='👆 Pick a picture first!'; fb.className='feedback bad'; return; }
+      if(selectedPic.dataset.gr===gr){
+        tile.classList.add('done'); selectedPic.classList.add('done');
+        selectedPic=null; done++;
+        fb.textContent = ['Ωραία! 🌟','Μπράβο! 👏','Τέλεια! ✨','Σωστά! 💫'][done%4];
+        fb.className='feedback good';
+        miniSpark(tile);
+        if(done===pool.length){
+          fb.textContent='All matched! The lock clicks open. 🔓';
+          $('#toQuiz').disabled=false;
+          markTabCleared('match');
+          confettiBurst(0.4);
+        }
+      } else {
+        tile.classList.add('wrong'); selectedPic.classList.add('wrong');
+        const sp=selectedPic;
+        setTimeout(()=>{tile.classList.remove('wrong');sp.classList.remove('wrong');},420);
+        clearSel(); selectedPic=null;
+        fb.textContent='Not quite — try again. Struggling is the point. 💜';
+        fb.className='feedback bad';
+      }
+    };
+  });
+  $('#toQuiz').onclick = ()=>switchStage('quiz');
+}
+
+/* ---------- STAGE: Multiple Choice (Unlock) ---------- */
+function buildQuiz(r){
+  const stage = $('#stage-quiz');
+  const all = byRoom(r);
+  const picks = shuffle(all).slice(0, Math.min(5, all.length));
+  const allEn = PHRASES.map(p=>p.en);
+  const questions = picks.map(p=>{
+    const distract = shuffle(allEn.filter(e=>e!==p.en)).slice(0,3);
+    return { p, options: shuffle([p.en, ...distract]) };
+  });
+  let qi=0, correct=0;
+
+  function renderQ(){
+    if(qi>=questions.length){ renderDoor(); return; }
+    const {p, options} = questions[qi];
+    stage.innerHTML = `
+      <div class="mcq">
+        <div class="mcq-prog">✨ Order up · ${qi+1} of ${questions.length}</div>
+        <div class="mcq-q">
+          <div class="gr">${p.gr}</div>
+          <div class="tr">${p.tr}</div>
+          <button class="say" id="qsay">🔊 Hear it again</button>
+          <div class="ask">What does it mean?</div>
+        </div>
+        <div class="mcq-opts">${options.map(o=>`<button class="opt" data-o="${encodeURIComponent(o)}">${o}</button>`).join('')}</div>
+        <div class="feedback" id="qfb"></div>
+      </div>`;
+    $('#qsay').onclick = (e)=>speak(p.gr, e.currentTarget);
+    speak(p.gr);
+    const fb=$('#qfb');
+    stage.querySelectorAll('.opt').forEach(opt=>{
+      opt.onclick = ()=>{
+        const chosen = decodeURIComponent(opt.dataset.o);
+        stage.querySelectorAll('.opt').forEach(o=>{
+          o.disabled=true;
+          if(decodeURIComponent(o.dataset.o)===p.en) o.classList.add('correct');
+        });
+        if(chosen===p.en){
+          correct++; fb.textContent='Σωστά! ✓'; fb.className='feedback good'; miniSpark(opt);
+        } else {
+          opt.classList.add('incorrect'); fb.textContent=`Almost! «${p.gr}» = ${p.en}`; fb.className='feedback bad';
+        }
+        setTimeout(()=>{ qi++; renderQ(); }, chosen===p.en?780:1700);
+      };
+    });
+  }
+
+  function renderDoor(){
+    const newKey = !state.cleared[r];
+    state.cleared[r]=true;
+    if(r+1>state.unlocked && r+1<ROOMS.length) state.unlocked = r+1;
+    if(r===ROOMS.length-1) state.unlocked = ROOMS.length;
+    markTabCleared('quiz'); paintKeys();
+    const last = r===ROOMS.length-1;
+    stage.innerHTML = `
+      <div class="door">
+        <div class="lock">🗝️</div>
+        <h3>${newKey?'You earned a golden key!':'Course already served — welcome back!'}</h3>
+        <p>${correct}/${questions.length} on the first pass — but every course opens for the brave, not the perfect. <span class="greek" style="color:var(--plum);font-weight:600">Μπράβο!</span></p>
+        ${ last
+          ? `<button class="btn gold" id="toFinale">🎉 Sit down to the Feast</button>`
+          : `<button class="btn gold" id="nextGate">On to Course ${r+2} →</button>
+             <div style="margin-top:10px"><button class="btn ghost sm" id="backMap2">Back to the menu</button></div>` }
+      </div>`;
+    confettiBurst(0.8);
+    if(last){
+      $('#toFinale').onclick = ()=>{ launchFinale(); };
+    } else {
+      $('#nextGate').onclick = ()=>openRoom(r+1);
+      $('#backMap2').onclick = ()=>{ show('screen-map'); renderMap(); };
+    }
+  }
+
+  // Quiz is rendered lazily the first time its stage becomes visible (see switchStage hook).
+  stage.innerHTML = `<div class="mcq"><div class="mcq-prog">✨ Tap “Order” when you're ready to order.</div></div>`;
+  stage.dataset.started = "";
+  stage._start = renderQ;
+}
+
+/* Ensure quiz starts when shown (covers all entry paths) */
+const _switchStage = switchStage;
+switchStage = function(st){
+  _switchStage(st);
+  if(st==='quiz'){
+    const stage = $('#stage-quiz');
+    if(stage && stage._start && stage.dataset.started!=='1'){
+      stage.dataset.started='1';
+      stage._start();
+    }
+  }
+};
+
+/* =====================================================================
+   FINALE
+   ===================================================================== */
+function launchFinale(){
+  setOwl($('#finaleOwl'), 'children', 'children');
+  show('screen-finale');
+  bigCelebration();
+}
+function bigCelebration(){
+  confettiBurst(1);
+  setTimeout(()=>confettiBurst(1),500);
+  setTimeout(()=>confettiBurst(1),1000);
+  setTimeout(()=>speak('Καλή όρεξη!'),350);
+}
+
+/* =====================================================================
+   CONFETTI (self-contained canvas, brand colors)
+   ===================================================================== */
+const cvs = $('#confetti'), ctx = cvs.getContext('2d');
+let parts = [], raf=null;
+function sizeCanvas(){ cvs.width=innerWidth; cvs.height=innerHeight; }
+sizeCanvas(); addEventListener('resize', sizeCanvas);
+const CONF_COLORS = ['#8E7CC3','#7AA6B9','#6FAE84','#C98BB0','#E0A93A','#F2D89A'];
+function confettiBurst(power=1){
+  const n = Math.floor(80*power);
+  for(let i=0;i<n;i++){
+    parts.push({
+      x: innerWidth*(0.5+(Math.random()-0.5)*0.5),
+      y: innerHeight*0.32,
+      vx:(Math.random()-0.5)*9*power,
+      vy:(Math.random()*-9-3)*power,
+      g:0.22+Math.random()*0.12,
+      s:6+Math.random()*7,
+      rot:Math.random()*6.28, vr:(Math.random()-0.5)*0.3,
+      c:CONF_COLORS[(Math.random()*CONF_COLORS.length)|0],
+      shape: Math.random()<0.5?'rect':'circ',
+      life: 120+Math.random()*40
+    });
+  }
+  if(!raf) animateConfetti();
+}
+function animateConfetti(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.vx*=0.99; p.life--;
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.c; ctx.globalAlpha=Math.max(0,Math.min(1,p.life/40));
+    if(p.shape==='rect') ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6);
+    else { ctx.beginPath(); ctx.arc(0,0,p.s/2,0,6.28); ctx.fill(); }
+    ctx.restore();
+  });
+  parts = parts.filter(p=>p.life>0 && p.y<cvs.height+40);
+  if(parts.length){ raf=requestAnimationFrame(animateConfetti); } else { ctx.clearRect(0,0,cvs.width,cvs.height); raf=null; }
+}
+/* tiny spark on a correct tap */
+function miniSpark(el){
+  const rect = el.getBoundingClientRect();
+  for(let i=0;i<14;i++){
+    parts.push({x:rect.left+rect.width/2, y:rect.top+rect.height/2,
+      vx:(Math.random()-0.5)*7, vy:(Math.random()*-6-1), g:0.25, s:4+Math.random()*5,
+      rot:Math.random()*6.28, vr:(Math.random()-0.5)*0.4, c:CONF_COLORS[(Math.random()*CONF_COLORS.length)|0],
+      shape:Math.random()<0.5?'rect':'circ', life:40+Math.random()*20});
+  }
+  if(!raf) animateConfetti();
+}
+
+/* =====================================================================
+   MEANDER divider (svg) + intro
+   ===================================================================== */
+function paintMeander(){
+  // simple decorative; CSS handles look. Nothing required.
+}
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+function boot(){
+  setOwl($('#introOwl'), 'socrates', 'socrates');
+  $('#beginBtn').onclick = ()=>{
+    // prime speech on user gesture
+    if('speechSynthesis' in window){ try{ const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u);}catch(e){} loadVoices(); }
+    $('#topbar').style.display='flex';
+    state.unlocked = Math.max(state.unlocked,0);
+    renderMap(); show('screen-map');
+  };
+  $('#celebrateBtn').onclick = ()=>{ bigCelebration(); };
+  $('#replayBtn').onclick = ()=>{ renderMap(); show('screen-map'); };
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
+
+</script>
+</body>
+</html>
