@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Άκου & Δραπέτευσε · Glossomathia A1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Poppins:wght@400;500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#5E4B6B; --plum-deep:#43374f; --slate:#4A4A55;
+    --purple:#8E7CC3; --blue:#7AA6B9; --green:#6FAE84; --rose:#C98BB0; --gold:#E0A93A;
+    --ink:#33333B; --mute:#7A7585; --paper:#FBFAFD;
+    --lav:#EFEAF6; --lav2:#E4DCEF;
+    --ok:#5FA978; --bad:#D08AA0;
+    --shadow:0 18px 50px -22px rgba(67,55,79,.55);
+    --ring:0 0 0 3px rgba(142,124,195,.35);
+    --font-display:"Cormorant Garamond",Georgia,serif;
+    --font-ui:"Poppins",system-ui,sans-serif;
+    --font-body:"Nunito",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--font-body); color:var(--ink); min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 20% -10%, rgba(142,124,195,.35), transparent 60%),
+      radial-gradient(900px 700px at 110% 20%, rgba(122,166,185,.28), transparent 55%),
+      linear-gradient(160deg,#efeaf6 0%, #e1d6ec 45%, #d6c7e3 100%);
+    display:flex; align-items:flex-start; justify-content:center;
+    padding:clamp(14px,3vw,40px);
+  }
+  .stage{ width:100%; max-width:680px; }
+  /* brand bar */
+  .brand{ display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:14px; }
+  .brand .mark{ font-family:var(--font-ui); font-weight:700; letter-spacing:.28em;
+    font-size:13px; color:var(--purple); text-transform:uppercase; }
+  .brand .dot{ color:var(--gold); }
+  .panel{
+    background:var(--paper); border-radius:26px; box-shadow:var(--shadow);
+    padding:clamp(20px,4vw,38px); position:relative; overflow:hidden;
+    border:1px solid rgba(142,124,195,.18);
+  }
+  .panel::before{ /* top accent ribbon */
+    content:""; position:absolute; inset:0 0 auto 0; height:5px;
+    background:linear-gradient(90deg,var(--purple),var(--blue),var(--green),var(--rose),var(--gold));
+  }
+  .eyebrow{ font-family:var(--font-ui); font-weight:600; font-size:12px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--blue); margin:6px 0 4px; }
+  h1,h2{ font-family:var(--font-display); color:var(--plum); margin:0; line-height:1.05; font-weight:700; }
+  h1{ font-size:clamp(34px,7vw,52px); }
+  h2{ font-size:clamp(26px,5.5vw,38px); }
+  .lede{ color:var(--slate); font-size:clamp(15px,2.4vw,17px); line-height:1.55; margin:14px 0 0; }
+  .owl-row{ display:flex; gap:14px; align-items:flex-start; margin-top:6px; }
+  .owl{ flex:0 0 auto; width:58px; height:58px; filter:drop-shadow(0 6px 10px rgba(67,55,79,.25)); }
+  .bubble{ background:var(--lav); border-radius:14px 14px 14px 4px; padding:10px 14px;
+    color:var(--plum); font-weight:600; font-size:15px; line-height:1.4; }
+
+  /* buttons */
+  button{ font-family:var(--font-ui); cursor:pointer; border:none; }
+  .btn{
+    font-weight:600; font-size:16px; color:#fff; background:var(--purple);
+    padding:14px 26px; border-radius:999px; box-shadow:0 10px 22px -10px rgba(142,124,195,.8);
+    transition:transform .12s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn:active{ transform:translateY(0); }
+  .btn.ghost{ background:transparent; color:var(--plum); box-shadow:none; border:2px solid var(--lav2); }
+  .btn.gold{ background:var(--gold); box-shadow:0 10px 22px -10px rgba(224,169,58,.85); color:#4a3711; }
+  .btn:focus-visible{ outline:none; box-shadow:var(--ring); }
+  .center{ text-align:center; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
+  .actions.center{ justify-content:center; }
+
+  /* progress keyring */
+  .keyring{ display:flex; gap:10px; align-items:center; justify-content:center; margin:2px 0 18px; }
+  .key{ width:38px; height:38px; border-radius:50%; display:grid; place-items:center;
+    background:var(--lav); color:var(--mute); font-family:var(--font-ui); font-weight:700; font-size:15px;
+    border:2px dashed var(--lav2); transition:all .35s ease; }
+  .key.on{ background:var(--gold); color:#4a3711; border:2px solid var(--gold);
+    box-shadow:0 8px 16px -8px rgba(224,169,58,.9); transform:scale(1.04); }
+
+  /* the sound sigil — the signature element */
+  .sigil-wrap{ display:flex; justify-content:center; margin:6px 0 4px; }
+  .sigil{ position:relative; width:118px; height:118px; border-radius:50%;
+    background:radial-gradient(circle at 50% 40%, #a594d1, var(--purple) 70%);
+    display:grid; place-items:center; color:#fff;
+    box-shadow:0 16px 34px -12px rgba(94,75,107,.85), inset 0 2px 8px rgba(255,255,255,.35);
+    transition:transform .15s ease; }
+  .sigil:hover{ transform:scale(1.04); }
+  .sigil:focus-visible{ outline:none; box-shadow:var(--ring),0 16px 34px -12px rgba(94,75,107,.85); }
+  .sigil svg{ width:46px; height:46px; }
+  .sigil .ring{ position:absolute; inset:0; border-radius:50%; border:2px solid var(--purple);
+    opacity:0; }
+  .sigil.speaking .ring{ animation:ripple 1.4s ease-out infinite; }
+  .sigil.speaking .ring:nth-child(2){ animation-delay:.45s; }
+  @keyframes ripple{ 0%{ transform:scale(1); opacity:.55 } 100%{ transform:scale(1.8); opacity:0 } }
+  .sigil-hint{ text-align:center; font-family:var(--font-ui); font-weight:600; font-size:13px;
+    color:var(--mute); margin-top:8px; letter-spacing:.02em; }
+
+  /* generic puzzle card */
+  .puzzle{ margin-top:8px; }
+  .qcount{ font-family:var(--font-ui); font-weight:600; font-size:13px; color:var(--blue); text-align:center; letter-spacing:.04em; }
+  .reveal{ text-align:center; min-height:26px; margin-top:6px; }
+  .reveal .gr{ font-family:var(--font-display); font-size:26px; font-weight:600; color:var(--plum); }
+  .reveal .small{ font-family:var(--font-ui); font-size:13px; color:var(--mute); font-weight:600; }
+  .show-link{ background:none; border:none; color:var(--blue); font-weight:600; font-size:13px;
+    text-decoration:underline; cursor:pointer; font-family:var(--font-ui); }
+
+  .opts{ display:grid; gap:10px; margin-top:18px; }
+  @media(min-width:460px){ .opts.two{ grid-template-columns:1fr 1fr; } }
+  .opt{ background:#fff; border:2px solid var(--lav2); border-radius:14px; padding:14px 16px;
+    font-family:var(--font-body); font-weight:700; font-size:16px; color:var(--plum); text-align:left;
+    transition:all .15s ease; }
+  .opt:hover{ border-color:var(--purple); transform:translateY(-1px); }
+  .opt:focus-visible{ outline:none; box-shadow:var(--ring); }
+  .opt.right{ background:#e8f3ec; border-color:var(--green); color:#2f6b48; }
+  .opt.wrong{ background:#f8ecf1; border-color:var(--rose); color:#9a4f6e; animation:shake .35s; }
+  @keyframes shake{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  /* matching */
+  .match{ display:grid; grid-template-columns:1fr 1fr; gap:10px 18px; margin-top:18px; }
+  .mcol-label{ font-family:var(--font-ui); font-weight:600; font-size:12px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--mute); }
+  .chip{ background:#fff; border:2px solid var(--lav2); border-radius:12px; padding:12px;
+    font-weight:700; color:var(--plum); display:flex; align-items:center; gap:10px; width:100%; text-align:left; transition:all .15s ease; }
+  .chip:hover{ border-color:var(--purple); }
+  .chip:focus-visible{ outline:none; box-shadow:var(--ring); }
+  .chip.sel{ border-color:var(--purple); background:var(--lav); }
+  .chip.done{ background:#e8f3ec; border-color:var(--green); color:#2f6b48; cursor:default; }
+  .chip.miss{ animation:shake .35s; border-color:var(--rose); }
+  .chip .ear{ width:26px;height:26px;flex:0 0 auto;border-radius:50%;background:var(--purple);display:grid;place-items:center; }
+  .chip .ear svg{ width:14px;height:14px;color:#fff; }
+  .chip.done .ear{ background:var(--green); }
+
+  /* typing */
+  .typed{ display:flex; gap:10px; margin-top:18px; }
+  .typed input{ flex:1; font-family:var(--font-display); font-size:24px; color:var(--plum);
+    padding:10px 16px; border:2px solid var(--lav2); border-radius:14px; background:#fff; }
+  .typed input:focus{ outline:none; border-color:var(--purple); box-shadow:var(--ring); }
+  .feedback{ text-align:center; font-family:var(--font-ui); font-weight:600; font-size:14px; margin-top:12px; min-height:20px; }
+  .feedback.good{ color:var(--green); } .feedback.bad{ color:#b56a86; }
+
+  /* keypad / final */
+  .code{ display:flex; gap:10px; justify-content:center; margin:20px 0 8px; }
+  .code input{ width:58px; height:66px; text-align:center; font-family:var(--font-display);
+    font-size:32px; font-weight:700; color:var(--plum); border:2px solid var(--lav2); border-radius:14px; background:#fff; }
+  .code input:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(224,169,58,.35); }
+  .hintdigits{ text-align:center; font-family:var(--font-ui); color:var(--mute); font-size:13px; }
+
+  /* end */
+  .review{ margin-top:20px; background:var(--lav); border-radius:16px; padding:16px 18px; }
+  .review h3{ font-family:var(--font-ui); font-size:13px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--plum); margin:0 0 10px; }
+  .review .empty{ color:var(--green); font-weight:700; }
+  .word-pill{ display:inline-flex; align-items:center; gap:8px; background:#fff; border:1.5px solid var(--lav2);
+    border-radius:999px; padding:7px 12px 7px 8px; margin:5px 6px 0 0; font-weight:700; color:var(--plum); font-size:15px; }
+  .word-pill button{ width:24px;height:24px;border-radius:50%;background:var(--blue);display:grid;place-items:center; }
+  .word-pill button svg{ width:13px;height:13px;color:#fff; }
+  .stat{ display:flex; gap:18px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
+  .stat div{ text-align:center; }
+  .stat b{ font-family:var(--font-display); font-size:30px; color:var(--plum); display:block; line-height:1; }
+  .stat span{ font-family:var(--font-ui); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute); }
+
+  .note{ font-family:var(--font-ui); font-size:12.5px; color:var(--mute); text-align:center; margin-top:16px; line-height:1.5; }
+  .foot{ text-align:center; margin-top:18px; font-family:var(--font-ui); font-size:12px; color:var(--plum); opacity:.7; }
+  .foot b{ color:var(--purple); }
+  .hidden{ display:none !important; }
+  .confetti{ position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+  .confetti i{ position:absolute; top:-12px; width:9px; height:14px; border-radius:2px; animation:fall linear forwards; }
+  @keyframes fall{ to{ transform:translateY(105vh) rotate(540deg); opacity:.9 } }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="brand"><span class="mark">Glossomathia <span class="dot">·</span> Άκου &amp; Δραπέτευσε</span></div>
+  <div class="panel" id="panel"><!-- screens injected here --></div>
+  <div class="foot">A1 · Γνωριμία &amp; Καθημερινή Ζωή · <b>@greekwithmarg</b></div>
+</div>
+
+<!-- reusable SVG defs as JS strings below -->
+<script>
+/* ---------- icons ---------- */
+const EAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 4-3 4-3 7a3 3 0 0 1-6 0"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>';
+const SOUND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8a4 4 0 0 1 0 8"/><path d="M19 5a8 8 0 0 1 0 14"/></svg>';
+const OWL = `<svg class="owl" viewBox="0 0 64 64" aria-hidden="true">
+  <ellipse cx="32" cy="38" rx="20" ry="22" fill="#8E7CC3"/>
+  <path d="M12 24c0-7 5-12 8-12 0 4-2 7-2 7M52 24c0-7-5-12-8-12 0 4 2 7 2 7" fill="#7c69b2"/>
+  <ellipse cx="32" cy="40" rx="12" ry="15" fill="#efeaf6"/>
+  <circle cx="24" cy="30" r="9" fill="#fff"/><circle cx="40" cy="30" r="9" fill="#fff"/>
+  <circle cx="24" cy="31" r="4.2" fill="#43374f"/><circle cx="40" cy="31" r="4.2" fill="#43374f"/>
+  <circle cx="25.4" cy="29.6" r="1.4" fill="#fff"/><circle cx="41.4" cy="29.6" r="1.4" fill="#fff"/>
+  <path d="M32 34l4 5h-8z" fill="#E0A93A"/>
+  <path d="M20 52c4 4 20 4 24 0" stroke="#6FAE84" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>`;
+
+/* ---------- speech ---------- */
+let voices = [];
+function loadVoices(){ try{ voices = window.speechSynthesis.getVoices()||[]; }catch(e){ voices=[]; } }
+if('speechSynthesis' in window){ loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
+function greekVoice(){ return voices.find(v=>/^el([-_]|$)/i.test(v.lang)) || voices.find(v=>/greek/i.test(v.name)) || null; }
+let lastSigil=null;
+function speak(text, sigilEl, rate){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='el-GR'; const gv=greekVoice(); if(gv) u.voice=gv;
+  u.rate = rate||0.88; u.pitch=1.0;
+  if(sigilEl){
+    lastSigil=sigilEl; sigilEl.classList.add('speaking');
+    u.onend = ()=> sigilEl.classList.remove('speaking');
+    u.onerror = ()=> sigilEl.classList.remove('speaking');
+  }
+  window.speechSynthesis.speak(u);
+}
+function hasGreekVoice(){ return !!greekVoice(); }
+
+/* ---------- helpers ---------- */
+const panel = document.getElementById('panel');
+function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstElementChild; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function normGr(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ς/g,'σ').replace(/[^a-zα-ω0-9]/g,'').trim(); }
+function sigilButton(text, hint){
+  const wrap = el(`<div><div class="sigil-wrap"><button class="sigil" aria-label="Άκουσε τη λέξη">
+    <span class="ring"></span><span class="ring"></span>${SOUND}</button></div>
+    <div class="sigil-hint">${hint||'Πάτησε για να ακούσεις'}</div></div>`);
+  const btn = wrap.querySelector('.sigil');
+  btn.addEventListener('click', ()=> speak(text, btn));
+  return { wrap, btn, play:()=>speak(text,btn) };
+}
+
+/* ---------- state ---------- */
+const STATE = { gate:0, digits:[null,null,null,null], hints:0, missed:new Map(), start:0 };
+const CODE = ['4','7','2','9'];
+function addMissed(gr,en){ if(gr) STATE.missed.set(gr, en||''); }
+
+/* ---------- gate data ---------- */
+const GATE1 = { digit:'4', items:[
+  { gr:'η μουσική', en:'music',  opts:['music','school','animal','park'] },
+  { gr:'ο σκύλος',  en:'dog',    opts:['dog','cat','house','game'] },
+  { gr:'το σχολείο',en:'school', opts:['school','music','free time','sister'] },
+  { gr:'το πάρκο',  en:'park',   opts:['park','phone','homework','brother'] },
+]};
+const GATE2 = { digit:'7', pairs:[
+  { gr:'η ζωγραφική', en:'painting' },
+  { gr:'η υγεία',     en:'health' },
+  { gr:'η παρέα',     en:'company' },
+  { gr:'η Κυριακή',   en:'Sunday' },
+]};
+const GATE3 = { digit:'2', items:[
+  { gr:'θέλω',    en:'I want' },
+  { gr:'ακούω',   en:'I listen' },
+  { gr:'μαθαίνω', en:'I learn' },
+]};
+const GATE4 = { digit:'9', items:[
+  { prompt:'Εμπρός;', label:'Εμπρός; (answering the phone)',
+    opts:[{t:'Γεια σου, η Άννα είμαι!',ok:true},{t:'Περαστικά!'},{t:'Δεν μου αρέσει.'}] },
+  { prompt:'Πώς είναι η υγεία σου;', label:'Πώς είναι η υγεία σου;',
+    opts:[{t:'Είμαι λίγο καλύτερα, ευχαριστώ.',ok:true},{t:'Στο πάρκο.'},{t:'Πέντε.'}] },
+  { prompt:'Τι μαθήματα κάνατε;', label:'Τι μαθήματα κάνατε;',
+    opts:[{t:'Κάναμε ελληνικά και ιστορία.',ok:true},{t:'Όχι, ευχαριστώ.'},{t:'Μένω στη Νέα Υόρκη.'}] },
+]};
+
+/* ---------- progress keyring ---------- */
+function keyring(){
+  const k = STATE.digits.map((d,i)=> `<div class="key ${d?'on':''}">${d||(i+1)}</div>`).join('');
+  return `<div class="keyring">${k}</div>`;
+}
+
+/* ---------- intro ---------- */
+function showIntro(){
+  panel.innerHTML='';
+  const noVoice = ('speechSynthesis' in window) ? '' :
+    `<div class="note">Ο φυλλομετρητής σου δεν υποστηρίζει ήχο ομιλίας. Μπορείς να παίξεις με το κουμπί «δείξε τη λέξη».</div>`;
+  const scr = el(`<div class="screen center">
+    <div class="eyebrow">Δωμάτιο Απόδρασης · A1</div>
+    <h1>Άκου &amp; Δραπέτευσε</h1>
+    <div class="owl-row" style="justify-content:center;text-align:left;max-width:440px;margin:18px auto 0">
+      ${OWL}
+      <div class="bubble">Καλώς ήρθες! Είμαι η κουκουβάγια-φύλακας. Κλειδώθηκες στο Δωμάτιο των Λέξεων.
+      Για να βγεις, <b>άκου</b> τις ελληνικές λέξεις και λύσε τέσσερις γρίφους. Κάθε γρίφος σού δίνει ένα ψηφίο για την πόρτα.</div>
+    </div>
+    <p class="lede">Ο ήχος είναι το κλειδί — το κείμενο είναι κρυμμένο. Πάτησε το μωβ σύμβολο για να ακούσεις, και διάλεξε σωστά.</p>
+    <div class="sigil-test"></div>
+    <div class="actions center">
+      <button class="btn gold" id="go">Ξεκίνα την απόδραση</button>
+    </div>
+    <div class="note">🔊 Άναψε τον ήχο της συσκευής σου. Για καλύτερη προφορά, χρειάζεσαι μια ελληνική φωνή στο σύστημά σου.
+    ${hasGreekVoice()? '' : '<br><b>Σημείωση:</b> δεν βρέθηκε ελληνική φωνή — ο ήχος μπορεί να ακούγεται με ξένη προφορά.'}</div>
+    ${noVoice}
+  </div>`);
+  const test = sigilButton('Γεια σου! Είσαι έτοιμος;', 'Δοκίμασε τον ήχο');
+  scr.querySelector('.sigil-test').appendChild(test.wrap);
+  scr.querySelector('#go').addEventListener('click', ()=>{ STATE.start=Date.now(); STATE.gate=1; renderGate(); });
+  panel.appendChild(scr);
+}
+
+/* ---------- gate frame ---------- */
+function gateFrame(num, titleGr, titleEn, bodyNode){
+  panel.innerHTML='';
+  const f = el(`<div class="screen">
+    ${keyring()}
+    <div class="eyebrow center">Πύλη 0${num} / 04</div>
+    <h2 class="center">${titleGr}</h2>
+    <div class="qcount" style="margin-top:6px">${titleEn}</div>
+    <div class="body"></div>
+  </div>`);
+  f.querySelector('.body').appendChild(bodyNode);
+  panel.appendChild(f);
+}
+function owlSay(node, msg, tone){
+  let b = node.querySelector('.gate-owl');
+  if(!b){ b = el(`<div class="owl-row gate-owl" style="margin-top:18px">${OWL}<div class="bubble"></div></div>`); node.appendChild(b); }
+  const bub = b.querySelector('.bubble');
+  bub.textContent = msg;
+  bub.style.color = tone==='bad' ? '#9a4f6e' : 'var(--plum)';
+}
+function gateSolved(num, digit){
+  STATE.digits[num-1]=digit;
+  const done = el(`<div class="center" style="margin-top:24px">
+    <div class="owl-row" style="justify-content:center;max-width:420px;margin:0 auto 4px;text-align:left">
+      ${OWL}<div class="bubble">Μπράβο! Η πύλη άνοιξε. Πήρες το ψηφίο <b style="font-size:20px;color:var(--gold)">${digit}</b>.</div>
+    </div>
+    <div class="actions center">
+      <button class="btn ${num<4?'':'gold'}" id="next">${num<4?'Επόμενη πύλη →':'Δοκίμασε την πόρτα 🚪'}</button>
+    </div></div>`);
+  panel.querySelector('.body').appendChild(done);
+  done.querySelector('#next').addEventListener('click', ()=>{ STATE.gate = num+1; renderGate(); });
+  // refresh keyring
+  const kr = panel.querySelector('.keyring');
+  if(kr) kr.outerHTML = keyring();
+}
+
+/* ---------- GATE 1: listen & choose ---------- */
+function gate1(){
+  let idx=0, solvedItems=0;
+  const body = el('<div class="puzzle"></div>');
+  function render(){
+    body.innerHTML='';
+    const item = GATE1.items[idx];
+    body.appendChild(el(`<div class="qcount">Λέξη ${idx+1} από ${GATE1.items.length} · Τι σημαίνει;</div>`));
+    const sig = sigilButton(item.gr, 'Άκουσε τη λέξη'); body.appendChild(sig.wrap);
+    const rev = el(`<div class="reveal"><button class="show-link">δείξε τη λέξη</button></div>`);
+    rev.querySelector('.show-link').addEventListener('click',()=>{ STATE.hints++; rev.innerHTML=`<span class="gr">${item.gr}</span>`; });
+    body.appendChild(rev);
+    const opts = el('<div class="opts two"></div>');
+    shuffle(item.opts).forEach(o=>{
+      const b = el(`<button class="opt">${o}</button>`);
+      b.addEventListener('click',()=>{
+        if(o===item.en){ b.classList.add('right'); [...opts.children].forEach(c=>c.disabled=true);
+          solvedItems++; setTimeout(()=>{ if(idx<GATE1.items.length-1){ idx++; render(); } else gateSolved(1,GATE1.digit); }, 650);
+        } else { b.classList.add('wrong'); b.disabled=true; addMissed(item.gr,item.en); }
+      });
+      opts.appendChild(b);
+    });
+    body.appendChild(opts);
+    setTimeout(()=>sig.play(), 250);
+  }
+  gateFrame(1,'Άκου &amp; Διάλεξε','Listen and choose the meaning', body);
+  render();
+}
+
+/* ---------- GATE 2: listen & match ---------- */
+function gate2(){
+  const body = el('<div class="puzzle"></div>');
+  let selected=null, done=0;
+  body.appendChild(el(`<div class="qcount">Άκουσε κάθε λέξη και ταίριαξέ τη με τη σημασία της.</div>`));
+  const grid = el(`<div class="match">
+    <div><div class="mcol-label">Λέξη (άκουσε)</div><div class="left"></div></div>
+    <div><div class="mcol-label">Σημασία</div><div class="right"></div></div></div>`);
+  const left = grid.querySelector('.left'), right = grid.querySelector('.right');
+  GATE2.pairs.forEach((p,i)=>{
+    const c = el(`<button class="chip" style="margin-bottom:10px"><span class="ear">${EAR}</span><span>Λέξη ${i+1}</span></button>`);
+    c.dataset.key=p.gr; c.addEventListener('click',()=>{ speak(p.gr,null);
+      if(c.classList.contains('done'))return;
+      left.querySelectorAll('.chip').forEach(x=>x.classList.remove('sel')); c.classList.add('sel'); selected=p.gr; });
+    left.appendChild(c);
+  });
+  shuffle(GATE2.pairs).forEach(p=>{
+    const c = el(`<button class="chip" style="margin-bottom:10px"><span>${p.en}</span></button>`);
+    c.dataset.key=p.gr; c.addEventListener('click',()=>{
+      if(c.classList.contains('done'))return;
+      if(!selected){ owlSay(body,'Πρώτα πάτησε μια λέξη αριστερά για να την ακούσεις.'); return; }
+      if(selected===p.gr){
+        const lc = left.querySelector('.chip.sel'); lc.classList.remove('sel'); lc.classList.add('done'); lc.disabled=true;
+        c.classList.add('done'); c.disabled=true; selected=null; done++;
+        if(done===GATE2.pairs.length){ owlSay(body,'Τέλεια! Όλα ταιριαστά.'); setTimeout(()=>gateSolved(2,GATE2.digit),600); }
+      } else {
+        const grWord = GATE2.pairs.find(x=>x.gr===selected); addMissed(selected, grWord?grWord.en:'');
+        c.classList.add('miss'); setTimeout(()=>c.classList.remove('miss'),400);
+        owlSay(body,'Όχι ακόμα — άκουσε ξανά και δοκίμασε.', 'bad');
+      }
+    });
+    right.appendChild(c);
+  });
+  body.appendChild(grid);
+  gateFrame(2,'Άκου &amp; Ταίριαξε','Tap a word to hear it, then tap its meaning', body);
+}
+
+/* ---------- GATE 3: listen & type ---------- */
+function gate3(){
+  let idx=0;
+  const body = el('<div class="puzzle"></div>');
+  function render(){
+    body.innerHTML='';
+    const item = GATE3.items[idx];
+    body.appendChild(el(`<div class="qcount">Λέξη ${idx+1} από ${GATE3.items.length} · Άκουσε και γράψε στα ελληνικά</div>`));
+    const sig = sigilButton(item.gr,'Άκουσε τη λέξη'); body.appendChild(sig.wrap);
+    const row = el(`<div class="typed"><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="γράψε εδώ…" aria-label="γράψε τη λέξη"><button class="btn" style="padding:12px 20px">Έλεγξε</button></div>`);
+    const input = row.querySelector('input'), check = row.querySelector('button');
+    const fb = el('<div class="feedback"></div>');
+    const help = el(`<div class="center" style="margin-top:8px"><button class="show-link">βοήθεια: δείξε το πρώτο γράμμα</button></div>`);
+    help.querySelector('.show-link').addEventListener('click',()=>{ STATE.hints++; input.value=item.gr[0]; input.focus(); });
+    function attempt(){
+      if(normGr(input.value)===normGr(item.gr)){
+        fb.textContent='Σωστά! '+item.gr+' = '+item.en; fb.className='feedback good'; check.disabled=true; input.disabled=true;
+        setTimeout(()=>{ if(idx<GATE3.items.length-1){ idx++; render(); } else gateSolved(3,GATE3.digit); },800);
+      } else { fb.textContent='Δοκίμασε ξανά — άκουσε προσεκτικά.'; fb.className='feedback bad'; addMissed(item.gr,item.en); }
+    }
+    check.addEventListener('click',attempt);
+    input.addEventListener('keydown',e=>{ if(e.key==='Enter') attempt(); });
+    body.append(row,fb,help);
+    setTimeout(()=>sig.play(),250);
+  }
+  gateFrame(3,'Άκου &amp; Γράψε','Listen and type the word (accents optional)', body);
+  render();
+}
+
+/* ---------- GATE 4: dialogue ---------- */
+function gate4(){
+  let idx=0;
+  const body = el('<div class="puzzle"></div>');
+  function render(){
+    body.innerHTML='';
+    const item = GATE4.items[idx];
+    body.appendChild(el(`<div class="qcount">Στήλη ${idx+1} από ${GATE4.items.length} · Άκουσε & διάλεξε τη σωστή απάντηση</div>`));
+    const sig = sigilButton(item.prompt,'Άκουσε τι λέει ο φίλος σου'); body.appendChild(sig.wrap);
+    const rev = el(`<div class="reveal"><button class="show-link">δείξε τι είπε</button></div>`);
+    rev.querySelector('.show-link').addEventListener('click',()=>{ STATE.hints++; rev.innerHTML=`<span class="gr">«${item.prompt}»</span>`; });
+    body.appendChild(rev);
+    const opts = el('<div class="opts"></div>');
+    shuffle(item.opts).forEach(o=>{
+      const b = el(`<button class="opt">${o.t}</button>`);
+      b.addEventListener('click',()=>{ speak(o.t,null);
+        if(o.ok){ b.classList.add('right'); [...opts.children].forEach(c=>c.disabled=true);
+          setTimeout(()=>{ if(idx<GATE4.items.length-1){ idx++; render(); } else gateSolved(4,GATE4.digit); },800);
+        } else { b.classList.add('wrong'); b.disabled=true; addMissed(item.label,''); }
+      });
+      opts.appendChild(b);
+    });
+    body.appendChild(opts);
+    setTimeout(()=>sig.play(),250);
+  }
+  gateFrame(4,'Ο Διάλογος','Listen to your friend, then pick the right reply', body);
+  render();
+}
+
+/* ---------- final door ---------- */
+function finalDoor(){
+  panel.innerHTML='';
+  const scr = el(`<div class="screen center">
+    ${keyring()}
+    <div class="eyebrow">Η Πόρτα</div>
+    <h2>Πληκτρολόγησε τον κωδικό</h2>
+    <p class="lede">Μάζεψες τέσσερα ψηφία. Γράψ' τα με τη σειρά για να ανοίξεις την πόρτα.</p>
+    <div class="code">
+      <input maxlength="1" inputmode="numeric" aria-label="ψηφίο 1">
+      <input maxlength="1" inputmode="numeric" aria-label="ψηφίο 2">
+      <input maxlength="1" inputmode="numeric" aria-label="ψηφίο 3">
+      <input maxlength="1" inputmode="numeric" aria-label="ψηφίο 4">
+    </div>
+    <div class="hintdigits">Τα ψηφία σου: ${STATE.digits.join(' · ')}</div>
+    <div class="feedback" id="fb"></div>
+    <div class="actions center"><button class="btn gold" id="open">Άνοιξε την πόρτα</button></div>
+  </div>`);
+  const inputs = [...scr.querySelectorAll('.code input')];
+  inputs.forEach((inp,i)=> inp.addEventListener('input',()=>{ if(inp.value && i<3) inputs[i+1].focus(); }));
+  scr.querySelector('#open').addEventListener('click',()=>{
+    const entered = inputs.map(i=>i.value.trim()).join('');
+    if(entered===CODE.join('')){ showEnd(); }
+    else { scr.querySelector('#fb').textContent='Λάθος κωδικός — έλεγξε ξανά τα ψηφία σου.'; scr.querySelector('#fb').className='feedback bad'; }
+  });
+  panel.appendChild(scr);
+  inputs[0].focus();
+}
+
+/* ---------- end ---------- */
+function showEnd(){
+  // confetti
+  const cc = el('<div class="confetti"></div>');
+  const cols=['#8E7CC3','#7AA6B9','#6FAE84','#C98BB0','#E0A93A'];
+  for(let i=0;i<70;i++){ const p=el('<i></i>'); p.style.left=Math.random()*100+'vw';
+    p.style.background=cols[i%cols.length]; p.style.animationDuration=(2.4+Math.random()*2)+'s';
+    p.style.animationDelay=(Math.random()*1.2)+'s'; cc.appendChild(p); }
+  document.body.appendChild(cc); setTimeout(()=>cc.remove(),6000);
+
+  const secs = Math.max(1, Math.round((Date.now()-STATE.start)/1000));
+  const mm = String(Math.floor(secs/60)).padStart(2,'0'), ss=String(secs%60).padStart(2,'0');
+  const missedArr = [...STATE.missed.entries()];
+  let reviewHtml;
+  if(missedArr.length===0){
+    reviewHtml = `<div class="review"><h3>Λέξεις για εξάσκηση</h3><span class="empty">Τέλεια — καμία λέξη δεν σου ξέφυγε! 🌟</span></div>`;
+  } else {
+    const pills = missedArr.map(([gr,en])=>`<span class="word-pill" data-gr="${gr}">${gr}${en?` <span style="color:var(--mute);font-weight:600">· ${en}</span>`:''}<button aria-label="άκουσε ${gr}">${EAR}</button></span>`).join('');
+    reviewHtml = `<div class="review"><h3>Λέξεις για εξάσκηση</h3><div class="pills">${pills}</div></div>`;
+  }
+  panel.innerHTML='';
+  const scr = el(`<div class="screen center">
+    <div class="eyebrow">Ελευθερία</div>
+    <h1>Δραπέτευσες! 🎉</h1>
+    <div class="owl-row" style="justify-content:center;max-width:440px;margin:16px auto 0;text-align:left">
+      ${OWL}<div class="bubble">Μπράβο σου! Άκουσες, κατάλαβες και άνοιξες όλες τις πύλες. Η κουκουβάγια είναι περήφανη!</div>
+    </div>
+    <div class="stat">
+      <div><b>${mm}:${ss}</b><span>Χρόνος</span></div>
+      <div><b>${missedArr.length}</b><span>Λάθη</span></div>
+      <div><b>${STATE.hints}</b><span>Βοήθειες</span></div>
+    </div>
+    ${reviewHtml}
+    <div class="actions center">
+      <button class="btn ghost" id="again">Παίξε ξανά</button>
+    </div>
+  </div>`);
+  scr.querySelectorAll('.word-pill button').forEach(b=>{
+    b.addEventListener('click',()=> speak(b.closest('.word-pill').dataset.gr, null));
+  });
+  scr.querySelector('#again').addEventListener('click',()=>{
+    STATE.gate=0; STATE.digits=[null,null,null,null]; STATE.hints=0; STATE.missed=new Map(); STATE.start=0; showIntro();
+  });
+  panel.appendChild(scr);
+}
+
+/* ---------- router ---------- */
+function renderGate(){
+  if(STATE.gate===1) return gate1();
+  if(STATE.gate===2) return gate2();
+  if(STATE.gate===3) return gate3();
+  if(STATE.gate===4) return gate4();
+  if(STATE.gate===5) return finalDoor();
+}
+showIntro();
+</script>
+</body>
+</html>
