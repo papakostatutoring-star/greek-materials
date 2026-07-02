@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Η Οικογένεια · Family Game — Glossomathia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Poppins:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#3D2B4F;
+    --plum-deep:#2A1D38;
+    --slate:#5C6B7A;
+    --lavender:#EFEAF7;
+    --lavender-soft:#F7F4FC;
+    --purple:#8E7CC3;
+    --blue:#7AA6B9;
+    --green:#6FAE84;
+    --rose:#C98BB0;
+    --card:#FFFFFF;
+    --gold:#D9B24A;
+    --shadow:0 6px 24px rgba(61,43,79,.10);
+    --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(142,124,195,.14), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(122,166,185,.12), transparent 60%),
+      var(--lavender-soft);
+    color:var(--plum);
+    min-height:100vh;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:28px 18px 60px;}
+
+  /* ---------- meander divider ---------- */
+  .meander{
+    height:14px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M0 13 V1 H12 V8 H6 V5 H9' fill='none' stroke='%238E7CC3' stroke-width='1.6'/%3E%3Cpath d='M14 1 H28' fill='none' stroke='%238E7CC3' stroke-width='0' /%3E%3C/svg%3E");
+    background-repeat:repeat-x;
+    opacity:.55;
+    margin:14px auto 0;
+    max-width:280px;
+  }
+
+  /* ---------- header ---------- */
+  header{text-align:center;margin-bottom:26px;}
+  .owl{font-size:2.4rem;display:inline-block;animation:bob 3.5s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+  h1{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:700;font-size:clamp(2.1rem,5.5vw,3.1rem);
+    line-height:1.05;letter-spacing:.01em;
+  }
+  h1 .en{display:block;font-size:.42em;font-family:'Poppins',sans-serif;font-weight:500;color:var(--slate);letter-spacing:.28em;text-transform:uppercase;margin-top:8px;}
+  .tagline{font-family:'Poppins',sans-serif;font-size:.78rem;letter-spacing:.22em;color:var(--purple);margin-top:10px;text-transform:uppercase;}
+
+  /* ---------- screens ---------- */
+  .screen{display:none;animation:fade .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ---------- home ---------- */
+  .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:26px;}
+  .mode-card{
+    background:var(--card);border-radius:var(--radius);padding:26px 22px;
+    box-shadow:var(--shadow);cursor:pointer;border:2px solid transparent;
+    text-align:left;transition:transform .18s ease, border-color .18s ease;
+    position:relative;overflow:hidden;
+  }
+  .mode-card::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:var(--accent);}
+  .mode-card:hover,.mode-card:focus-visible{transform:translateY(-4px);border-color:var(--accent);outline:none;}
+  .mode-card .icon{font-size:1.9rem;}
+  .mode-card h2{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:700;margin:10px 0 2px;}
+  .mode-card .sub{font-family:'Poppins',sans-serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  .mode-card p{color:var(--slate);font-size:.92rem;margin-top:8px;line-height:1.45;}
+  .m-match{--accent:var(--purple);}
+  .m-who{--accent:var(--blue);}
+  .m-speed{--accent:var(--green);}
+
+  /* ---------- top bar in games ---------- */
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
+  .bar .title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;}
+  .pill{
+    font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;
+    background:var(--card);border-radius:999px;padding:7px 16px;box-shadow:var(--shadow);
+  }
+  .btn{
+    font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;
+    border:none;border-radius:999px;padding:11px 24px;cursor:pointer;
+    background:var(--plum);color:#fff;transition:transform .15s ease,opacity .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:transparent;color:var(--plum);border:2px solid var(--plum);padding:9px 22px;}
+  .btn.accent{background:var(--accent,var(--purple));}
+
+  /* ---------- match game ---------- */
+  #grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  @media(max-width:560px){#grid{grid-template-columns:repeat(4,1fr);gap:8px;}}
+  .mcard{aspect-ratio:3/3.6;perspective:700px;cursor:pointer;background:none;border:none;padding:0;}
+  .mcard .inner{
+    position:relative;width:100%;height:100%;
+    transform-style:preserve-3d;transition:transform .45s cubic-bezier(.4,.2,.2,1);
+  }
+  .mcard.flipped .inner,.mcard.matched .inner{transform:rotateY(180deg);}
+  .face{
+    position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;
+  }
+  .face.back{
+    background:linear-gradient(145deg,var(--plum),var(--plum-deep));
+    color:var(--lavender);font-size:1.5rem;box-shadow:var(--shadow);
+  }
+  .face.front{
+    background:var(--card);transform:rotateY(180deg);
+    box-shadow:var(--shadow);border:2px solid var(--lavender);
+    font-weight:800;font-size:clamp(.78rem,2.6vw,1.02rem);line-height:1.2;
+    flex-direction:column;gap:4px;
+  }
+  .face.front .lang{font-family:'Poppins',sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);font-weight:500;}
+  .face.front.gr{color:var(--purple);}
+  .face.front.en{color:var(--plum);}
+  .mcard.matched .face.front{border-color:var(--green);background:#F1F8F3;animation:pop .4s ease;}
+  @keyframes pop{50%{transform:rotateY(180deg) scale(1.07)}}
+  .mcard.wrong .face.front{border-color:var(--rose);animation:shake .35s ease;}
+  @keyframes shake{25%{transform:rotateY(180deg) translateX(-4px)}75%{transform:rotateY(180deg) translateX(4px)}}
+
+  /* ---------- who am i ---------- */
+  .riddle-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px 26px;text-align:center;}
+  .riddle-gr{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,4.5vw,1.9rem);font-weight:600;font-style:italic;line-height:1.35;}
+  .riddle-hint{color:var(--slate);font-size:.92rem;margin-top:10px;min-height:1.4em;}
+  .hint-btn{background:none;border:none;color:var(--blue);font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;margin-top:8px;}
+  .speak{background:none;border:2px solid var(--lavender);border-radius:999px;width:42px;height:42px;font-size:1.1rem;cursor:pointer;transition:border-color .15s;vertical-align:middle;margin-left:8px;}
+  .speak:hover{border-color:var(--blue);}
+  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:22px;}
+  .opt{
+    font-family:'Nunito',sans-serif;font-weight:800;font-size:1.05rem;color:var(--plum);
+    background:var(--lavender);border:2px solid transparent;border-radius:14px;
+    padding:16px 12px;cursor:pointer;transition:all .15s ease;
+  }
+  .opt:hover:not(:disabled){border-color:var(--accent,var(--blue));background:#fff;transform:translateY(-2px);}
+  .opt.correct{background:#F1F8F3;border-color:var(--green);color:var(--green);}
+  .opt.incorrect{background:#FBF0F6;border-color:var(--rose);color:var(--rose);}
+  .opt:disabled{cursor:default;}
+  .feedback{font-family:'Poppins',sans-serif;font-weight:600;margin-top:18px;min-height:1.6em;font-size:.95rem;}
+  .feedback.good{color:var(--green);}
+  .feedback.bad{color:var(--rose);}
+
+  /* ---------- speed ---------- */
+  .timerbar{height:10px;background:var(--lavender);border-radius:999px;overflow:hidden;margin-bottom:18px;}
+  .timerbar .fill{height:100%;width:100%;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .25s linear;border-radius:999px;}
+  .speed-word{
+    font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,7vw,3rem);font-weight:700;
+    text-align:center;background:var(--card);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:34px 20px;
+  }
+  .speed-word .lbl{display:block;font-family:'Poppins',sans-serif;font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--slate);font-weight:500;margin-bottom:6px;}
+  .streak{color:var(--gold);font-weight:800;}
+
+  /* ---------- results ---------- */
+  .results{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:40px 26px;text-align:center;}
+  .results .big{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;margin:6px 0;}
+  .stars{font-size:2rem;letter-spacing:.15em;margin:10px 0;}
+  .results p{color:var(--slate);margin-bottom:20px;}
+  footer{text-align:center;margin-top:44px;color:var(--slate);font-family:'Poppins',sans-serif;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="owl" aria-hidden="true">🦉</span>
+    <h1>Η Οικογένεια<span class="en">The Family · A Greek Word Game</span></h1>
+    <div class="meander" aria-hidden="true"></div>
+    <div class="tagline">Play · Listen · Learn</div>
+  </header>
+
+  <!-- HOME -->
+  <section class="screen active" id="home">
+    <div class="modes">
+      <button class="mode-card m-match" onclick="startMatch()">
+        <span class="icon" aria-hidden="true">🃏</span>
+        <div class="sub">Mode 1</div>
+        <h2>Ταίριαξέ τα!</h2>
+        <p>Memory match — flip the cards and pair each Greek word with its English meaning.</p>
+      </button>
+      <button class="mode-card m-who" onclick="startWho()">
+        <span class="icon" aria-hidden="true">🕵️</span>
+        <div class="sub">Mode 2</div>
+        <h2>Ποιος είμαι;</h2>
+        <p>Who am I? — solve family riddles in Greek. Tap 🔊 to listen, peek at a hint if you're stuck.</p>
+      </button>
+      <button class="mode-card m-speed" onclick="startSpeed()">
+        <span class="icon" aria-hidden="true">⚡</span>
+        <div class="sub">Mode 3</div>
+        <h2>Γρήγορα!</h2>
+        <p>Speed round — 45 seconds, pick the right Greek word. Build a streak for bonus points!</p>
+      </button>
+    </div>
+  </section>
+
+  <!-- MATCH -->
+  <section class="screen" id="match">
+    <div class="bar">
+      <div class="title">🃏 Ταίριαξέ τα!</div>
+      <span class="pill" id="match-moves">Moves: 0</span>
+      <button class="btn ghost" onclick="goHome()">← Menu</button>
+    </div>
+    <div id="grid"></div>
+  </section>
+
+  <!-- WHO AM I -->
+  <section class="screen" id="who">
+    <div class="bar">
+      <div class="title">🕵️ Ποιος είμαι;</div>
+      <span class="pill" id="who-progress">1 / 8</span>
+      <button class="btn ghost" onclick="goHome()">← Menu</button>
+    </div>
+    <div class="riddle-card" style="--accent:var(--blue)">
+      <div class="riddle-gr"><span id="riddle-text"></span><button class="speak" id="speak-btn" title="Listen" aria-label="Listen to the riddle">🔊</button></div>
+      <button class="hint-btn" id="hint-btn">Show hint</button>
+      <div class="riddle-hint" id="riddle-hint"></div>
+      <div class="opts" id="who-opts"></div>
+      <div class="feedback" id="who-feedback"></div>
+    </div>
+  </section>
+
+  <!-- SPEED -->
+  <section class="screen" id="speed">
+    <div class="bar">
+      <div class="title">⚡ Γρήγορα!</div>
+      <span class="pill">Score: <span id="speed-score">0</span> · <span class="streak" id="speed-streak"></span></span>
+      <button class="btn ghost" onclick="goHome()">← Menu</button>
+    </div>
+    <div class="timerbar"><div class="fill" id="timer-fill"></div></div>
+    <div class="speed-word"><span class="lbl">Find the Greek word for…</span><span id="speed-en"></span></div>
+    <div class="opts" id="speed-opts" style="--accent:var(--green)"></div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="screen" id="results">
+    <div class="results">
+      <span style="font-size:2.6rem" aria-hidden="true">🦉</span>
+      <div class="big" id="res-title">Μπράβο σου!</div>
+      <div class="stars" id="res-stars"></div>
+      <p id="res-detail"></p>
+      <button class="btn accent" id="res-again">Play again</button>
+      <button class="btn ghost" onclick="goHome()">Back to menu</button>
+    </div>
+  </section>
+
+  <footer>Glossomathia · glossomathia.com</footer>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const PAIRS = [
+  {gr:'η μητέρα', en:'mother'},
+  {gr:'ο πατέρας', en:'father'},
+  {gr:'ο αδελφός', en:'brother'},
+  {gr:'η αδελφή', en:'sister'},
+  {gr:'ο παππούς', en:'grandfather'},
+  {gr:'η γιαγιά', en:'grandmother'},
+  {gr:'ο γιος', en:'son'},
+  {gr:'η κόρη', en:'daughter'},
+];
+
+const SPEED_POOL = PAIRS.concat([
+  {gr:'ο θείος', en:'uncle'},
+  {gr:'η θεία', en:'aunt'},
+  {gr:'ο ξάδελφος', en:'cousin'},
+  {gr:'η οικογένεια', en:'family'},
+  {gr:'το μωρό', en:'baby'},
+  {gr:'οι γονείς', en:'parents'},
+]);
+
+const RIDDLES = [
+  {gr:'Είμαι η μαμά του μπαμπά σου.', hint:"I am your dad's mom.", a:'η γιαγιά', opts:['η γιαγιά','η θεία','η μητέρα','η αδελφή']},
+  {gr:'Είμαι ο γιος της μητέρας σου.', hint:"I am your mother's son.", a:'ο αδελφός', opts:['ο αδελφός','ο θείος','ο παππούς','ο γιος']},
+  {gr:'Είμαι ο αδελφός της μαμάς σου.', hint:"I am your mom's brother.", a:'ο θείος', opts:['ο πατέρας','ο θείος','ο ξάδελφος','ο παππούς']},
+  {gr:'Είμαι η κόρη της θείας σου.', hint:"I am your aunt's daughter.", a:'η ξαδέλφη', opts:['η αδελφή','η γιαγιά','η ξαδέλφη','η κόρη']},
+  {gr:'Είμαι ο μπαμπάς του μπαμπά σου.', hint:"I am your dad's dad.", a:'ο παππούς', opts:['ο θείος','ο αδελφός','ο γιος','ο παππούς']},
+  {gr:'Είμαι η αδελφή του πατέρα σου.', hint:"I am your father's sister.", a:'η θεία', opts:['η θεία','η μαμά','η ξαδέλφη','η γιαγιά']},
+  {gr:'Είμαστε η μαμά και ο μπαμπάς μαζί.', hint:'We are mom and dad together.', a:'οι γονείς', opts:['τα αδέλφια','οι γονείς','οι θείοι','οι παππούδες']},
+  {gr:'Είμαι η κόρη των γονιών σου.', hint:"I am your parents' daughter.", a:'η αδελφή', opts:['η μητέρα','η θεία','η αδελφή','η γιαγιά']},
+];
+
+/* ================= HELPERS ================= */
+const $ = id => document.getElementById(id);
+const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goHome(){ stopTimer(); show('home'); }
+
+function speakGreek(text){
+  try{
+    if(!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'el-GR'; u.rate = 0.85;
+    const v = speechSynthesis.getVoices().find(v=>v.lang.startsWith('el'));
+    if(v) u.voice = v;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function showResults(title, stars, detail, again){
+  $('res-title').textContent = title;
+  $('res-stars').textContent = '★'.repeat(stars) + '☆'.repeat(3-stars);
+  $('res-detail').textContent = detail;
+  $('res-again').onclick = again;
+  show('results');
+}
+
+/* ================= MODE 1 · MATCH ================= */
+let mFirst=null, mLock=false, mMoves=0, mMatched=0;
+
+function startMatch(){
+  mFirst=null; mLock=false; mMoves=0; mMatched=0;
+  $('match-moves').textContent='Moves: 0';
+  const cards = [];
+  PAIRS.forEach((p,i)=>{
+    cards.push({id:i, lang:'gr', text:p.gr});
+    cards.push({id:i, lang:'en', text:p.en});
+  });
+  const grid = $('grid');
+  grid.innerHTML='';
+  shuffle(cards).forEach(c=>{
+    const b=document.createElement('button');
+    b.className='mcard';
+    b.dataset.id=c.id;
+    b.setAttribute('aria-label','Hidden card');
+    b.innerHTML=`<div class="inner">
+      <div class="face back">🦉</div>
+      <div class="face front ${c.lang}"><span class="lang">${c.lang==='gr'?'Ελληνικά':'English'}</span>${c.text}</div>
+    </div>`;
+    b.onclick=()=>flip(b,c);
+    grid.appendChild(b);
+  });
+  show('match');
+}
+
+function flip(el,c){
+  if(mLock || el.classList.contains('flipped') || el.classList.contains('matched')) return;
+  el.classList.add('flipped');
+  if(c.lang==='gr') speakGreek(c.text);
+  if(!mFirst){ mFirst={el,c}; return; }
+  mMoves++; $('match-moves').textContent='Moves: '+mMoves;
+  if(mFirst.c.id===c.id && mFirst.c.lang!==c.lang){
+    mFirst.el.classList.add('matched'); el.classList.add('matched');
+    mFirst=null; mMatched++;
+    if(mMatched===PAIRS.length){
+      const stars = mMoves<=11?3 : mMoves<=15?2 : 1;
+      setTimeout(()=>showResults('Τέλεια! Perfect match!', stars,
+        `You matched all ${PAIRS.length} pairs in ${mMoves} moves.`, startMatch), 700);
+    }
+  } else {
+    mLock=true;
+    const a=mFirst.el, b=el;
+    a.classList.add('wrong'); b.classList.add('wrong');
+    setTimeout(()=>{
+      a.classList.remove('flipped','wrong');
+      b.classList.remove('flipped','wrong');
+      mFirst=null; mLock=false;
+    },900);
+  }
+}
+
+/* ================= MODE 2 · WHO AM I ================= */
+let wIndex=0, wScore=0, wRiddles=[];
+
+function startWho(){
+  wIndex=0; wScore=0;
+  wRiddles = shuffle(RIDDLES.slice());
+  show('who');
+  renderRiddle();
+}
+
+function renderRiddle(){
+  const r = wRiddles[wIndex];
+  $('who-progress').textContent = `${wIndex+1} / ${wRiddles.length}`;
+  $('riddle-text').textContent = '«' + r.gr + '»';
+  $('riddle-hint').textContent = '';
+  $('hint-btn').style.display='inline-block';
+  $('hint-btn').onclick = ()=>{ $('riddle-hint').textContent = r.hint; $('hint-btn').style.display='none'; };
+  $('speak-btn').onclick = ()=>speakGreek(r.gr);
+  $('who-feedback').textContent=''; $('who-feedback').className='feedback';
+  const box = $('who-opts'); box.innerHTML='';
+  shuffle(r.opts.slice()).forEach(o=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.textContent=o;
+    b.onclick=()=>answerWho(b,o,r);
+    box.appendChild(b);
+  });
+}
+
+function answerWho(btn,choice,r){
+  document.querySelectorAll('#who-opts .opt').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===r.a) b.classList.add('correct');
+  });
+  const fb=$('who-feedback');
+  if(choice===r.a){
+    wScore++;
+    fb.textContent='Σωστά! 🎉'; fb.className='feedback good';
+    speakGreek(r.a);
+  } else {
+    btn.classList.add('incorrect');
+    fb.textContent=`Όχι… είμαι ${r.a}!`; fb.className='feedback bad';
+  }
+  setTimeout(()=>{
+    wIndex++;
+    if(wIndex < wRiddles.length){ renderRiddle(); }
+    else{
+      const stars = wScore>=7?3 : wScore>=5?2 : 1;
+      showResults(wScore>=7?'Ντετέκτιβ της οικογένειας!':'Μπράβο σου!', stars,
+        `You solved ${wScore} of ${wRiddles.length} riddles.`, startWho);
+    }
+  },1600);
+}
+
+/* ================= MODE 3 · SPEED ================= */
+let sScore=0, sStreak=0, sTime=45, sTimer=null, sCurrent=null;
+
+function startSpeed(){
+  sScore=0; sStreak=0; sTime=45;
+  $('speed-score').textContent='0';
+  $('speed-streak').textContent='';
+  $('timer-fill').style.width='100%';
+  show('speed');
+  nextSpeed();
+  stopTimer();
+  sTimer=setInterval(()=>{
+    sTime--;
+    $('timer-fill').style.width=(sTime/45*100)+'%';
+    if(sTime<=0){
+      stopTimer();
+      const stars = sScore>=140?3 : sScore>=80?2 : 1;
+      showResults('Χρόνος! Time\'s up!', stars,
+        `You scored ${sScore} points. Streak bonuses count — can you beat it?`, startSpeed);
+    }
+  },1000);
+}
+function stopTimer(){ if(sTimer){clearInterval(sTimer); sTimer=null;} }
+
+function nextSpeed(){
+  sCurrent = SPEED_POOL[Math.floor(Math.random()*SPEED_POOL.length)];
+  $('speed-en').textContent = sCurrent.en;
+  const wrong = shuffle(SPEED_POOL.filter(p=>p.gr!==sCurrent.gr)).slice(0,3).map(p=>p.gr);
+  const opts = shuffle(wrong.concat([sCurrent.gr]));
+  const box=$('speed-opts'); box.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.textContent=o;
+    b.onclick=()=>answerSpeed(b,o);
+    box.appendChild(b);
+  });
+}
+
+function answerSpeed(btn,choice){
+  const correct = choice===sCurrent.gr;
+  document.querySelectorAll('#speed-opts .opt').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===sCurrent.gr) b.classList.add('correct');
+  });
+  if(correct){
+    sStreak++;
+    sScore += 10 + Math.min(sStreak-1,5)*2;
+    speakGreek(sCurrent.gr);
+  } else {
+    btn.classList.add('incorrect');
+    sStreak=0;
+  }
+  $('speed-score').textContent=sScore;
+  $('speed-streak').textContent = sStreak>=2 ? '🔥 x'+sStreak : '';
+  setTimeout(nextSpeed, correct?450:900);
+}
+
+/* warm up voices list (some browsers load async) */
+if(window.speechSynthesis) speechSynthesis.getVoices();
+</script>
+</body>
+</html>
