@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Τα Σχολικά · School Items Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#8E7CC3; --blue:#7AA6B9; --green:#6FAE84; --rose:#C98BB0;
+    --cream:#FFF9E8; --card:#FFFFFF; --ink:#3A3550; --soft:#6E6890;
+    --wrong:#D9807B;
+    --radius:18px;
+    --shadow:0 4px 14px rgba(94,84,142,.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Nunito',sans-serif; background:var(--cream); color:var(--ink);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    padding:24px 16px 60px;
+  }
+  h1{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-size:clamp(2rem,5vw,3rem);
+    letter-spacing:.08em; color:var(--purple); text-align:center;
+  }
+  .subtitle{color:var(--blue); font-weight:700; letter-spacing:.25em; text-transform:uppercase; font-size:.75rem; text-align:center; margin-top:4px;}
+  .tagline{color:var(--soft); font-size:.8rem; text-align:center; margin-top:2px;}
+
+  /* Backpack progress — the signature element */
+  .backpack-bar{
+    display:flex; align-items:center; gap:12px; margin:22px auto 6px; max-width:520px; width:100%;
+  }
+  .backpack{font-size:2rem; line-height:1; filter:drop-shadow(0 2px 3px rgba(0,0,0,.15)); transition:transform .3s;}
+  .backpack.bounce{animation:bounce .5s;}
+  @keyframes bounce{0%{transform:scale(1)}40%{transform:scale(1.25) rotate(-6deg)}100%{transform:scale(1)}}
+  .track{flex:1; height:14px; background:#EDE6F7; border-radius:99px; overflow:hidden;}
+  .fill{height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,var(--blue),var(--purple),var(--rose)); transition:width .45s ease;}
+  .packed-label{font-size:.8rem; font-weight:800; color:var(--purple); min-width:64px; text-align:right;}
+
+  .modes{display:flex; gap:10px; margin:20px 0 8px; flex-wrap:wrap; justify-content:center;}
+  .mode-btn{
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:.9rem;
+    padding:10px 20px; border-radius:99px; border:2.5px solid transparent; cursor:pointer;
+    background:var(--card); color:var(--soft); box-shadow:var(--shadow); transition:all .2s;
+  }
+  .mode-btn:hover{transform:translateY(-2px);}
+  .mode-btn:focus-visible{outline:3px solid var(--blue); outline-offset:2px;}
+  .mode-btn.active{color:#fff;}
+  .mode-btn.active.m0{background:var(--blue); border-color:var(--blue);}
+  .mode-btn.active.m1{background:var(--green); border-color:var(--green);}
+  .mode-btn.active.m2{background:var(--rose); border-color:var(--rose);}
+
+  .stage{
+    background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    max-width:560px; width:100%; margin-top:14px; padding:26px 22px 30px; text-align:center;
+  }
+  .round-label{font-size:.75rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:var(--soft); margin-bottom:14px;}
+
+  /* MATCH mode */
+  .match-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .match-col{display:flex; flex-direction:column; gap:10px;}
+  .tile{
+    font-weight:700; font-size:1rem; padding:12px 10px; border-radius:14px;
+    border:2.5px solid #EDE6F7; background:#FDFBFF; cursor:pointer; transition:all .15s;
+    color:var(--ink); font-family:'Nunito',sans-serif;
+  }
+  .tile:hover{border-color:var(--blue);}
+  .tile:focus-visible{outline:3px solid var(--blue); outline-offset:2px;}
+  .tile.sel{border-color:var(--purple); background:#F3EEFB; transform:scale(1.03);}
+  .tile.done{border-color:var(--green); background:#EAF6EE; color:var(--green); cursor:default; opacity:.75;}
+  .tile.shake{animation:shake .35s; border-color:var(--wrong);}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+  /* QUIZ mode */
+  .prompt-word{font-family:'Cormorant Garamond',serif; font-weight:700; font-size:2.4rem; color:var(--ink); margin:6px 0 2px;}
+  .phonetic{color:var(--rose); font-size:1rem; margin-bottom:18px; font-weight:600;}
+  .choices{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .choice{
+    font-weight:700; font-size:1rem; padding:14px 10px; border-radius:14px;
+    border:2.5px solid #EDE6F7; background:#FDFBFF; cursor:pointer; transition:all .15s;
+    font-family:'Nunito',sans-serif; color:var(--ink);
+  }
+  .choice:hover{border-color:var(--green);}
+  .choice:focus-visible{outline:3px solid var(--green); outline-offset:2px;}
+  .choice.correct{border-color:var(--green); background:#EAF6EE; color:var(--green);}
+  .choice.wrong{border-color:var(--wrong); background:#FBEEED; color:var(--wrong);}
+
+  /* TYPE mode */
+  .emoji-big{font-size:3rem; margin-bottom:4px;}
+  .type-input{
+    font-family:'Nunito',sans-serif; font-size:1.3rem; font-weight:700; text-align:center;
+    padding:12px 16px; border-radius:14px; border:2.5px solid #EDE6F7; width:100%;
+    max-width:320px; margin:14px auto 4px; display:block; color:var(--ink); background:#FDFBFF;
+  }
+  .type-input:focus{outline:none; border-color:var(--rose);}
+  .type-input.correct{border-color:var(--green); background:#EAF6EE;}
+  .type-input.wrong{border-color:var(--wrong); background:#FBEEED; animation:shake .35s;}
+  .hint{color:var(--soft); font-size:.85rem; margin-top:6px; min-height:1.2em;}
+  .reveal{color:var(--purple); font-weight:800; font-size:1.1rem; min-height:1.4em; margin-top:6px;}
+
+  .action-btn{
+    margin-top:18px; font-family:'Nunito',sans-serif; font-weight:800; font-size:1rem;
+    color:#fff; background:var(--purple); border:none; border-radius:99px;
+    padding:12px 32px; cursor:pointer; box-shadow:var(--shadow); transition:transform .15s;
+  }
+  .action-btn:hover{transform:translateY(-2px);}
+  .action-btn:focus-visible{outline:3px solid var(--blue); outline-offset:2px;}
+  .action-btn.secondary{background:var(--blue);}
+
+  .feedback{min-height:1.6em; font-weight:800; margin-top:12px; font-size:1rem;}
+  .feedback.good{color:var(--green);}
+  .feedback.bad{color:var(--wrong);}
+
+  .score-row{display:flex; justify-content:center; gap:22px; margin-top:16px; font-size:.85rem; font-weight:800; color:var(--soft);}
+  .score-row span b{color:var(--purple);}
+
+  .finish{padding:30px 10px;}
+  .finish .emoji-big{font-size:4rem;}
+  .finish h2{font-family:'Cormorant Garamond',serif; color:var(--purple); font-size:2rem; margin:10px 0 6px;}
+  .finish p{color:var(--soft); font-weight:600;}
+
+  @media (max-width:480px){
+    .match-grid{gap:8px;}
+    .tile{font-size:.88rem; padding:10px 6px;}
+    .prompt-word{font-size:1.9rem;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<h1>Τα Σχολικά</h1>
+<div class="subtitle">School Items · Σχολικά Είδη</div>
+<div class="tagline">Play · Listen · Learn — Glossomathia</div>
+
+<div class="backpack-bar">
+  <div class="backpack" id="backpack">🎒</div>
+  <div class="track"><div class="fill" id="fill"></div></div>
+  <div class="packed-label"><span id="packedCount">0</span>/32</div>
+</div>
+
+<div class="modes">
+  <button class="mode-btn m0 active" data-mode="0">🧩 Ταίριαξέ τα</button>
+  <button class="mode-btn m1" data-mode="1">❓ Κουίζ</button>
+  <button class="mode-btn m2" data-mode="2">✏️ Γράψ' το</button>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<script>
+const WORDS = [
+  {gr:"Βιβλίο", ph:"[ˈvivlio]", en:"Book", ic:"📖"},
+  {gr:"Τετράδιο", ph:"[teˈtraðio]", en:"Notebook", ic:"📓"},
+  {gr:"Ξύστρα", ph:"[ˈksistra]", en:"Sharpener", ic:"🌀"},
+  {gr:"Σχολική Τσάντα", ph:"[sxoliˈci ˈtsanda]", en:"School Bag", ic:"🎒"},
+  {gr:"Κόλλα", ph:"[ˈkola]", en:"Glue", ic:"🧴"},
+  {gr:"Αριθμομηχανή", ph:"[ariθmomiˈxani]", en:"Calculator", ic:"🧮"},
+  {gr:"Χάρτης", ph:"[ˈxartis]", en:"Map", ic:"🗺️"},
+  {gr:"Τάξη", ph:"[ˈtaksi]", en:"Classroom", ic:"🏫"},
+  {gr:"Λεξικό", ph:"[leˈksiko]", en:"Dictionary", ic:"📕"},
+  {gr:"Διορθωτικό", ph:"[ðiorθoˈtiko]", en:"Whiteout", ic:"⬜"},
+  {gr:"Παγουρίνο", ph:"[paˈɣurino]", en:"Water Bottle", ic:"🍶"},
+  {gr:"Μολύβι", ph:"[moˈlivi]", en:"Pencil", ic:"✏️"},
+  {gr:"Στυλό", ph:"[stiˈlo]", en:"Pen", ic:"🖊️"},
+  {gr:"Γόμα", ph:"[ˈɣoma]", en:"Eraser", ic:"🩹"},
+  {gr:"Χάρακας", ph:"[ˈxarakas]", en:"Ruler", ic:"📏"},
+  {gr:"Ψαλίδι", ph:"[psaˈliði]", en:"Scissors", ic:"✂️"},
+  {gr:"Κασετίνα", ph:"[kaseˈtina]", en:"Pencil Case", ic:"👝"},
+  {gr:"Μαρκαδόρος", ph:"[markaˈðoros]", en:"Marker", ic:"🖍️"},
+  {gr:"Ξυλομπογιές", ph:"[ksilobojˈes]", en:"Colored Pencils", ic:"🎨"},
+  {gr:"Θρανίο", ph:"[θraˈnio]", en:"School Desk", ic:"🪑"},
+  {gr:"Πίνακας", ph:"[ˈpinakas]", en:"Board", ic:"⬛"},
+  {gr:"Κιμωλία", ph:"[cimoˈlia]", en:"Chalk", ic:"🖆"},
+  {gr:"Χαρτί", ph:"[xarˈti]", en:"Paper", ic:"📄"},
+  {gr:"Φάκελος", ph:"[ˈfakelos]", en:"Folder", ic:"📁"},
+  {gr:"Συρραπτικό", ph:"[siraptiˈko]", en:"Stapler", ic:"📎"},
+  {gr:"Σελοτέιπ", ph:"[seloˈteip]", en:"Tape", ic:"🎞️"},
+  {gr:"Διαβήτης", ph:"[ðjaˈvitis]", en:"Compass", ic:"🧭"},
+  {gr:"Μοιρογνωμόνιο", ph:"[miroɣnoˈmonio]", en:"Protractor", ic:"📐"},
+  {gr:"Τσάντα φαγητού", ph:"[ˈtsanda fajiˈtu]", en:"Lunchbox", ic:"🍱"},
+  {gr:"Πινέλο", ph:"[piˈnelo]", en:"Paintbrush", ic:"🖌️"},
+  {gr:"Νερομπογιές", ph:"[nerobojˈes]", en:"Watercolors", ic:"💧"},
+  {gr:"Υπολογιστής", ph:"[ipolojiˈstis]", en:"Computer", ic:"💻"},
+];
+
+const stage = document.getElementById('stage');
+const fillEl = document.getElementById('fill');
+const packedEl = document.getElementById('packedCount');
+const backpackEl = document.getElementById('backpack');
+let mode = 0;
+const mastered = new Set();
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function norm(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/ς/g,'σ');}
+
+function pack(idx){
+  if(!mastered.has(idx)){
+    mastered.add(idx);
+    packedEl.textContent = mastered.size;
+    fillEl.style.width = (mastered.size/WORDS.length*100)+'%';
+    backpackEl.classList.remove('bounce'); void backpackEl.offsetWidth; backpackEl.classList.add('bounce');
+  }
+}
+
+/* ---------- MODE 0: MATCH ---------- */
+let matchRounds, matchRound, selected, remainingPairs;
+function startMatch(){
+  const order = shuffle(WORDS.map((_,i)=>i));
+  matchRounds = [order.slice(0,8), order.slice(8,16), order.slice(16,24), order.slice(24,32)];
+  matchRound = 0;
+  renderMatchRound();
+}
+function renderMatchRound(){
+  if(matchRound >= matchRounds.length){ return renderFinish('🧩','Τα ταίριαξες όλα!','You matched all 32 school items.'); }
+  const idxs = matchRounds[matchRound];
+  remainingPairs = idxs.length;
+  selected = null;
+  const left = shuffle(idxs), right = shuffle(idxs);
+  stage.innerHTML = `<div class="round-label">Γύρος ${matchRound+1} / 4 — Ταίριαξε ελληνικά ↔ αγγλικά</div>
+    <div class="match-grid">
+      <div class="match-col" id="colL">${left.map(i=>`<button class="tile" data-i="${i}" data-side="L">${WORDS[i].gr}</button>`).join('')}</div>
+      <div class="match-col" id="colR">${right.map(i=>`<button class="tile" data-i="${i}" data-side="R">${WORDS[i].ic} ${WORDS[i].en}</button>`).join('')}</div>
+    </div>
+    <div class="feedback" id="fb"></div>`;
+  stage.querySelectorAll('.tile').forEach(t=>t.addEventListener('click',()=>tapTile(t)));
+}
+function tapTile(t){
+  if(t.classList.contains('done')) return;
+  if(selected === t){ t.classList.remove('sel'); selected=null; return; }
+  if(!selected){ selected = t; t.classList.add('sel'); return; }
+  if(selected.dataset.side === t.dataset.side){ selected.classList.remove('sel'); selected = t; t.classList.add('sel'); return; }
+  const a = selected, b = t;
+  a.classList.remove('sel');
+  if(a.dataset.i === b.dataset.i){
+    a.classList.add('done'); b.classList.add('done');
+    pack(+a.dataset.i);
+    remainingPairs--;
+    if(remainingPairs===0){
+      document.getElementById('fb').className='feedback good';
+      document.getElementById('fb').textContent='Μπράβο! 🎉';
+      matchRound++;
+      setTimeout(renderMatchRound, 900);
+    }
+  } else {
+    a.classList.add('shake'); b.classList.add('shake');
+    setTimeout(()=>{a.classList.remove('shake');b.classList.remove('shake');},380);
+  }
+  selected = null;
+}
+
+/* ---------- MODE 1: QUIZ ---------- */
+let quizOrder, quizPos, quizScore;
+function startQuiz(){
+  quizOrder = shuffle(WORDS.map((_,i)=>i));
+  quizPos = 0; quizScore = 0;
+  renderQuizQ();
+}
+function renderQuizQ(){
+  if(quizPos >= quizOrder.length){ return renderFinish('❓',`Σκορ: ${quizScore} / 32`, quizScore===32 ? 'Τέλεια! Perfect score!' : 'Great work — replay to beat your score.'); }
+  const i = quizOrder[quizPos];
+  const grToEn = quizPos % 2 === 0;
+  const w = WORDS[i];
+  const distractors = shuffle(WORDS.filter((_,j)=>j!==i)).slice(0,3);
+  const opts = shuffle([w, ...distractors]);
+  stage.innerHTML = `<div class="round-label">Ερώτηση ${quizPos+1} / 32</div>
+    <div class="prompt-word">${grToEn ? w.gr : w.ic+' '+w.en}</div>
+    <div class="phonetic">${grToEn ? w.ph : '&nbsp;'}</div>
+    <div class="choices">${opts.map(o=>`<button class="choice" data-i="${WORDS.indexOf(o)}">${grToEn ? o.ic+' '+o.en : o.gr}</button>`).join('')}</div>
+    <div class="feedback" id="fb"></div>`;
+  stage.querySelectorAll('.choice').forEach(c=>c.addEventListener('click',()=>{
+    const right = +c.dataset.i === i;
+    stage.querySelectorAll('.choice').forEach(x=>{ x.disabled=true; if(+x.dataset.i===i) x.classList.add('correct'); });
+    const fb = document.getElementById('fb');
+    if(right){ c.classList.add('correct'); fb.className='feedback good'; fb.textContent='Σωστά! ✅'; quizScore++; pack(i); }
+    else { c.classList.add('wrong'); fb.className='feedback bad'; fb.textContent=`Όχι — ${w.gr} = ${w.en}`; }
+    quizPos++;
+    setTimeout(renderQuizQ, right ? 800 : 1600);
+  }));
+}
+
+/* ---------- MODE 2: TYPE ---------- */
+let typeOrder, typePos, typeScore, hintUsed;
+function startType(){
+  typeOrder = shuffle(WORDS.map((_,i)=>i));
+  typePos = 0; typeScore = 0;
+  renderTypeQ();
+}
+function renderTypeQ(){
+  if(typePos >= typeOrder.length){ return renderFinish('✏️',`Σκορ: ${typeScore} / 32`,'Spelling champion! Τα κατάφερες.'); }
+  const i = typeOrder[typePos];
+  const w = WORDS[i];
+  hintUsed = false;
+  stage.innerHTML = `<div class="round-label">Λέξη ${typePos+1} / 32 — Γράψε το στα ελληνικά</div>
+    <div class="emoji-big">${w.ic}</div>
+    <div class="prompt-word" style="font-size:1.7rem">${w.en}</div>
+    <input class="type-input" id="ti" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="…">
+    <div class="hint" id="hint">Tip: accents optional — Μολυβι counts!</div>
+    <div class="reveal" id="reveal"></div>
+    <button class="action-btn" id="check">Έλεγξε</button>
+    <button class="action-btn secondary" id="hintBtn">Βοήθεια 💡</button>
+    <div class="feedback" id="fb"></div>`;
+  const input = document.getElementById('ti');
+  input.focus();
+  const check = ()=>{
+    if(!input.value.trim()) return;
+    if(norm(input.value) === norm(w.gr)){
+      input.classList.add('correct'); input.disabled=true;
+      document.getElementById('fb').className='feedback good';
+      document.getElementById('fb').textContent = `Σωστά! ${w.gr} ${w.ph}`;
+      if(!hintUsed) typeScore++;
+      pack(i);
+      typePos++;
+      setTimeout(renderTypeQ, 1100);
+    } else {
+      input.classList.add('wrong');
+      document.getElementById('fb').className='feedback bad';
+      document.getElementById('fb').textContent='Δοκίμασε ξανά!';
+      setTimeout(()=>input.classList.remove('wrong'),400);
+    }
+  };
+  document.getElementById('check').addEventListener('click',check);
+  input.addEventListener('keydown',e=>{ if(e.key==='Enter') check(); });
+  document.getElementById('hintBtn').addEventListener('click',()=>{
+    hintUsed = true;
+    const r = document.getElementById('reveal');
+    if(!r.dataset.step){ r.dataset.step='1'; r.textContent = w.gr[0] + '···  ' + w.ph; }
+    else { r.textContent = w.gr + '  ' + w.ph; }
+  });
+}
+
+/* ---------- FINISH ---------- */
+function renderFinish(icon, title, sub){
+  stage.innerHTML = `<div class="finish">
+    <div class="emoji-big">${icon}</div>
+    <h2>${title}</h2>
+    <p>${sub}</p>
+    <div class="score-row"><span>🎒 Packed: <b>${mastered.size}/32</b></span></div>
+    <button class="action-btn" id="again">Παίξε ξανά</button>
+  </div>`;
+  document.getElementById('again').addEventListener('click',()=>setMode(mode,true));
+}
+
+/* ---------- MODE SWITCH ---------- */
+function setMode(m, force){
+  if(m===mode && !force && stage.innerHTML) return;
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active', +b.dataset.mode===m));
+  if(m===0) startMatch();
+  else if(m===1) startQuiz();
+  else startType();
+}
+document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=>setMode(+b.dataset.mode,true)));
+setMode(0,true);
+</script>
+</body>
+</html>
