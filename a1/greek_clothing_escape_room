@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Η Χαμένη Βαλίτσα | Glossomathia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#8E7CC3;
+  --blue:#7AA6B9;
+  --green:#6FAE84;
+  --rose:#C98BB0;
+  --gold:#C9A961;
+  --gold-deep:#A8873F;
+  --plum:#2E2438;
+  --plum-soft:#3D3049;
+  --slate:#5A5F6E;
+  --lavender:#EDE8F3;
+  --cream:#FBF9FC;
+  --ink:#241C2C;
+  --shadow:0 18px 40px rgba(20,12,28,.28);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Nunito',system-ui,sans-serif;
+  background:
+    radial-gradient(900px 520px at 12% -8%, rgba(142,124,195,.32), transparent 62%),
+    radial-gradient(760px 480px at 92% 108%, rgba(122,166,185,.24), transparent 60%),
+    var(--plum);
+  color:var(--cream);
+  min-height:100vh;
+  line-height:1.6;
+  padding:28px 18px 72px;
+}
+.wrap{max-width:920px;margin:0 auto}
+
+/* ---------- header ---------- */
+.eyebrow{
+  font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;
+  font-weight:700;color:var(--gold);margin:0 0 10px;
+}
+h1{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-weight:700;font-size:clamp(2.4rem,7vw,4rem);
+  line-height:1.02;margin:0 0 6px;letter-spacing:.01em;
+}
+.sub{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-style:italic;font-size:clamp(1.05rem,2.6vw,1.35rem);
+  color:var(--lavender);opacity:.82;margin:0 0 26px;
+}
+
+/* ---------- suitcase ---------- */
+.case{
+  position:relative;
+  background:linear-gradient(168deg,#4A3A58,#332740);
+  border:1px solid rgba(201,169,97,.4);
+  border-radius:20px;
+  padding:26px 24px 22px;
+  box-shadow:var(--shadow);
+  margin-bottom:34px;
+  overflow:hidden;
+}
+.case::before{
+  content:"";position:absolute;inset:14px;border:1px solid rgba(237,232,243,.12);
+  border-radius:12px;pointer-events:none;
+}
+.case-strap{
+  position:absolute;top:0;bottom:0;width:16px;
+  background:linear-gradient(180deg,rgba(201,169,97,.22),rgba(201,169,97,.08));
+  border-left:1px solid rgba(201,169,97,.28);
+  border-right:1px solid rgba(201,169,97,.28);
+}
+.case-strap.a{left:14%}
+.case-strap.b{right:14%}
+.case-inner{position:relative;z-index:2}
+.story{
+  font-size:1.02rem;color:var(--lavender);max-width:60ch;margin:0 0 4px;
+}
+.story .en{display:block;font-size:.88rem;color:rgba(237,232,243,.62);margin-top:8px}
+
+.latches{
+  display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;
+}
+.latch{
+  flex:1 1 120px;min-width:110px;
+  border:1px solid rgba(201,169,97,.45);
+  border-radius:10px;padding:12px 10px;text-align:center;
+  background:rgba(20,13,27,.35);
+  transition:.35s;
+}
+.latch .no{font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(237,232,243,.5)}
+.latch .glyph{font-family:'Cormorant Garamond',serif;font-size:1.9rem;line-height:1.1;color:rgba(237,232,243,.35);font-weight:700}
+.latch.open{
+  border-color:var(--gold);
+  background:linear-gradient(180deg,rgba(201,169,97,.26),rgba(201,169,97,.08));
+  box-shadow:0 0 0 1px rgba(201,169,97,.25),0 8px 22px rgba(201,169,97,.16);
+}
+.latch.open .glyph{color:var(--gold);animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+/* ---------- rooms ---------- */
+.room{
+  background:var(--cream);color:var(--ink);
+  border-radius:18px;padding:26px 24px;margin-bottom:20px;
+  box-shadow:var(--shadow);position:relative;
+}
+.room.locked{opacity:.42;filter:saturate(.35)}
+.room.locked .body{display:none}
+.room-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.room-no{
+  font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:700;
+  color:var(--purple);line-height:1;min-width:44px;
+}
+h2{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:clamp(1.5rem,4vw,2rem);font-weight:600;margin:0;color:var(--ink);
+}
+.task{color:var(--slate);font-size:.95rem;margin:6px 0 18px}
+.task .en{display:block;font-size:.82rem;opacity:.75;margin-top:3px}
+.body{margin-top:6px}
+.solved-flag{
+  display:none;margin-left:auto;font-size:.7rem;letter-spacing:.2em;
+  text-transform:uppercase;font-weight:800;color:var(--green);
+}
+.room.solved .solved-flag{display:block}
+.room.solved{border:1px solid rgba(111,174,132,.5)}
+
+/* generic tiles */
+.grid{display:grid;gap:10px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.tile{
+  font-family:'Nunito',sans-serif;font-size:1rem;font-weight:600;
+  border:1.5px solid var(--lavender);background:#fff;color:var(--ink);
+  border-radius:12px;padding:14px 10px;cursor:pointer;transition:.18s;
+  text-align:center;
+}
+.tile:hover{border-color:var(--purple);transform:translateY(-2px)}
+.tile:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.tile.emoji{font-size:2.2rem;padding:12px 8px}
+.tile.sel{border-color:var(--gold);background:rgba(201,169,97,.14);box-shadow:0 0 0 2px rgba(201,169,97,.3)}
+.tile.done{border-color:var(--green);background:rgba(111,174,132,.16);color:var(--green);cursor:default;opacity:.7}
+.tile.done:hover{transform:none}
+.tile.wrong{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+.counter{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);font-weight:700;margin-bottom:12px}
+
+/* riddle */
+.riddle{
+  font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;
+  line-height:1.4;color:var(--ink);background:var(--lavender);
+  border-left:4px solid var(--purple);border-radius:0 12px 12px 0;
+  padding:18px 20px;margin-bottom:16px;
+}
+
+/* bins */
+.bins{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+.bin{
+  border:2px dashed var(--lavender);border-radius:12px;padding:12px 8px;min-height:120px;
+  cursor:pointer;transition:.18s;background:#fff;
+}
+.bin:hover{border-color:var(--purple)}
+.bin h3{
+  font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin:0 0 8px;
+  text-align:center;color:var(--purple);font-weight:700;
+}
+.bin .chip{
+  display:block;width:100%;font-size:.82rem;padding:6px 4px;margin-bottom:5px;
+  background:var(--lavender);border-radius:7px;text-align:center;font-weight:600;
+}
+.bin .chip.bad{background:rgba(201,139,176,.3);color:#8A3E6C}
+.bin .chip.good{background:rgba(111,174,132,.22);color:#2F6B45}
+
+/* sentences */
+.sentence{
+  font-size:1.02rem;padding:11px 0;border-bottom:1px solid var(--lavender);
+  display:flex;flex-wrap:wrap;align-items:center;gap:6px;
+}
+.blank{
+  display:inline-block;min-width:120px;border-bottom:2px solid var(--purple);
+  text-align:center;font-weight:700;color:var(--purple);cursor:pointer;padding:0 8px;
+}
+.blank.filled{border-bottom-color:var(--green);color:var(--green)}
+
+/* controls */
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+button.act{
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  border:none;border-radius:999px;padding:11px 22px;cursor:pointer;transition:.18s;
+}
+button.act.primary{background:var(--purple);color:#fff}
+button.act.primary:hover{background:#7A66B5}
+button.act.ghost{background:transparent;color:var(--slate);border:1.5px solid var(--lavender)}
+button.act.ghost:hover{border-color:var(--slate)}
+button.act:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.msg{font-size:.9rem;font-weight:700;min-height:22px}
+.msg.ok{color:var(--green)}
+.msg.no{color:#B4568F}
+
+/* final lock */
+.finale{
+  background:linear-gradient(168deg,#4A3A58,#2A2035);
+  border:1px solid rgba(201,169,97,.45);color:var(--cream);
+}
+.finale h2{color:var(--cream)}
+.finale .task{color:rgba(237,232,243,.72)}
+.code-slots{display:flex;gap:12px;justify-content:center;margin:20px 0}
+.slot{
+  width:62px;height:76px;border:2px solid rgba(201,169,97,.5);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:700;
+  color:var(--gold);background:rgba(20,13,27,.4);
+}
+.keypad{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.key{
+  width:56px;height:56px;font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;
+  border:1.5px solid rgba(237,232,243,.28);background:rgba(237,232,243,.08);color:var(--cream);
+  border-radius:10px;cursor:pointer;transition:.16s;
+}
+.key:hover{border-color:var(--gold);background:rgba(201,169,97,.2)}
+.key:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+/* victory */
+.victory{display:none;text-align:center}
+.victory.show{display:block}
+.victory h2{font-size:clamp(2rem,6vw,3rem);color:var(--gold)}
+table{width:100%;border-collapse:collapse;margin-top:20px;text-align:left;font-size:.95rem}
+th{
+  font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);
+  border-bottom:2px solid var(--lavender);padding:8px 10px;font-weight:800;
+}
+td{padding:9px 10px;border-bottom:1px solid var(--lavender)}
+td.gr{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--ink)}
+td.art{color:var(--purple);font-weight:700}
+tr:nth-child(even) td{background:rgba(237,232,243,.34)}
+
+footer{
+  text-align:center;margin-top:34px;font-size:.72rem;letter-spacing:.24em;
+  text-transform:uppercase;color:rgba(237,232,243,.42);font-weight:700;
+}
+@media (max-width:620px){
+  .bins{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(2,1fr)}
+  .slot{width:50px;height:64px;font-size:2rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Glossomathia · Παίζω · Ακούω · Μαθαίνω</p>
+  <h1>Η Χαμένη Βαλίτσα</h1>
+  <p class="sub">Ρούχα και αξεσουάρ · escape room για την ελληνική τάξη</p>
+
+  <section class="case">
+    <div class="case-strap a"></div>
+    <div class="case-strap b"></div>
+    <div class="case-inner">
+      <p class="story">
+        Έξι η ώρα το πρωί. Το αεροπλάνο για την Αθήνα φεύγει σε μία ώρα, η βαλίτσα σου είναι
+        κλειδωμένη και δεν θυμάσαι τον κωδικό. Τέσσερις κλειδαριές, τέσσερα γράμματα.
+        Λύσε τους γρίφους, μάζεψε τα γράμματα και άνοιξε τη βαλίτσα πριν χάσεις την πτήση.
+        <span class="en">Four latches, four letters. Solve each puzzle to earn a letter, then enter the code in order.</span>
+      </p>
+      <div class="latches">
+        <div class="latch" id="latch1"><div class="no">Κλειδαριά 1</div><div class="glyph" id="g1">?</div></div>
+        <div class="latch" id="latch2"><div class="no">Κλειδαριά 2</div><div class="glyph" id="g2">?</div></div>
+        <div class="latch" id="latch3"><div class="no">Κλειδαριά 3</div><div class="glyph" id="g3">?</div></div>
+        <div class="latch" id="latch4"><div class="no">Κλειδαριά 4</div><div class="glyph" id="g4">?</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROOM 1 -->
+  <section class="room" id="room1">
+    <div class="room-head">
+      <div class="room-no">Α</div>
+      <div>
+        <h2>Τι είναι αυτό;</h2>
+      </div>
+      <div class="solved-flag">Άνοιξε</div>
+    </div>
+    <div class="body">
+      <p class="task">Διάλεξε μια εικόνα και μετά τη σωστή λέξη.
+        <span class="en">Tap a picture, then tap the word that names it.</span></p>
+      <div class="counter" id="c1">0 από 6</div>
+      <div class="grid g3" id="pics"></div>
+      <div class="grid g3" id="words" style="margin-top:12px"></div>
+      <div class="row"><div class="msg" id="m1"></div></div>
+    </div>
+  </section>
+
+  <!-- ROOM 2 -->
+  <section class="room locked" id="room2">
+    <div class="room-head">
+      <div class="room-no">Β</div>
+      <div><h2>Οι γρίφοι της γιαγιάς</h2></div>
+      <div class="solved-flag">Άνοιξε</div>
+    </div>
+    <div class="body">
+      <p class="task">Διάβασε τον γρίφο και διάλεξε τη σωστή απάντηση.
+        <span class="en">Read the riddle, choose the word it describes.</span></p>
+      <div class="counter" id="c2">Γρίφος 1 από 6</div>
+      <div class="riddle" id="riddle"></div>
+      <div class="grid g3" id="opts"></div>
+      <div class="row"><div class="msg" id="m2"></div></div>
+    </div>
+  </section>
+
+  <!-- ROOM 3 -->
+  <section class="room locked" id="room3">
+    <div class="room-head">
+      <div class="room-no">Γ</div>
+      <div><h2>Το άρθρο κλειδώνει</h2></div>
+      <div class="solved-flag">Άνοιξε</div>
+    </div>
+    <div class="body">
+      <p class="task">Διάλεξε μια λέξη και μετά το άρθρο της. Προσοχή, μόνο μία λέξη παίρνει «η».
+        <span class="en">Tap a word, then tap its article. Only one word here takes η.</span></p>
+      <div class="grid g3" id="chips"></div>
+      <div class="bins">
+        <div class="bin" data-art="οι"><h3>οι</h3><div class="hold"></div></div>
+        <div class="bin" data-art="τα"><h3>τα</h3><div class="hold"></div></div>
+        <div class="bin" data-art="η"><h3>η</h3><div class="hold"></div></div>
+        <div class="bin" data-art="το"><h3>το</h3><div class="hold"></div></div>
+      </div>
+      <div class="row">
+        <button class="act primary" id="check3">Έλεγχος</button>
+        <button class="act ghost" id="reset3">Από την αρχή</button>
+        <div class="msg" id="m3"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROOM 4 -->
+  <section class="room locked" id="room4">
+    <div class="room-head">
+      <div class="room-no">Δ</div>
+      <div><h2>Τι φοράω σήμερα;</h2></div>
+      <div class="solved-flag">Άνοιξε</div>
+    </div>
+    <div class="body">
+      <p class="task">Διάλεξε μια λέξη και μετά το κενό όπου ταιριάζει.
+        <span class="en">Tap a word, then tap the gap where it belongs.</span></p>
+      <div class="grid g3" id="bank"></div>
+      <div id="sentences" style="margin-top:16px"></div>
+      <div class="row">
+        <button class="act ghost" id="reset4">Από την αρχή</button>
+        <div class="msg" id="m4"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINALE -->
+  <section class="room finale locked" id="room5">
+    <div class="room-head">
+      <div class="room-no" style="color:var(--gold)">Ε</div>
+      <div><h2>Η κλειδαριά της βαλίτσας</h2></div>
+    </div>
+    <div class="body">
+      <p class="task">Πάτησε τα τέσσερα γράμματα με τη σειρά που τα κέρδισες.
+        <span class="en">Enter your four letters in the order you earned them.</span></p>
+      <div class="code-slots">
+        <div class="slot" id="s0"></div><div class="slot" id="s1"></div>
+        <div class="slot" id="s2"></div><div class="slot" id="s3"></div>
+      </div>
+      <div class="keypad" id="keypad"></div>
+      <div class="row" style="justify-content:center">
+        <button class="act ghost" id="clearCode">Σβήσε</button>
+        <div class="msg" id="m5"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VICTORY -->
+  <section class="room victory" id="victory">
+    <h2>ΠΑΜΕ!</h2>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:var(--slate);max-width:52ch;margin:0 auto">
+      Η βαλίτσα άνοιξε, τα ρούχα είναι μέσα και η πτήση σε περιμένει. Καλό ταξίδι.
+    </p>
+    <table>
+      <thead><tr><th>Άρθρο</th><th>Λέξη</th><th>English</th></tr></thead>
+      <tbody id="vocab"></tbody>
+    </table>
+    <div class="row" style="justify-content:center">
+      <button class="act primary" onclick="location.reload()">Παίξε ξανά</button>
+    </div>
+  </section>
+
+  <footer>Glossomathia · Escape Room Engine</footer>
+</div>
+
+<script>
+/* ---------------- data ---------------- */
+const VOCAB = [
+  {art:'οι', w:'μπότες',        en:'boots'},
+  {art:'τα', w:'σανδάλια',      en:'sandals'},
+  {art:'οι', w:'παντόφλες',     en:'slippers'},
+  {art:'το', w:'καπέλο',        en:'hat'},
+  {art:'το', w:'κασκόλ',        en:'scarf'},
+  {art:'τα', w:'γάντια',        en:'gloves'},
+  {art:'η',  w:'ζώνη',          en:'belt'},
+  {art:'τα', w:'γυαλιά ηλίου',  en:'sunglasses'},
+  {art:'τα', w:'εσώρουχα',      en:'underwear'},
+  {art:'το', w:'σουτιέν',       en:'bra'},
+  {art:'οι', w:'κάλτσες',       en:'socks'},
+  {art:'οι', w:'πιτζάμες',      en:'pyjamas'},
+  {art:'το', w:'μαγιό',         en:'swimsuit'}
+];
+const LETTERS = ['Π','Α','Μ','Ε'];
+const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(p=>p[1]);
+const say = (el,txt,ok) => { const n=document.getElementById(el); n.textContent=txt; n.className='msg '+(ok?'ok':'no'); };
+
+function openLatch(i){
+  document.getElementById('latch'+i).classList.add('open');
+  document.getElementById('g'+i).textContent = LETTERS[i-1];
+  document.getElementById('room'+i).classList.add('solved');
+  const next = document.getElementById('room'+(i+1));
+  if(next){
+    next.classList.remove('locked');
+    setTimeout(()=>next.scrollIntoView({behavior:'smooth',block:'start'}),450);
+  }
+}
+
+/* ---------------- room 1: picture match ---------------- */
+const PAIRS = [
+  {e:'👢', w:'μπότες'}, {e:'🩴', w:'σανδάλια'}, {e:'🧢', w:'καπέλο'},
+  {e:'🧤', w:'γάντια'}, {e:'🧦', w:'κάλτσες'},  {e:'🕶️', w:'γυαλιά ηλίου'}
+];
+let pick1=null, done1=0;
+(function(){
+  const pics=document.getElementById('pics'), words=document.getElementById('words');
+  shuffle(PAIRS.slice()).forEach(p=>{
+    const b=document.createElement('button');
+    b.className='tile emoji'; b.textContent=p.e; b.dataset.w=p.w;
+    b.onclick=()=>{ if(b.classList.contains('done'))return;
+      document.querySelectorAll('#pics .tile').forEach(t=>t.classList.remove('sel'));
+      b.classList.add('sel'); pick1=b; };
+    pics.appendChild(b);
+  });
+  shuffle(PAIRS.slice()).forEach(p=>{
+    const b=document.createElement('button');
+    b.className='tile'; b.textContent=p.w; b.dataset.w=p.w;
+    b.onclick=()=>{
+      if(b.classList.contains('done'))return;
+      if(!pick1){ say('m1','Διάλεξε πρώτα μια εικόνα.',false); return; }
+      if(pick1.dataset.w===b.dataset.w){
+        pick1.classList.remove('sel'); pick1.classList.add('done'); b.classList.add('done');
+        pick1=null; done1++;
+        document.getElementById('c1').textContent = done1+' από 6';
+        say('m1','Σωστά!',true);
+        if(done1===6){ say('m1','Η πρώτη κλειδαριά άνοιξε. Κέρδισες το γράμμα Π.',true); openLatch(1); }
+      } else {
+        b.classList.add('wrong'); setTimeout(()=>b.classList.remove('wrong'),420);
+        say('m1','Όχι ακόμα. Δοκίμασε ξανά.',false);
+      }
+    };
+    words.appendChild(b);
+  });
+})();
+
+/* ---------------- room 2: riddles ---------------- */
+const RIDDLES=[
+  {q:'Τις φοράω όταν χιονίζει. Είναι ψηλές, ζεστές και φτάνουν ως τη γάμπα.', a:'μπότες',    o:['μπότες','σανδάλια','κάλτσες']},
+  {q:'Το φοράω γύρω από τον λαιμό μου τον χειμώνα, για να μην κρυώνω.',        a:'κασκόλ',    o:['ζώνη','κασκόλ','καπέλο']},
+  {q:'Τις φοράω μέσα στο σπίτι, ποτέ έξω στον δρόμο.',                         a:'παντόφλες', o:['κάλτσες','μπότες','παντόφλες']},
+  {q:'Το φοράω για να κολυμπήσω στη θάλασσα.',                                 a:'μαγιό',     o:['σουτιέν','μαγιό','καπέλο']},
+  {q:'Τη φοράω στη μέση μου και κρατάει το παντελόνι μου.',                    a:'ζώνη',      o:['ζώνη','κασκόλ','εσώρουχα']},
+  {q:'Τις φοράω το βράδυ, λίγο πριν κοιμηθώ.',                                 a:'πιτζάμες',  o:['παντόφλες','κάλτσες','πιτζάμες']}
+];
+let r2=0;
+function drawRiddle(){
+  const r=RIDDLES[r2];
+  document.getElementById('c2').textContent='Γρίφος '+(r2+1)+' από 6';
+  document.getElementById('riddle').textContent='«'+r.q+'»';
+  const box=document.getElementById('opts'); box.innerHTML='';
+  shuffle(r.o.slice()).forEach(o=>{
+    const b=document.createElement('button'); b.className='tile'; b.textContent=o;
+    b.onclick=()=>{
+      if(o===r.a){
+        b.classList.add('done'); r2++;
+        if(r2===RIDDLES.length){
+          say('m2','Η δεύτερη κλειδαριά άνοιξε. Κέρδισες το γράμμα Α.',true);
+          document.getElementById('opts').innerHTML='';
+          document.getElementById('riddle').textContent='Όλοι οι γρίφοι λύθηκαν.';
+          openLatch(2);
+        } else { say('m2','Σωστά! Επόμενος γρίφος.',true); setTimeout(drawRiddle,650); }
+      } else {
+        b.classList.add('wrong'); setTimeout(()=>b.classList.remove('wrong'),420);
+        say('m2','Διάβασέ τον ξανά. Πού το φοράς;',false);
+      }
+    };
+    box.appendChild(b);
+  });
+}
+drawRiddle();
+
+/* ---------------- room 3: articles ---------------- */
+let pick3=null;
+function buildChips(){
+  const box=document.getElementById('chips'); box.innerHTML='';
+  document.querySelectorAll('#room3 .hold').forEach(h=>h.innerHTML='');
+  shuffle(VOCAB.slice()).forEach(v=>{
+    const b=document.createElement('button'); b.className='tile'; b.textContent=v.w;
+    b.dataset.art=v.art;
+    b.onclick=()=>{ document.querySelectorAll('#chips .tile').forEach(t=>t.classList.remove('sel'));
+      b.classList.add('sel'); pick3=b; };
+    box.appendChild(b);
+  });
+  say('m3','',true);
+}
+buildChips();
+document.querySelectorAll('#room3 .bin').forEach(bin=>{
+  bin.onclick=()=>{
+    if(!pick3){ say('m3','Διάλεξε πρώτα μια λέξη.',false); return; }
+    const chip=document.createElement('div');
+    chip.className='chip'; chip.textContent=pick3.textContent;
+    chip.dataset.art=pick3.dataset.art; chip.dataset.bin=bin.dataset.art;
+    bin.querySelector('.hold').appendChild(chip);
+    pick3.remove(); pick3=null; say('m3','',true);
+  };
+});
+document.getElementById('reset3').onclick=()=>{ pick3=null; buildChips(); };
+document.getElementById('check3').onclick=()=>{
+  const chips=document.querySelectorAll('#room3 .chip');
+  if(chips.length<VOCAB.length){ say('m3','Λείπουν λέξεις. Τοποθέτησε και τις δεκατρείς.',false); return; }
+  let bad=0;
+  chips.forEach(c=>{
+    const ok = c.dataset.art===c.dataset.bin;
+    c.className='chip '+(ok?'good':'bad'); if(!ok) bad++;
+  });
+  if(bad===0){ say('m3','Η τρίτη κλειδαριά άνοιξε. Κέρδισες το γράμμα Μ.',true); openLatch(3); }
+  else say('m3', bad+' λέξεις είναι σε λάθος θέση. Δες τις ροζ.',false);
+};
+
+/* ---------------- room 4: sentences ---------------- */
+const SENT=[
+  {t:['Πάω στην παραλία και παίρνω το ','  μου.'],            a:'μαγιό'},
+  {t:['Χιονίζει σήμερα, φοράω τα ','  στα χέρια μου.'],       a:'γάντια'},
+  {t:['Ο ήλιος είναι πολύ δυνατός, βάζω τα ','  μου.'],       a:'γυαλιά ηλίου'},
+  {t:['Το παντελόνι μού πέφτει, χρειάζομαι μια ','.'],        a:'ζώνη'},
+  {t:['Είναι έντεκα το βράδυ, φοράω τις ','  μου.'],          a:'πιτζάμες'},
+  {t:['Κάνει ζέστη, φοράω τα ','  και βγαίνω βόλτα.'],        a:'σανδάλια'}
+];
+let pick4=null, done4=0;
+function buildRoom4(){
+  done4=0; pick4=null;
+  const bank=document.getElementById('bank'); bank.innerHTML='';
+  shuffle(SENT.map(s=>s.a)).forEach(w=>{
+    const b=document.createElement('button'); b.className='tile'; b.textContent=w; b.dataset.w=w;
+    b.onclick=()=>{ if(b.classList.contains('done'))return;
+      document.querySelectorAll('#bank .tile').forEach(t=>t.classList.remove('sel'));
+      b.classList.add('sel'); pick4=b; };
+    bank.appendChild(b);
+  });
+  const box=document.getElementById('sentences'); box.innerHTML='';
+  SENT.forEach(s=>{
+    const row=document.createElement('div'); row.className='sentence';
+    row.appendChild(document.createTextNode(s.t[0]));
+    const bl=document.createElement('span'); bl.className='blank'; bl.textContent='______';
+    bl.dataset.a=s.a; bl.tabIndex=0;
+    bl.onclick=()=>{
+      if(bl.classList.contains('filled'))return;
+      if(!pick4){ say('m4','Διάλεξε πρώτα μια λέξη.',false); return; }
+      if(pick4.dataset.w===bl.dataset.a){
+        bl.textContent=pick4.dataset.w; bl.classList.add('filled');
+        pick4.classList.remove('sel'); pick4.classList.add('done'); pick4=null; done4++;
+        say('m4','Σωστά!',true);
+        if(done4===SENT.length){ say('m4','Η τέταρτη κλειδαριά άνοιξε. Κέρδισες το γράμμα Ε.',true); openLatch(4); }
+      } else { say('m4','Αυτή η λέξη δεν ταιριάζει εδώ.',false); }
+    };
+    row.appendChild(bl);
+    row.appendChild(document.createTextNode(s.t[1]));
+    box.appendChild(row);
+  });
+  say('m4','',true);
+}
+buildRoom4();
+document.getElementById('reset4').onclick=buildRoom4;
+
+/* ---------------- finale ---------------- */
+let code=[];
+(function(){
+  const pad=document.getElementById('keypad');
+  shuffle(['Π','Α','Μ','Ε','Σ','Τ','Ο','Ι']).forEach(l=>{
+    const b=document.createElement('button'); b.className='key'; b.textContent=l;
+    b.onclick=()=>{
+      if(code.length>=4)return;
+      code.push(l); document.getElementById('s'+(code.length-1)).textContent=l;
+      if(code.length===4){
+        if(code.join('')==='ΠΑΜΕ'){
+          say('m5','',true);
+          document.getElementById('room5').style.display='none';
+          const v=document.getElementById('victory'); v.classList.add('show');
+          v.scrollIntoView({behavior:'smooth',block:'center'});
+        } else say('m5','Λάθος κωδικός. Δες ξανά τις κλειδαριές.',false);
+      }
+    };
+    pad.appendChild(b);
+  });
+})();
+document.getElementById('clearCode').onclick=()=>{
+  code=[]; for(let i=0;i<4;i++) document.getElementById('s'+i).textContent='';
+  say('m5','',true);
+};
+
+/* ---------------- vocab table ---------------- */
+(function(){
+  const tb=document.getElementById('vocab');
+  VOCAB.forEach(v=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td class="art">'+v.art+'</td><td class="gr">'+v.w+'</td><td>'+v.en+'</td>';
+    tb.appendChild(tr);
+  });
+})();
+</script>
+</body>
+</html>
