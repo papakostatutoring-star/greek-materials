@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ταξίδι στο Νησί — Greek Travel Escape Room · Glossomathia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#4a4458;
+    --h1:#8e7cc3;
+    --subtitle:#a88bcf;
+    --wordmark:#b3a7c9;
+    --gold:#c9a75e;
+
+    --p-h2:#8e7cc3; --p-deep:#6d5b87; --p-bg:#f7eef9;
+    --b-h2:#7aa6b9; --b-deep:#3f6d82; --b-bg:#e9f1f7;
+    --g-h2:#6fae84; --g-deep:#3f7a54; --g-bg:#eaf6ee;
+    --r-h2:#c98bb0; --r-deep:#9c5980; --r-bg:#fbeef5;
+
+    --lav:#ece3f7; --lav-pale:#f7f2fc;
+    --wine:#8e4a73;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Nunito',sans-serif;
+    color:var(--ink);
+    background:linear-gradient(180deg,#fdfbff 0%,#f7f2fc 100%);
+    min-height:100vh;
+    padding:24px 16px 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto}
+
+  header{text-align:center;margin-bottom:28px}
+  .wordmark{font-family:'Cormorant Garamond',serif;color:var(--wordmark);font-size:1.05rem;letter-spacing:.18em;margin-bottom:14px}
+  h1{font-family:'Cormorant Garamond',serif;color:var(--h1);font-size:2.6rem;font-weight:700;line-height:1.1}
+  .subtitle{color:var(--subtitle);font-size:1.05rem;margin-top:8px;font-weight:600}
+  .story{
+    background:var(--lav-pale);
+    border:1px solid var(--lav);
+    border-radius:16px;
+    padding:18px 22px;
+    margin:22px auto 0;
+    font-size:1rem;
+    line-height:1.65;
+    text-align:left;
+  }
+  .story strong{color:var(--p-deep)}
+
+  .progress{
+    display:flex;gap:10px;justify-content:center;margin:26px 0 6px;flex-wrap:wrap;
+  }
+  .digit-slot{
+    width:52px;height:64px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;
+    background:#fff;border:2px dashed var(--wordmark);color:var(--wordmark);
+    transition:all .35s ease;
+  }
+  .digit-slot.filled{border-style:solid;transform:scale(1.05)}
+  .digit-slot.s1.filled{border-color:var(--p-h2);color:var(--p-deep);background:var(--p-bg)}
+  .digit-slot.s2.filled{border-color:var(--b-h2);color:var(--b-deep);background:var(--b-bg)}
+  .digit-slot.s3.filled{border-color:var(--g-h2);color:var(--g-deep);background:var(--g-bg)}
+  .digit-slot.s4.filled{border-color:var(--r-h2);color:var(--r-deep);background:var(--r-bg)}
+  .progress-label{text-align:center;font-size:.85rem;color:var(--wordmark);margin-bottom:24px}
+
+  .room{
+    background:#fff;
+    border-radius:20px;
+    padding:26px 26px 30px;
+    margin-bottom:26px;
+    box-shadow:0 2px 14px rgba(142,124,195,.10);
+    border-top:6px solid transparent;
+  }
+  .room.locked{position:relative;overflow:hidden}
+  .room.locked .room-body{filter:blur(4px);pointer-events:none;user-select:none;opacity:.55}
+  .lock-overlay{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:8px;color:var(--wordmark);font-weight:700;font-size:1rem;z-index:2;
+  }
+  .lock-overlay .lock-icon{font-size:1.9rem}
+
+  .room.purple{border-top-color:var(--p-h2)}
+  .room.blue{border-top-color:var(--b-h2)}
+  .room.green{border-top-color:var(--g-h2)}
+  .room.rose{border-top-color:var(--r-h2)}
+
+  .room h2{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;margin-bottom:2px}
+  .room.purple h2{color:var(--p-h2)} .room.blue h2{color:var(--b-h2)}
+  .room.green h2{color:var(--g-h2)} .room.rose h2{color:var(--r-h2)}
+  .room .translit{font-size:.9rem;font-weight:600;margin-bottom:12px}
+  .room.purple .translit{color:var(--p-deep)} .room.blue .translit{color:var(--b-deep)}
+  .room.green .translit{color:var(--g-deep)} .room.rose .translit{color:var(--r-deep)}
+  .room .task{font-size:.98rem;line-height:1.6;margin-bottom:18px}
+
+  /* Room 1: matching */
+  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .match-col{display:flex;flex-direction:column;gap:10px}
+  .match-btn{
+    font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;color:var(--ink);
+    background:var(--p-bg);border:2px solid transparent;border-radius:12px;
+    padding:12px 10px;cursor:pointer;transition:all .15s ease;text-align:center;
+  }
+  .match-btn .small{display:block;font-size:.78rem;font-weight:600;color:var(--p-deep);margin-top:2px}
+  .match-btn:hover{border-color:var(--p-h2)}
+  .match-btn.selected{border-color:var(--p-deep);background:#fff}
+  .match-btn.done{background:var(--g-bg);color:var(--g-deep);border-color:var(--g-h2);cursor:default}
+  .match-btn.wrong{animation:shake .35s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  /* Room 2: departure board */
+  .board{
+    background:var(--b-deep);border-radius:14px;padding:16px 18px;margin-bottom:18px;
+    color:#fff;font-size:.95rem;line-height:1.9;letter-spacing:.03em;
+  }
+  .board .flap{color:#ffe9a8;font-weight:800}
+  .quiz-q{margin-bottom:16px}
+  .quiz-q p{font-weight:700;margin-bottom:8px}
+  .quiz-opts{display:flex;flex-wrap:wrap;gap:8px}
+  .quiz-opt{
+    font-family:'Nunito',sans-serif;font-size:.92rem;font-weight:600;
+    background:var(--b-bg);color:var(--b-deep);border:2px solid transparent;border-radius:999px;
+    padding:8px 16px;cursor:pointer;transition:all .15s ease;
+  }
+  .quiz-opt:hover{border-color:var(--b-h2)}
+  .quiz-opt.right{background:var(--g-bg);color:var(--g-deep);border-color:var(--g-h2);cursor:default}
+  .quiz-opt.wrong{background:#fbeef5;color:var(--wine);border-color:var(--r-h2);animation:shake .35s}
+
+  /* Room 3: dialogue */
+  .dialogue{display:flex;flex-direction:column;gap:12px}
+  .line{display:flex;gap:10px;align-items:flex-start}
+  .who{
+    flex:0 0 auto;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.05rem;
+    color:var(--g-deep);min-width:86px;padding-top:8px;
+  }
+  .bubble{
+    background:var(--g-bg);border-radius:14px;padding:10px 14px;font-size:.98rem;line-height:1.7;flex:1;
+  }
+  .bubble .en{display:block;font-size:.8rem;color:var(--g-deep);font-weight:600;margin-top:3px}
+  .bubble select{
+    font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;color:var(--g-deep);
+    border:2px solid var(--g-h2);border-radius:8px;padding:3px 6px;background:#fff;cursor:pointer;
+  }
+  .bubble select.right{background:var(--g-bg);border-color:var(--g-deep)}
+  .bubble select.wrong{border-color:var(--wine);background:#fbeef5;animation:shake .35s}
+
+  /* Room 4: tiles */
+  .unscramble{margin-bottom:20px}
+  .unscramble .clue{font-weight:700;margin-bottom:8px}
+  .unscramble .clue em{font-style:normal;color:var(--r-deep);font-weight:600;font-size:.85rem}
+  .answer-row{display:flex;gap:6px;flex-wrap:wrap;min-height:46px;margin-bottom:8px;
+    background:var(--lav-pale);border-radius:10px;padding:6px;border:1px dashed var(--r-h2)}
+  .tile-row{display:flex;gap:6px;flex-wrap:wrap}
+  .tile{
+    width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    font-size:1.15rem;font-weight:800;background:var(--r-bg);color:var(--r-deep);
+    border:2px solid var(--r-h2);cursor:pointer;transition:transform .1s ease;
+  }
+  .tile:hover{transform:translateY(-2px)}
+  .tile.in-answer{background:#fff}
+  .unscramble.solved .answer-row{border-style:solid;border-color:var(--g-h2);background:var(--g-bg)}
+  .unscramble.solved .tile{background:var(--g-bg);color:var(--g-deep);border-color:var(--g-h2);cursor:default}
+  .mini-btn{
+    font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;color:var(--r-deep);
+    background:none;border:1.5px solid var(--r-h2);border-radius:999px;padding:4px 12px;cursor:pointer;margin-top:6px;
+  }
+
+  .reward{
+    display:none;margin-top:20px;text-align:center;font-weight:800;font-size:1.05rem;
+    background:var(--lav);border-radius:14px;padding:14px;color:var(--p-deep);
+  }
+  .reward.show{display:block;animation:pop .4s ease}
+  .reward .big{font-family:'Cormorant Garamond',serif;font-size:2.2rem;display:block;color:var(--h1)}
+  @keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
+
+  /* Final gate */
+  .gate{
+    background:#fff;border-radius:20px;border-top:6px solid var(--gold);
+    padding:28px 26px;text-align:center;box-shadow:0 2px 14px rgba(201,167,94,.18);
+  }
+  .gate h2{font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:1.8rem;margin-bottom:4px}
+  .gate .translit{color:#a3874a;font-size:.9rem;font-weight:600;margin-bottom:14px}
+  .gate p{font-size:.95rem;margin-bottom:16px;line-height:1.6}
+  .code-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
+  .code-inputs input{
+    width:56px;height:64px;text-align:center;font-family:'Cormorant Garamond',serif;
+    font-size:2rem;font-weight:700;color:var(--ink);
+    border:2px solid var(--lav);border-radius:12px;outline:none;
+  }
+  .code-inputs input:focus{border-color:var(--gold)}
+  .go-btn{
+    font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;color:#fff;
+    background:var(--gold);border:none;border-radius:999px;padding:12px 34px;cursor:pointer;
+    transition:transform .12s ease;
+  }
+  .go-btn:hover{transform:translateY(-2px)}
+  .gate-msg{margin-top:12px;font-weight:700;min-height:1.4em}
+  .gate-msg.bad{color:var(--wine)}
+
+  /* Victory */
+  #victory{display:none;text-align:center;padding:40px 20px}
+  #victory.show{display:block;animation:pop .5s ease}
+  #victory h2{font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--h1);margin-bottom:6px}
+  #victory .vt{color:var(--subtitle);font-weight:700;font-size:1.1rem;margin-bottom:18px}
+  #victory p{max-width:480px;margin:0 auto 18px;line-height:1.7}
+  .vocab-recap{
+    max-width:520px;margin:0 auto;background:#fff;border-radius:16px;padding:20px;
+    box-shadow:0 2px 14px rgba(142,124,195,.10);text-align:left;font-size:.92rem;line-height:2;
+  }
+  .vocab-recap span{color:var(--p-deep);font-weight:700}
+
+  footer{text-align:center;margin-top:40px;color:var(--wordmark);font-size:.9rem}
+  footer .fl{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.12em}
+
+  @media(max-width:520px){
+    h1{font-size:2rem}
+    .match-grid{gap:8px}
+    .who{min-width:70px;font-size:.95rem}
+    .code-inputs input{width:48px;height:56px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="game">
+
+  <header>
+    <div class="wordmark">GLOSSOMATHIA 🌿</div>
+    <h1>Ταξίδι στο Νησί</h1>
+    <div class="subtitle">Taxidi sto Nisi · Journey to the Island</div>
+    <div class="story">
+      Λοιπόν! <em>(lipon — so, well then!)</em> Your summer adventure begins today, but nothing goes as planned.
+      Your <strong>airplane</strong> lands late, the <strong>bus</strong> to the <strong>harbor</strong> is about to leave,
+      and the last <strong>ship</strong> to the island departs at sunset. Solve each station to collect the four digits
+      of the <strong>boarding gate code</strong> — before the ship sails without you!
+    </div>
+  </header>
+
+  <div class="progress">
+    <div class="digit-slot s1" id="slot1">?</div>
+    <div class="digit-slot s2" id="slot2">?</div>
+    <div class="digit-slot s3" id="slot3">?</div>
+    <div class="digit-slot s4" id="slot4">?</div>
+  </div>
+  <div class="progress-label">Ο κωδικός της πύλης · The gate code</div>
+
+  <!-- ROOM 1 -->
+  <section class="room purple" id="room1">
+    <div class="room-body">
+      <h2>Σταθμός 1 · Το Γραφείο Εισιτηρίων</h2>
+      <div class="translit">To Grafio Isitirion · The Ticket Office</div>
+      <p class="task">The ticket agent tests you before selling you anything. Match each Greek word to its English meaning. Click a Greek word, then click its match.</p>
+      <div class="match-grid">
+        <div class="match-col" id="matchLeft"></div>
+        <div class="match-col" id="matchRight"></div>
+      </div>
+      <div class="reward" id="reward1">Μπράβο! The agent hands you your ticket. The first digit is
+        <span class="big">3</span></div>
+    </div>
+  </section>
+
+  <!-- ROOM 2 -->
+  <section class="room blue locked" id="room2">
+    <div class="lock-overlay"><span class="lock-icon">🔒</span>Solve Station 1 to unlock</div>
+    <div class="room-body">
+      <h2>Σταθμός 2 · Ο Πίνακας Αναχωρήσεων</h2>
+      <div class="translit">O Pinakas Anachoriseon · The Departure Board</div>
+      <p class="task">The departure board flickers with Greek words. Answer correctly to read your departure details.</p>
+      <div class="board">
+        ΑΝΑΧΩΡΗΣΕΙΣ · DEPARTURES<br>
+        <span class="flap">ΛΕΩΦΟΡΕΙΟ 17</span> → ΛΙΜΑΝΙ &nbsp;·&nbsp; 16:40<br>
+        <span class="flap">ΠΛΟΙΟ «ΓΑΛΗΝΗ»</span> → ΝΗΣΙ &nbsp;·&nbsp; 19:15
+      </div>
+      <div class="quiz-q">
+        <p>1. Your ticket says <strong>η ημερομηνία: 12/07</strong>. What does η ημερομηνία mean?</p>
+        <div class="quiz-opts" data-answer="the date">
+          <button class="quiz-opt">the price</button>
+          <button class="quiz-opt">the date</button>
+          <button class="quiz-opt">the seat</button>
+        </div>
+      </div>
+      <div class="quiz-q">
+        <p>2. You must show το εισιτήριο to board. What is it?</p>
+        <div class="quiz-opts" data-answer="the ticket">
+          <button class="quiz-opt">the passport</button>
+          <button class="quiz-opt">the suitcase</button>
+          <button class="quiz-opt">the ticket</button>
+        </div>
+      </div>
+      <div class="quiz-q">
+        <p>3. A passenger sighs: «Το ταξίδι είναι κουραστικό…» The journey is…</p>
+        <div class="quiz-opts" data-answer="tiring">
+          <button class="quiz-opt">tiring</button>
+          <button class="quiz-opt">cheap</button>
+          <button class="quiz-opt">beautiful</button>
+        </div>
+      </div>
+      <div class="quiz-q">
+        <p>4. The announcer begins: «Λοιπόν, το λεωφορείο φεύγει!» Λοιπόν means…</p>
+        <div class="quiz-opts" data-answer="so / well then">
+          <button class="quiz-opt">never</button>
+          <button class="quiz-opt">so / well then</button>
+          <button class="quiz-opt">goodbye</button>
+        </div>
+      </div>
+      <div class="reward" id="reward2">The board flashes green. Bus 17 it is! The second digit is
+        <span class="big">7</span></div>
+    </div>
+  </section>
+
+  <!-- ROOM 3 -->
+  <section class="room green locked" id="room3">
+    <div class="lock-overlay"><span class="lock-icon">🔒</span>Solve Station 2 to unlock</div>
+    <div class="room-body">
+      <h2>Σταθμός 3 · Η Πληρωμή</h2>
+      <div class="translit">I Pliromi · The Payment</div>
+      <p class="task">On the bus, the driver wants payment, but your wallet is a mystery. Complete the dialogue by choosing the right word in each blank.</p>
+      <div class="dialogue">
+        <div class="line"><div class="who">Οδηγός<br><span style="font-size:.75rem;font-weight:600">(driver)</span></div>
+          <div class="bubble">Δύο ευρώ, παρακαλώ. Πώς <select data-key="πληρώνετε"><option value="">…</option><option>πληρώνετε</option><option>κοιμάστε</option><option>τρώτε</option></select>;
+            <span class="en">Two euros, please. How are you paying?</span></div></div>
+        <div class="line"><div class="who">Εσύ<br><span style="font-size:.75rem;font-weight:600">(you)</span></div>
+          <div class="bubble">Με <select data-key="κάρτα"><option value="">…</option><option>πλοίο</option><option>κάρτα</option><option>λιμάνι</option></select>, παρακαλώ!
+            <span class="en">By card, please!</span></div></div>
+        <div class="line"><div class="who">Οδηγός</div>
+          <div class="bubble">Το μηχάνημα δεν δουλεύει… Μόνο <select data-key="μετρητά"><option value="">…</option><option>μετρητά</option><option>αεροπλάνα</option><option>εισιτήρια</option></select>!
+            <span class="en">The machine isn't working… Cash only!</span></div></div>
+        <div class="line"><div class="who">Εσύ</div>
+          <div class="bubble"><select data-key="Ρε συ"><option value="">…</option><option>Ρε συ</option><option>Το λιμάνι</option><option>Η κάρτα</option></select>, έχω μόνο δύο ευρώ στην τσέπη! Ορίστε!
+            <span class="en">Come on! I have only two euros in my pocket! Here you go!</span></div></div>
+      </div>
+      <div class="reward" id="reward3">The driver laughs and waves you aboard. The third digit is
+        <span class="big">1</span></div>
+    </div>
+  </section>
+
+  <!-- ROOM 4 -->
+  <section class="room rose locked" id="room4">
+    <div class="lock-overlay"><span class="lock-icon">🔒</span>Solve Station 3 to unlock</div>
+    <div class="room-body">
+      <h2>Σταθμός 4 · Το Λιμάνι</h2>
+      <div class="translit">To Limani · The Harbor</div>
+      <p class="task">You made it to the harbor! But the gate names are scrambled by the sea wind. Click the letter tiles in the right order to rebuild each word.</p>
+      <div id="unscrambles"></div>
+      <div class="reward" id="reward4">The sailor salutes you. The last digit is
+        <span class="big">5</span></div>
+    </div>
+  </section>
+
+  <!-- FINAL GATE -->
+  <section class="gate" id="gate">
+    <h2>Η Πύλη Επιβίβασης</h2>
+    <div class="translit">I Pili Epivivasis · The Boarding Gate</div>
+    <p>The ship's horn sounds across the water. Enter the four digits you collected, passenger!</p>
+    <div class="code-inputs">
+      <input type="tel" maxlength="1" inputmode="numeric">
+      <input type="tel" maxlength="1" inputmode="numeric">
+      <input type="tel" maxlength="1" inputmode="numeric">
+      <input type="tel" maxlength="1" inputmode="numeric">
+    </div>
+    <button class="go-btn" id="goBtn">Επιβίβαση · Board the ship</button>
+    <div class="gate-msg" id="gateMsg"></div>
+  </section>
+
+  <footer><span class="fl">❀</span><br>Glossomathia · Play · Listen · Learn</footer>
+</div>
+
+<!-- VICTORY -->
+<div class="wrap" id="victory">
+  <h2>Μπράβο σου! 🌿</h2>
+  <div class="vt">Bravo sou! · Good job, passenger!</div>
+  <p>The gate opens, the ship glides out of the harbor, and the island appears on the horizon.
+     You paid, you boarded, you survived a very κουραστικό journey — and you did it all in Greek.</p>
+  <div class="vocab-recap">
+    <span>το αεροπλάνο</span> airplane · <span>το πλοίο</span> ship · <span>το λεωφορείο</span> bus ·
+    <span>το λιμάνι</span> harbor · <span>ο επιβάτης</span> passenger · <span>το εισιτήριο</span> ticket ·
+    <span>η ημερομηνία</span> date · <span>κουραστικός</span> tiring · <span>πληρώνω</span> I pay ·
+    <span>η κάρτα</span> card · <span>τα μετρητά</span> cash · <span>λοιπόν</span> so ·
+    <span>ρε συ</span> hey, come on · <span>μπράβο σου!</span> good job!
+  </div>
+  <footer style="margin-top:34px"><span class="fl">❀</span><br>Glossomathia · Play · Listen · Learn</footer>
+</div>
+
+<script>
+(function(){
+  const CODE = ['3','7','1','5'];
+
+  function fillSlot(n, d){
+    const s = document.getElementById('slot'+n);
+    s.textContent = d; s.classList.add('filled');
+  }
+  function unlock(n){
+    const r = document.getElementById('room'+n);
+    if(!r) return;
+    r.classList.remove('locked');
+    const o = r.querySelector('.lock-overlay');
+    if(o) o.remove();
+    r.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  function showReward(n, digit){
+    document.getElementById('reward'+n).classList.add('show');
+    fillSlot(n, digit);
+    setTimeout(()=>unlock(n+1), 900);
+  }
+
+  /* ---------- ROOM 1: matching ---------- */
+  const pairs = [
+    ['το αεροπλάνο','to aeroplano','airplane'],
+    ['το πλοίο','to plio','ship'],
+    ['το λεωφορείο','to leoforio','bus'],
+    ['το λιμάνι','to limani','harbor'],
+    ['ο επιβάτης','o epivatis','passenger']
+  ];
+  const left = document.getElementById('matchLeft');
+  const right = document.getElementById('matchRight');
+  let selGr = null, matched = 0;
+
+  function shuffle(a){return a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);}
+
+  shuffle(pairs.map((p,i)=>i)).forEach(i=>{
+    const b=document.createElement('button');
+    b.className='match-btn'; b.dataset.pair=i;
+    b.innerHTML=pairs[i][0]+'<span class="small">'+pairs[i][1]+'</span>';
+    b.addEventListener('click',()=>{
+      if(b.classList.contains('done'))return;
+      left.querySelectorAll('.match-btn').forEach(x=>x.classList.remove('selected'));
+      b.classList.add('selected'); selGr=b;
+    });
+    left.appendChild(b);
+  });
+  shuffle(pairs.map((p,i)=>i)).forEach(i=>{
+    const b=document.createElement('button');
+    b.className='match-btn'; b.dataset.pair=i;
+    b.textContent=pairs[i][2];
+    b.addEventListener('click',()=>{
+      if(b.classList.contains('done')||!selGr)return;
+      if(selGr.dataset.pair===b.dataset.pair){
+        selGr.classList.remove('selected');
+        selGr.classList.add('done'); b.classList.add('done');
+        selGr=null; matched++;
+        if(matched===pairs.length) showReward(1,CODE[0]);
+      } else {
+        b.classList.add('wrong'); selGr.classList.add('wrong');
+        setTimeout(()=>{ b.classList.remove('wrong'); if(selGr)selGr.classList.remove('wrong'); },400);
+      }
+    });
+    right.appendChild(b);
+  });
+
+  /* ---------- ROOM 2: quiz ---------- */
+  let quizDone = 0;
+  document.querySelectorAll('#room2 .quiz-opts').forEach(g=>{
+    let solved=false;
+    g.querySelectorAll('.quiz-opt').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        if(solved)return;
+        if(btn.textContent===g.dataset.answer){
+          solved=true; btn.classList.add('right'); quizDone++;
+          if(quizDone===4) showReward(2,CODE[1]);
+        } else {
+          btn.classList.add('wrong');
+          setTimeout(()=>btn.classList.remove('wrong'),450);
+        }
+      });
+    });
+  });
+
+  /* ---------- ROOM 3: dialogue ---------- */
+  const selects = document.querySelectorAll('#room3 select');
+  function checkDialogue(){
+    let ok=0;
+    selects.forEach(s=>{
+      if(!s.value){ s.classList.remove('right','wrong'); return; }
+      if(s.value===s.dataset.key){ s.classList.add('right'); s.classList.remove('wrong'); ok++; }
+      else { s.classList.add('wrong'); s.classList.remove('right');
+        setTimeout(()=>s.classList.remove('wrong'),450); }
+    });
+    if(ok===selects.length){
+      selects.forEach(s=>s.disabled=true);
+      showReward(3,CODE[2]);
+    }
+  }
+  selects.forEach(s=>s.addEventListener('change',checkDialogue));
+
+  /* ---------- ROOM 4: unscramble ---------- */
+  const words = [
+    {w:'ΠΛΟΙΟ', clue:'The last one leaves at sunset… (ship)'},
+    {w:'ΛΙΜΑΝΙ', clue:'You are standing in it right now! (harbor)'},
+    {w:'ΜΠΡΑΒΟ', clue:'What the sailor will shout when you finish! (well done!)'}
+  ];
+  const host = document.getElementById('unscrambles');
+  let solvedWords = 0;
+
+  words.forEach((item)=>{
+    const box=document.createElement('div');
+    box.className='unscramble';
+    box.innerHTML='<div class="clue">'+item.clue+' <em>('+item.w.length+' letters)</em></div>'+
+      '<div class="answer-row"></div><div class="tile-row"></div>'+
+      '<button class="mini-btn">Clear · Καθάρισε</button>';
+    host.appendChild(box);
+
+    const answerRow=box.querySelector('.answer-row');
+    const tileRow=box.querySelector('.tile-row');
+    const clearBtn=box.querySelector('.mini-btn');
+    let placed=[];
+
+    function makeTiles(){
+      tileRow.innerHTML=''; answerRow.innerHTML=''; placed=[];
+      let letters=shuffle(item.w.split(''));
+      if(letters.join('')===item.w) letters=shuffle(letters);
+      letters.forEach(L=>{
+        const t=document.createElement('div');
+        t.className='tile'; t.textContent=L;
+        t.addEventListener('click',()=>{
+          if(box.classList.contains('solved'))return;
+          if(t.parentElement===tileRow){
+            answerRow.appendChild(t); t.classList.add('in-answer'); placed.push(t);
+            if(placed.length===item.w.length){
+              const attempt=placed.map(x=>x.textContent).join('');
+              if(attempt===item.w){
+                box.classList.add('solved'); solvedWords++;
+                if(solvedWords===words.length) showReward(4,CODE[3]);
+              } else {
+                answerRow.style.animation='shake .35s';
+                setTimeout(()=>{answerRow.style.animation='';},400);
+              }
+            }
+          } else {
+            tileRow.appendChild(t); t.classList.remove('in-answer');
+            placed=placed.filter(x=>x!==t);
+          }
+        });
+        tileRow.appendChild(t);
+      });
+    }
+    clearBtn.addEventListener('click',()=>{ if(!box.classList.contains('solved')) makeTiles(); });
+    makeTiles();
+  });
+
+  /* ---------- GATE ---------- */
+  const inputs=document.querySelectorAll('.code-inputs input');
+  inputs.forEach((inp,i)=>{
+    inp.addEventListener('input',()=>{
+      if(inp.value.length===1 && i<inputs.length-1) inputs[i+1].focus();
+    });
+    inp.addEventListener('keydown',e=>{
+      if(e.key==='Backspace' && !inp.value && i>0) inputs[i-1].focus();
+    });
+  });
+  document.getElementById('goBtn').addEventListener('click',()=>{
+    const attempt=[...inputs].map(x=>x.value).join('');
+    const msg=document.getElementById('gateMsg');
+    if(attempt===CODE.join('')){
+      document.getElementById('game').style.display='none';
+      document.getElementById('victory').classList.add('show');
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+      msg.textContent='Λάθος κωδικός! Wrong code — check your digits.';
+      msg.className='gate-msg bad';
+    }
+  });
+})();
+</script>
+</body>
+</html>
