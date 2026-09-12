@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Η ώρα η καλή! — Glossomathia Escape Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#8E7CC3; --purple-deep:#6d5b87; --purple-bg:#f7eef9;
+  --blue:#7AA6B9; --blue-deep:#3f6d82; --blue-bg:#e9f1f7;
+  --green:#6FAE84; --green-deep:#3f7a54; --green-bg:#eaf6ee;
+  --rose:#C98BB0; --rose-deep:#9c5980; --rose-bg:#fbeef5;
+  --ink:#4a4458; --pale:#b3a7c9; --paper:#fdfbf7; --line:#e6ddf0;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:'Nunito',sans-serif; color:var(--ink); background:
+  linear-gradient(180deg,#f6f1fa 0%, #fdf6fa 60%, #f4f7f3 100%);
+  min-height:100vh; padding:16px; display:flex; justify-content:center;}
+.app{width:100%; max-width:560px;}
+.wordmark{text-align:center; font-size:11px; letter-spacing:.35em; color:var(--pale);
+  font-weight:700; margin:6px 0 14px;}
+.card{background:var(--paper); border:1px solid var(--line); border-radius:18px;
+  padding:22px 20px; box-shadow:0 6px 24px rgba(142,124,195,.10);}
+h1{font-weight:900; font-size:30px; color:var(--purple); line-height:1.15; text-align:center;}
+.tag{ text-align:center; color:var(--rose-deep); font-weight:700; font-size:14px; margin-top:4px;}
+.story{margin:14px 0 6px; font-size:15.5px; line-height:1.55;}
+.story em{color:#9a8fb0; font-style:italic; font-size:14px; display:block; margin-top:6px;}
+.hud{display:flex; justify-content:space-between; align-items:center; margin:14px 0 10px;
+  font-size:13px; font-weight:700; color:#9a8fb0;}
+.tiles{display:flex; gap:8px;}
+.tile{width:34px; height:40px; border-radius:9px; border:2px dashed var(--line);
+  display:flex; align-items:center; justify-content:center; font-weight:900; font-size:19px;
+  color:var(--purple-deep); background:#fff;}
+.tile.won{border:2px solid var(--purple); background:var(--purple-bg); animation:pop .35s ease;}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.stagehead{display:flex; align-items:baseline; gap:8px; margin-bottom:4px; flex-wrap:wrap;}
+.stageno{font-size:12px; font-weight:800; letter-spacing:.12em; padding:3px 10px;
+  border-radius:99px; color:#fff;}
+h2{font-weight:800; font-size:21px;}
+.instr{font-size:14px; color:#9a8fb0; margin:6px 0 14px; line-height:1.5;}
+.prompt{font-size:19px; font-weight:800; margin:10px 0 4px; line-height:1.4;}
+.btns{display:flex; flex-direction:column; gap:9px; margin-top:12px;}
+button{font-family:'Nunito',sans-serif; cursor:pointer; border:none;}
+.opt{width:100%; text-align:left; font-size:16.5px; font-weight:700; color:var(--ink);
+  background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px 14px;
+  transition:transform .08s ease;}
+.opt:hover{transform:translateX(3px);}
+.opt:focus-visible,.chip:focus-visible,.big:focus-visible,.spk:focus-visible,.ltr:focus-visible{
+  outline:3px solid var(--purple); outline-offset:2px;}
+.opt.right{border-color:var(--green); background:var(--green-bg); color:var(--green-deep);}
+.opt.wrong{border-color:var(--rose); background:var(--rose-bg); color:var(--rose-deep);}
+.feedback{min-height:22px; font-size:14px; font-weight:700; margin-top:10px; line-height:1.45;}
+.feedback.good{color:var(--green-deep);}
+.feedback.bad{color:var(--rose-deep);}
+.big{display:block; width:100%; padding:14px; margin-top:16px; border-radius:14px;
+  font-size:17px; font-weight:800; color:#fff; background:var(--purple);
+  box-shadow:0 4px 0 var(--purple-deep); transition:transform .08s;}
+.big:active{transform:translateY(3px); box-shadow:none;}
+.big:disabled{opacity:.45; box-shadow:none; cursor:default;}
+.spk{background:none; font-size:20px; vertical-align:middle; padding:2px 6px; border-radius:8px;}
+.spk:hover{background:var(--blue-bg);}
+.invite{background:#fff; border:2px solid var(--rose); border-radius:14px; padding:18px 16px;
+  font-size:17px; line-height:2.1; text-align:center;}
+.invite .orn{color:var(--rose); font-size:20px; letter-spacing:.4em;}
+.gap{display:inline-block; min-width:96px; border-bottom:2.5px solid var(--rose);
+  font-weight:800; color:var(--rose-deep); padding:0 6px; cursor:pointer; border-radius:6px 6px 0 0;}
+.gap.filled{background:var(--rose-bg);}
+.bank{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:14px;}
+.chip{font-size:15.5px; font-weight:800; padding:8px 14px; border-radius:99px;
+  border:2px solid var(--blue); color:var(--blue-deep); background:var(--blue-bg);}
+.chip:disabled{opacity:.35; cursor:default;}
+.artword{text-align:center; font-size:30px; font-weight:900; margin:10px 0 14px;}
+.artrow{display:flex; gap:10px; justify-content:center;}
+.artrow .opt{width:84px; text-align:center; font-size:20px;}
+.sl .opt{display:inline-block; width:48%; text-align:center;}
+.slrow{display:flex; gap:4%; }
+.lockltrs{display:flex; gap:10px; justify-content:center; margin:16px 0;}
+.ltr{width:52px; height:60px; border-radius:12px; border:2px solid var(--purple);
+  background:var(--purple-bg); font-size:26px; font-weight:900; color:var(--purple-deep);}
+.ltr:disabled{opacity:.3;}
+.lockslots{display:flex; gap:10px; justify-content:center; font-size:26px; font-weight:900;
+  color:var(--purple-deep); min-height:40px; letter-spacing:.2em;}
+.hidden{display:none;}
+.endwrap{text-align:center;}
+.endwrap h1{font-size:36px;}
+.stats{margin:14px 0; font-size:16px; font-weight:700; color:#9a8fb0;}
+.confetti{position:fixed; top:-12px; font-size:20px; animation:fall linear forwards; z-index:9;}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);}}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important;}
+  .confetti{display:none;}
+}
+footer{text-align:center; font-size:11px; color:var(--pale); font-weight:700;
+  letter-spacing:.15em; margin:18px 0 6px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="wordmark">G L O S S O M A T H I A</div>
+
+  <!-- INTRO -->
+  <div class="card" id="intro">
+    <h1>Η ώρα η καλή!</h1>
+    <div class="tag">Escape Room · Ελληνικά Α1</div>
+    <p class="story">
+      Συγχαρητήρια! 🎉 Είσαι ο νέος βοηθός στην εταιρεία «Η ώρα η καλή» στην Αθήνα.
+      Σήμερα είναι η πρώτη σου μέρα — και το Σάββατο έχουμε έναν μεγάλο γάμο!
+      Κάνε τις 5 δουλειές σου, πάρε τα 5 γράμματα και βρες τον μυστικό κωδικό.
+      <em>Congratulations! You are the new assistant at the wedding company.
+      Finish your 5 tasks, collect 5 letters, and crack the secret code before Saturday's big wedding.</em>
+    </p>
+    <button class="big" onclick="startGame()">Πάμε! · Let's go</button>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud hidden" id="hud">
+    <span id="timer">0:00</span>
+    <div class="tiles" id="tiles"></div>
+  </div>
+
+  <!-- STAGE AREA -->
+  <div class="card hidden" id="stage"></div>
+
+  <footer>PLAY · LISTEN · LEARN</footer>
+</div>
+
+<script>
+/* ---------- shared ---------- */
+const LETTERS = ['Γ','Α','Μ','Ο','Σ'];
+let won = [], mistakes = 0, seconds = 0, timerId = null;
+const $ = id => document.getElementById(id);
+
+function speak(txt){
+  try{
+    const u = new SpeechSynthesisUtterance(txt);
+    u.lang = 'el-GR'; u.rate = 0.85;
+    const v = speechSynthesis.getVoices().find(v=>v.lang.startsWith('el'));
+    if(v) u.voice = v;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }catch(e){}
+}
+function spk(txt){ return `<button class="spk" aria-label="Άκουσε" onclick="speak('${txt.replace(/'/g,"\\'")}')">🔊</button>`; }
+
+function drawTiles(){
+  $('tiles').innerHTML = LETTERS.map((L,i)=>
+    `<div class="tile ${i<won.length?'won':''}">${i<won.length?won[i]:''}</div>`).join('');
+}
+function startGame(){
+  $('intro').classList.add('hidden');
+  $('hud').classList.remove('hidden');
+  $('stage').classList.remove('hidden');
+  drawTiles();
+  timerId = setInterval(()=>{ seconds++;
+    $('timer').textContent = Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');
+  },1000);
+  stage1();
+}
+function winLetter(next){
+  won.push(LETTERS[won.length]);
+  drawTiles();
+  setTimeout(next, 900);
+}
+function shuffle(a){ return a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]); }
+
+/* ---------- Stage 1 · Η αίτηση (vocab MCQ) ---------- */
+const S1 = [
+  {q:'η ευκαιρία', a:'opportunity', d:['company','salary','application'],
+   why:'η ευκαιρία = opportunity. Αυτή είναι η ευκαιρία σου!'},
+  {q:'ο πελάτης', a:'customer', d:['assistant','photographer','groom'],
+   why:'ο πελάτης = customer. Το γραφείο έχει πολλούς πελάτες.'},
+  {q:'ο μισθός', a:'salary', d:['month','office','job ad'],
+   why:'ο μισθός = salary. Careful: ο μήνας = month!'},
+  {q:'η αίτηση', a:'application form', d:['job ad','invitation','instruction'],
+   why:'η αίτηση = application. η αγγελία = job ad, το προσκλητήριο = invitation.'},
+  {q:'ο βοηθός', a:'assistant', d:['customer','boss','baker'],
+   why:'ο βοηθός = assistant — that is you!'}
+];
+let s1i = 0;
+function stage1(){
+  if(s1i >= S1.length){ stageDone('Πήρες τη δουλειά! You got the job!', stage2); return; }
+  const it = S1[s1i];
+  const opts = shuffle([it.a, ...it.d]);
+  $('stage').innerHTML = `
+    <div class="stagehead"><span class="stageno" style="background:var(--blue)">ΔΟΥΛΕΙΑ 1/5</span>
+    <h2>Η αίτηση</h2></div>
+    <p class="instr">First, pass the interview! What does the word mean? (${s1i+1}/5)</p>
+    <p class="prompt">${it.q} ${spk(it.q)}</p>
+    <div class="btns">${opts.map(o=>`<button class="opt" onclick="s1pick(this,'${o}')">${o}</button>`).join('')}</div>
+    <div class="feedback" id="fb"></div>`;
+}
+function s1pick(btn, o){
+  const it = S1[s1i];
+  lockOpts();
+  if(o === it.a){
+    btn.classList.add('right');
+    $('fb').className='feedback good'; $('fb').textContent='Σωστά! ✓';
+    s1i++; setTimeout(stage1, 800);
+  }else{
+    btn.classList.add('wrong'); mistakes++;
+    $('fb').className='feedback bad'; $('fb').textContent = it.why;
+    setTimeout(()=>{ unlockOpts(); }, 1600);
+  }
+}
+function lockOpts(){ document.querySelectorAll('.opt').forEach(b=>b.disabled=true); }
+function unlockOpts(){ document.querySelectorAll('.opt').forEach(b=>{b.disabled=false; b.classList.remove('wrong');}); }
+
+/* ---------- Stage 2 · Τα προσκλητήρια (gap-fill invitation) ---------- */
+const S2ANS = ['νύφη','γαμπρός','γάμο','τούρτα'];
+const S2BANK = shuffle(['νύφη','γαμπρός','γάμο','τούρτα','μισθός','ρούχα']);
+let s2fill = [null,null,null,null];
+function stage2(){
+  $('stage').innerHTML = `
+    <div class="stagehead"><span class="stageno" style="background:var(--rose)">ΔΟΥΛΕΙΑ 2/5</span>
+    <h2>Τα προσκλητήρια</h2></div>
+    <p class="instr">Θα φτιάξεις τα προσκλητήρια! Tap a word chip to fill the invitation. Tap a gap to empty it. Two chips are traps!</p>
+    <div class="invite" id="inv"></div>
+    <div class="bank" id="bank"></div>
+    <button class="big" id="chk" onclick="s2check()" disabled>Στείλε το προσκλητήριο ✉️</button>
+    <div class="feedback" id="fb"></div>`;
+  s2draw();
+}
+function s2draw(){
+  const g = i => `<span class="gap ${s2fill[i]?'filled':''}" role="button" tabindex="0"
+     onclick="s2clear(${i})" onkeydown="if(event.key==='Enter')s2clear(${i})">${s2fill[i]||'\u00A0\u00A0\u00A0'}</span>`;
+  $('inv').innerHTML = `<div class="orn">❀ ❀ ❀</div>
+    Η ${g(0)} Μαρία και<br>ο ${g(1)} Νίκος<br>
+    σας προσκαλούν στον ${g(2)} τους<br>το Σάββατο στις 6:00 μ.μ.<br>
+    Μετά: ${g(3)} από το ζαχαροπλαστείο «Γλυκό»!
+    <div class="orn">❀ ❀ ❀</div>`;
+  $('bank').innerHTML = S2BANK.map(w=>{
+    const used = s2fill.includes(w);
+    return `<button class="chip" ${used?'disabled':''} onclick="s2place('${w}')">${w}</button>`;
+  }).join('');
+  $('chk').disabled = s2fill.some(x=>!x);
+}
+function s2place(w){
+  const i = s2fill.indexOf(null);
+  if(i === -1) return;
+  s2fill[i] = w; s2draw();
+}
+function s2clear(i){ if(s2fill[i]){ s2fill[i]=null; s2draw(); } }
+function s2check(){
+  if(s2fill.join('|') === S2ANS.join('|')){
+    $('fb').className='feedback good';
+    $('fb').textContent='Τέλειο προσκλητήριο! ✓';
+    speak('Η νύφη Μαρία και ο γαμπρός Νίκος σας προσκαλούν στον γάμο τους');
+    stageDone('Τα προσκλητήρια είναι έτοιμα!', stage3);
+  }else{
+    mistakes++;
+    $('fb').className='feedback bad';
+    $('fb').textContent='Κάτι δεν πάει καλά… Think: who is the bride? who is the groom? what do we eat after the church? 🍰';
+  }
+}
+
+/* ---------- Stage 3 · Ο, Η ή Το; (articles) ---------- */
+const S3 = shuffle([
+  ['γάμος','ο'],['νύφη','η'],['ζευγάρι','το'],['τούρτα','η'],
+  ['προσκλητήριο','το'],['μισθός','ο'],['εταιρεία','η'],['ζαχαροπλαστείο','το']
+]);
+let s3i = 0;
+function stage3(){
+  if(s3i >= S3.length){ stageDone('Μπράβο, ξέρεις τα άρθρα!', stage4); return; }
+  const [w,art] = S3[s3i];
+  $('stage').innerHTML = `
+    <div class="stagehead"><span class="stageno" style="background:var(--purple)">ΔΟΥΛΕΙΑ 3/5</span>
+    <h2>Ο, Η ή Το;</h2></div>
+    <p class="instr">The office labels are missing their articles! Choose the right one. (${s3i+1}/8)</p>
+    <div class="artword">${w} ${spk(art+' '+w)}</div>
+    <div class="artrow">
+      ${['ο','η','το'].map(a=>`<button class="opt" onclick="s3pick(this,'${a}')">${a}</button>`).join('')}
+    </div>
+    <div class="feedback" id="fb"></div>`;
+}
+function s3pick(btn,a){
+  const [w,art] = S3[s3i];
+  lockOpts();
+  if(a === art){
+    btn.classList.add('right');
+    $('fb').className='feedback good'; $('fb').textContent = `${art} ${w} ✓`;
+    s3i++; setTimeout(stage3, 700);
+  }else{
+    btn.classList.add('wrong'); mistakes++;
+    $('fb').className='feedback bad'; $('fb').textContent = 'Όχι… try again! Look at the ending of the word.';
+    setTimeout(unlockOpts, 900);
+  }
+}
+
+/* ---------- Stage 4 · Το ζαχαροπλαστείο (future tense) ---------- */
+const S4 = [
+  {s:'Θα ____ τα προσκλητήρια.', a:'φτιάξεις', d:['φτιάχνεις','έφτιαξες'],
+   full:'Θα φτιάξεις τα προσκλητήρια.'},
+  {s:'Θα ____ με τη νύφη για τα ρούχα.', a:'μιλήσεις', d:['μιλάς','μίλησες'],
+   full:'Θα μιλήσεις με τη νύφη για τα ρούχα.'},
+  {s:'Θα ____ οδηγίες για την τούρτα.', a:'δώσεις', d:['δίνεις','έδωσες'],
+   full:'Θα δώσεις οδηγίες για την τούρτα.'},
+  {s:'Θα ____ τους φωτογράφους.', a:'βρεις', d:['βρίσκεις','βρήκες'],
+   full:'Θα βρεις τους φωτογράφους.'},
+  {s:'Θα ____ από το πρωί μέχρι το βράδυ.', a:'δουλέψεις', d:['δουλεύεις','δούλεψες'],
+   full:'Θα δουλέψεις από το πρωί μέχρι το βράδυ.'}
+];
+let s4i = 0;
+function stage4(){
+  if(s4i >= S4.length){ stageDone('Η τούρτα θα είναι υπέροχη! 🍰', stage5); return; }
+  const it = S4[s4i];
+  const opts = shuffle([it.a, ...it.d]);
+  $('stage').innerHTML = `
+    <div class="stagehead"><span class="stageno" style="background:var(--green)">ΔΟΥΛΕΙΑ 4/5</span>
+    <h2>Το ζαχαροπλαστείο</h2></div>
+    <p class="instr">The baker wants your to-do list — but only in the future tense! After θα, which form fits? (${s4i+1}/5)</p>
+    <p class="prompt">${it.s} ${spk(it.full)}</p>
+    <div class="btns">${opts.map(o=>`<button class="opt" onclick="s4pick(this,'${o}')">${o}</button>`).join('')}</div>
+    <div class="feedback" id="fb"></div>`;
+}
+function s4pick(btn,o){
+  const it = S4[s4i];
+  lockOpts();
+  if(o === it.a){
+    btn.classList.add('right');
+    $('fb').className='feedback good'; $('fb').textContent = it.full + ' ✓';
+    s4i++; setTimeout(stage4, 850);
+  }else{
+    btn.classList.add('wrong'); mistakes++;
+    $('fb').className='feedback bad';
+    $('fb').textContent = o === it.d[0]
+      ? 'That is the present (now, every day). After θα we need the future form.'
+      : 'That is the past. After θα we look forward, not back!';
+    setTimeout(unlockOpts, 1500);
+  }
+}
+
+/* ---------- Stage 5 · Σωστό ή Λάθος (exam format) ---------- */
+const S5 = [
+  {s:'Η εταιρεία έχει γραφεία μόνο στην Αθήνα.', a:false,
+   why:'Λάθος — έχει γραφεία σε μεγάλες πόλεις στο εξωτερικό από το 1990.'},
+  {s:'Ο βοηθός πρέπει να είναι 25 με 35 χρονών.', a:true,
+   why:'Σωστό — Είσαι 25-35 χρονών;'},
+  {s:'Θα δουλέψεις από τον Ιούνιο μέχρι τον Αύγουστο.', a:true,
+   why:'Σωστό — τότε γίνονται πιο πολλοί γάμοι.'},
+  {s:'Θα φτιάξεις εσύ την τούρτα του γάμου.', a:false,
+   why:'Λάθος — θα δώσεις οδηγίες στο ζαχαροπλαστείο. You do not bake it yourself!'},
+  {s:'Ο μισθός είναι μεγάλος.', a:true,
+   why:'Σωστό — θα χαρείς πολύ, όταν δεις τον μεγάλο σου μισθό!'}
+];
+let s5i = 0;
+function stage5(){
+  if(s5i >= S5.length){ stageDone('Ο φωτογράφος είναι έτοιμος! 📸', finalLock); return; }
+  const it = S5[s5i];
+  $('stage').innerHTML = `
+    <div class="stagehead"><span class="stageno" style="background:var(--blue)">ΔΟΥΛΕΙΑ 5/5</span>
+    <h2>Σωστό ή Λάθος;</h2></div>
+    <p class="instr">The photographer read the job ad — but did he read it well? Check his notes against the text. (${s5i+1}/5)</p>
+    <p class="prompt">${it.s} ${spk(it.s)}</p>
+    <div class="slrow sl">
+      <button class="opt" onclick="s5pick(this,true)">Σωστό ✓</button>
+      <button class="opt" onclick="s5pick(this,false)">Λάθος ✗</button>
+    </div>
+    <div class="feedback" id="fb"></div>`;
+}
+function s5pick(btn,v){
+  const it = S5[s5i];
+  lockOpts();
+  if(v === it.a){
+    btn.classList.add('right');
+    $('fb').className='feedback good'; $('fb').textContent = it.why;
+    s5i++; setTimeout(stage5, 1500);
+  }else{
+    btn.classList.add('wrong'); mistakes++;
+    $('fb').className='feedback bad'; $('fb').textContent = it.why;
+    s5i++; setTimeout(stage5, 2200);
+  }
+}
+
+/* ---------- transitions & final lock ---------- */
+function stageDone(msg, next){
+  $('stage').innerHTML = `<h2 style="text-align:center; color:var(--green-deep)">${msg}</h2>
+    <p style="text-align:center; margin-top:10px; font-size:15px; color:#9a8fb0; font-weight:700">
+    Πήρες ένα γράμμα!</p>`;
+  winLetter(next);
+}
+let lockPick = [];
+function finalLock(){
+  lockPick = [];
+  const scrambled = shuffle([...LETTERS]);
+  $('stage').innerHTML = `
+    <div class="stagehead"><span class="stageno" style="background:var(--purple)">ΚΩΔΙΚΟΣ</span>
+    <h2>Η μυστική λέξη</h2></div>
+    <p class="instr">Έχεις 5 γράμματα. Βάλε τα στη σωστή σειρά!<br>
+    Hint: it is what this whole company is about… 💍</p>
+    <div class="lockslots" id="slots">_ _ _ _ _</div>
+    <div class="lockltrs">${scrambled.map((L,i)=>
+      `<button class="ltr" id="L${i}" onclick="pickL(${i},'${L}')">${L}</button>`).join('')}</div>
+    <button class="big" onclick="resetLock()" style="background:var(--blue); box-shadow:0 4px 0 var(--blue-deep)">Ξανά · Reset</button>
+    <div class="feedback" id="fb"></div>`;
+}
+function pickL(i,L){
+  $('L'+i).disabled = true;
+  lockPick.push(L);
+  $('slots').textContent = lockPick.join(' ') + ' _'.repeat(5-lockPick.length);
+  if(lockPick.length === 5){
+    if(lockPick.join('') === 'ΓΑΜΟΣ'){
+      speak('Ο γάμος! Η ώρα η καλή!');
+      setTimeout(ending, 600);
+    }else{
+      mistakes++;
+      $('fb').className='feedback bad';
+      $('fb').textContent='Όχι αυτή η λέξη… Ξανά!';
+      setTimeout(resetLock, 1200);
+    }
+  }
+}
+function resetLock(){ finalLock(); }
+
+/* ---------- ending ---------- */
+function ending(){
+  clearInterval(timerId);
+  const t = Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');
+  $('hud').classList.add('hidden');
+  $('stage').innerHTML = `
+    <div class="endwrap">
+      <h1>Ο ΓΑΜΟΣ! 💍</h1>
+      <div class="tag" style="font-size:18px; margin-top:8px">Η ώρα η καλή!</div>
+      <p class="story" style="text-align:center">
+        Ο γάμος της Μαρίας και του Νίκου ήταν υπέροχος —
+        και όλα χάρη σε σένα, τον καλύτερο βοηθό της Αθήνας!
+        <em>The wedding was wonderful, thanks to you — the best assistant in Athens!</em></p>
+      <div class="stats">⏱ ${t} &nbsp;·&nbsp; λάθη: ${mistakes}</div>
+      <button class="big" onclick="location.reload()">Παίξε ξανά · Play again</button>
+    </div>`;
+  confetti();
+}
+function confetti(){
+  const bits = ['❀','💜','🤍','💍','✿','🎉'];
+  for(let i=0;i<40;i++){
+    const s = document.createElement('span');
+    s.className='confetti';
+    s.textContent = bits[i%bits.length];
+    s.style.left = Math.random()*100+'vw';
+    s.style.animationDuration = (2.5+Math.random()*2.5)+'s';
+    s.style.animationDelay = (Math.random()*1.2)+'s';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 6500);
+  }
+}
+if('speechSynthesis' in window){ speechSynthesis.getVoices(); }
+</script>
+</body>
+</html>
