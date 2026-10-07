@@ -1,0 +1,528 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Modern Greek Spelling Rules</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: one reading column on parchment; sticky level bar; each level a chapter with rule cards and a practice block */
+:root{
+  --parchment:#F4F1EA;
+  --parchment-deep:#EAE4D6;
+  --charcoal:#2F2F2F;
+  --muted:#5E5A52;
+  --gold:#C6A75E;
+  --gold-deep:#8A6F2E;
+  --navy:#08314A;
+  --teal:#005F7B;
+  --teal-wash:#E2EBEA;
+  --line:#D9D1BF;
+  --display:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  color-scheme:light;
+}
+html,body{background:var(--parchment);color:var(--charcoal)}
+body{font-family:var(--body);font-size:16px;line-height:1.6;padding-inline:20px}
+.wrap{max-width:860px;margin:0 auto;padding-block:40px 64px}
+h1,h2,h3{font-family:var(--display);color:var(--navy);text-wrap:balance;margin:0;line-height:1.1}
+p{margin:0}
+a{color:var(--teal)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px}
+
+/* Cover */
+.cover{display:grid;gap:14px;padding-bottom:28px;border-bottom:1px solid var(--line)}
+.brand{font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--teal)}
+.brand span{color:var(--gold-deep)}
+.cover h1{font-size:clamp(40px,8vw,68px);font-weight:600}
+.cover h1 em{font-style:italic;color:var(--teal);font-weight:500}
+.cover .lede{font-size:18px;max-width:62ch;color:var(--charcoal)}
+.levels-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.levels-strip span{font-weight:800;font-size:13px;color:var(--navy);border:1px solid var(--navy);border-radius:999px;padding:2px 12px}
+
+/* Sticky nav */
+nav.levels{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--parchment);border-bottom:1px solid var(--line);margin-inline:-20px;padding:10px 20px}
+nav.levels ul{list-style:none;margin:0 auto;padding:0;max-width:860px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.levels a{display:block;white-space:nowrap;text-decoration:none;font-weight:700;font-size:14px;color:var(--navy);padding:6px 12px;border-radius:6px}
+nav.levels a:hover{background:var(--parchment-deep)}
+
+/* Intro panel */
+.intro{display:grid;grid-template-columns:1fr 1fr;gap:28px;padding-block:32px;border-bottom:1px solid var(--line)}
+.intro h2{font-size:26px;margin-bottom:10px}
+.intro ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.note{border-left:3px solid var(--gold);padding-left:16px}
+@media (max-width:640px){.intro{grid-template-columns:1fr}}
+
+/* Level chapters */
+section.level{padding-top:48px;scroll-margin-top:60px}
+.level-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.level-code{font-family:var(--display);font-size:56px;font-weight:700;color:var(--gold);line-height:1}
+.level-head h2{font-size:clamp(28px,5vw,38px)}
+.level-sub{color:var(--muted);font-size:15px;margin-bottom:24px}
+
+.rule{display:grid;grid-template-columns:56px 1fr;gap:4px 16px;padding-block:22px;border-top:1px solid var(--line)}
+.rule-no{font-family:var(--display);font-size:15px;font-weight:700;color:var(--gold-deep);letter-spacing:.06em;text-transform:uppercase;padding-top:6px}
+.rule-body{min-width:0;display:grid;gap:10px}
+.rule h3{font-size:25px;font-weight:600}
+.rule p{max-width:65ch}
+
+.gk{font-family:var(--display);font-size:1.18em;font-weight:600;color:var(--navy)}
+.tip{background:var(--teal-wash);color:var(--navy);border-radius:6px;padding:8px 14px;font-weight:600;font-size:15px;justify-self:start}
+
+/* Tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#FBF9F4}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--teal);color:var(--parchment);text-align:left;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px}
+td{padding:9px 14px;border-top:1px solid var(--line);vertical-align:top}
+tbody tr:nth-child(even) td{background:rgba(0,95,123,.045)}
+td .gk{font-size:1.15em}
+.ok{color:var(--teal);font-weight:800}
+.bad{color:#9A3B2E;text-decoration:line-through;text-decoration-thickness:1px}
+.stress{color:var(--teal);text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:2px;text-underline-offset:3px}
+
+/* Practice */
+.practice{margin-top:28px;border:1.5px solid var(--navy);border-radius:10px;padding:22px clamp(16px,4vw,28px);display:grid;gap:22px;background:#FBF9F4}
+.practice-title{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--navy)}
+.practice-title::after{content:"";flex:1;height:1px;background:var(--gold)}
+.ex{display:grid;gap:8px;min-width:0}
+.ex h4{margin:0;font-family:var(--display);font-size:21px;color:var(--teal);font-weight:600}
+.ex ol{margin:0;padding-left:22px;display:grid;gap:4px}
+.ex .ask{color:var(--muted);font-size:15px}
+details.ans{justify-self:start;max-width:100%}
+details.ans summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;color:var(--gold-deep);border:1px solid var(--gold);border-radius:999px;padding:3px 14px}
+details.ans summary::-webkit-details-marker{display:none}
+details.ans summary::before{content:"+";font-weight:800}
+details.ans[open] summary::before{content:"−"}
+details.ans[open] summary{background:var(--gold);color:var(--navy)}
+details.ans div{margin-top:10px;padding:10px 14px;background:var(--parchment-deep);border-radius:6px;color:var(--navy)}
+
+/* Cheat sheet */
+.cheat{margin-top:56px;padding:30px clamp(16px,4vw,32px);border:2px solid var(--gold);border-radius:12px;display:grid;gap:22px;scroll-margin-top:60px}
+.cheat h2{font-size:clamp(30px,5vw,40px)}
+.five{margin:0;padding:0;list-style:none;counter-reset:f;display:grid;gap:12px}
+.five li{counter-increment:f;display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:baseline}
+.five li::before{content:counter(f);font-family:var(--display);font-size:30px;font-weight:700;color:var(--gold);line-height:1}
+.five strong{color:var(--navy)}
+.ywords{display:flex;flex-wrap:wrap;gap:8px}
+.ywords span{font-family:var(--display);font-size:22px;font-weight:600;color:var(--navy);border-bottom:2px solid var(--gold);padding:0 4px}
+.cheat h3{font-size:22px;color:var(--teal)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.two > div{min-width:0;display:grid;gap:8px;align-content:start}
+@media (max-width:680px){.two{grid-template-columns:1fr}}
+
+section.appendix{padding-top:56px;display:grid;gap:18px;scroll-margin-top:60px}
+section.appendix h2{font-size:clamp(28px,5vw,36px)}
+.lv{display:inline-block;font-weight:800;font-size:12px;color:var(--navy);background:var(--parchment-deep);border-radius:4px;padding:1px 8px;white-space:nowrap}
+
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13px;color:var(--muted)}
+footer b{font-family:var(--display);font-size:18px;color:var(--navy)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<nav class="levels" aria-label="Levels">
+  <ul>
+    <li><a href="#a1">A1</a></li>
+    <li><a href="#a2">A2</a></li>
+    <li><a href="#b1">B1</a></li>
+    <li><a href="#b2">B2</a></li>
+    <li><a href="#c">C1 · C2</a></li>
+    <li><a href="#cheat">Cheat sheet</a></li>
+    <li><a href="#appendix">All rules</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+
+<header class="cover">
+  <div class="brand">Glossomathia <span>· Play · Listen · Learn</span></div>
+  <h1>Modern Greek <em>Spelling Rules</em></h1>
+  <p class="lede">Every spelling pattern a Glossomathia student needs, from the first Greek letters at A1 through the literary forms at C2. Each level stands on its own: find yours, master those rules, then move up.</p>
+  <div class="levels-strip"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></div>
+</header>
+
+<section class="intro">
+  <div>
+    <h2>How to use this guide</h2>
+    <ul>
+      <li>Work through your level first, then read higher levels as a preview.</li>
+      <li>The cheat sheet at the end applies to every level. Bookmark it.</li>
+      <li>Say every Greek example aloud. Spelling and sound are deeply linked in Modern Greek.</li>
+    </ul>
+  </div>
+  <div class="note">
+    <h2>A note on the system</h2>
+    <p>Modern Greek uses the monotonic system: one accent mark, the tonos <span class="gk">΄</span>, on the stressed syllable of every word with two or more syllables. Greek spelling is largely phonemic. Once you know the rules, you can spell almost anything you can say.</p>
+  </div>
+</section>
+
+<!-- ============ A1 ============ -->
+<section class="level" id="a1">
+  <div class="level-head"><span class="level-code">A1</span><h2>Foundation</h2></div>
+  <p class="level-sub">The Greek alphabet, basic sounds, the accent, and the first digraphs</p>
+
+  <article class="rule"><div class="rule-no">Rule 1</div><div class="rule-body">
+    <h3>σ vs ς: two forms of sigma</h3>
+    <p>The letter sigma has two forms. Use <span class="gk">σ</span> everywhere except at the very end of a word, where you use <span class="gk">ς</span>.</p>
+    <div class="tbl"><table><thead><tr><th>Position</th><th>Letter</th><th>Example</th></tr></thead><tbody>
+      <tr><td>Inside a word</td><td><span class="gk">σ</span></td><td><span class="gk">σπίτι, ιστορία</span></td></tr>
+      <tr><td>End of a word</td><td><span class="gk">ς</span></td><td><span class="gk">καλημέρας, φίλος</span></td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 2</div><div class="rule-body">
+    <h3>The accent (tonos)</h3>
+    <p>Every word with two or more syllables carries exactly one accent on the stressed syllable. Capital letters carry no accent.</p>
+    <div class="tbl"><table><thead><tr><th>Word</th><th>Meaning</th><th>Stressed syllable</th></tr></thead><tbody>
+      <tr><td><span class="gk">σπίτι</span></td><td>house</td><td><span class="gk"><span class="stress">σπί</span>τι</span></td></tr>
+      <tr><td><span class="gk">ημέρα</span></td><td>day</td><td><span class="gk">η<span class="stress">μέ</span>ρα</span></td></tr>
+      <tr><td><span class="gk">τραπέζι</span></td><td>table</td><td><span class="gk">τρα<span class="stress">πέ</span>ζι</span></td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 3</div><div class="rule-body">
+    <h3>Digraphs: two letters, one sound</h3>
+    <div class="tbl"><table><thead><tr><th>Digraph</th><th>Sound</th><th>Example</th><th>Meaning</th></tr></thead><tbody>
+      <tr><td><span class="gk">μπ</span></td><td>/b/</td><td><span class="gk">μπαμπάς</span></td><td>dad</td></tr>
+      <tr><td><span class="gk">ντ</span></td><td>/d/</td><td><span class="gk">ντομάτα</span></td><td>tomato</td></tr>
+      <tr><td><span class="gk">γκ</span></td><td>/g/</td><td><span class="gk">γκαρσόν</span></td><td>waiter</td></tr>
+      <tr><td><span class="gk">αι</span></td><td>/ee/</td><td><span class="gk">καιρός</span></td><td>weather</td></tr>
+      <tr><td><span class="gk">ει</span></td><td>/ee/</td><td><span class="gk">εικόνα</span></td><td>image</td></tr>
+      <tr><td><span class="gk">οι</span></td><td>/ee/</td><td><span class="gk">οικογένεια</span></td><td>family</td></tr>
+      <tr><td><span class="gk">αυ</span></td><td>/af/ or /av/</td><td><span class="gk">αύριο</span></td><td>tomorrow</td></tr>
+      <tr><td><span class="gk">ευ</span></td><td>/ef/ or /ev/</td><td><span class="gk">ευχαριστώ</span></td><td>thank you</td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <div class="practice">
+    <div class="practice-title">A1 Practice</div>
+    <div class="ex"><h4>1. Final σ or ς?</h4><p class="ask">Add the correct sigma to complete each word.</p>
+      <ol><li><span class="gk">καλημέρα_</span> (good morning)</li><li><span class="gk">_πίτι</span> (house)</li><li><span class="gk">φίλο_</span> (friend)</li><li><span class="gk">ι_τορία</span> (history)</li></ol>
+      <details class="ans" id="a1-e1"><summary>Answers</summary><div><span class="gk">καλημέρας · σπίτι · φίλος · ιστορία</span></div></details></div>
+    <div class="ex"><h4>2. Where does the accent go?</h4><p class="ask">Add one accent to each word. Say it aloud first.</p>
+      <ol><li><span class="gk">ημερα</span> (day)</li><li><span class="gk">βιβλιο</span> (book)</li><li><span class="gk">φιλος</span> (friend)</li><li><span class="gk">τραπεζι</span> (table)</li></ol>
+      <details class="ans" id="a1-e2"><summary>Answers</summary><div><span class="gk">ημέρα · βιβλίο · φίλος · τραπέζι</span></div></details></div>
+    <div class="ex"><h4>3. Digraph match</h4><p class="ask">Match each digraph to its sound: <span class="gk">μπ · ντ · αυ · οι</span></p>
+      <details class="ans" id="a1-e3"><summary>Answers</summary><div><span class="gk">μπ</span> = /b/ · <span class="gk">ντ</span> = /d/ · <span class="gk">αυ</span> = /af/ or /av/ · <span class="gk">οι</span> = /ee/</div></details></div>
+  </div>
+</section>
+
+<!-- ============ A2 ============ -->
+<section class="level" id="a2">
+  <div class="level-head"><span class="level-code">A2</span><h2>Elementary</h2></div>
+  <p class="level-sub">The six /ee/ spellings, the /o/ rule, and common noun endings</p>
+
+  <article class="rule"><div class="rule-no">Rule 4</div><div class="rule-body">
+    <h3>Six spellings of the /ee/ sound</h3>
+    <p>All six are pronounced identically. The spelling of each word must be learned.</p>
+    <div class="tbl"><table><thead><tr><th>Spelling</th><th>Example</th><th>Meaning</th></tr></thead><tbody>
+      <tr><td><span class="gk">η</span></td><td><span class="gk">ημέρα</span></td><td>day</td></tr>
+      <tr><td><span class="gk">ι</span></td><td><span class="gk">ιστορία</span></td><td>history</td></tr>
+      <tr><td><span class="gk">υ</span></td><td><span class="gk">υπό</span></td><td>under</td></tr>
+      <tr><td><span class="gk">ει</span></td><td><span class="gk">εικόνα</span></td><td>image</td></tr>
+      <tr><td><span class="gk">οι</span></td><td><span class="gk">οικογένεια</span></td><td>family</td></tr>
+      <tr><td><span class="gk">αι</span></td><td><span class="gk">καιρός</span></td><td>weather</td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 5</div><div class="rule-body">
+    <h3>Two spellings of the /o/ sound</h3>
+    <div class="tbl"><table><thead><tr><th>Letter</th><th>When</th><th>Examples</th></tr></thead><tbody>
+      <tr><td><span class="gk">ο</span></td><td>Default, everywhere</td><td><span class="gk">οδός, λόγος, καλό</span></td></tr>
+      <tr><td><span class="gk">ω</span></td><td>Specific endings (B1 and up)</td><td><span class="gk">γράφω, καλώς</span></td></tr>
+    </tbody></table></div>
+    <p class="tip">At A2: when in doubt, write ο. You will learn the ω patterns at B1.</p>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 6</div><div class="rule-body">
+    <h3>Common noun endings by gender</h3>
+    <div class="tbl"><table><thead><tr><th>Gender</th><th>Common endings</th><th>Example</th></tr></thead><tbody>
+      <tr><td>Feminine</td><td><span class="gk">-α</span> or <span class="gk">-η</span></td><td><span class="gk">η γυναίκα, η ζώνη</span></td></tr>
+      <tr><td>Masculine</td><td><span class="gk">-ας, -ης, -ος</span></td><td><span class="gk">ο άντρας, ο μαθητής, ο δάσκαλος</span></td></tr>
+      <tr><td>Neuter</td><td><span class="gk">-ο</span> or <span class="gk">-ι</span></td><td><span class="gk">το βιβλίο, το σπίτι</span></td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <div class="practice">
+    <div class="practice-title">A2 Practice</div>
+    <div class="ex"><h4>1. Which /ee/ spelling?</h4>
+      <div class="tbl"><table><thead><tr><th>Meaning</th><th>Options</th></tr></thead><tbody>
+        <tr><td>day</td><td><span class="gk">ημέρα / ιμέρα / ειμέρα</span></td></tr>
+        <tr><td>house</td><td><span class="gk">σπίτι / σπήτι / σπείτι</span></td></tr>
+        <tr><td>family</td><td><span class="gk">οικογένεια / ικογένεια</span></td></tr>
+        <tr><td>image</td><td><span class="gk">εικόνα / ικόνα / ηκόνα</span></td></tr>
+      </tbody></table></div>
+      <details class="ans" id="a2-e1"><summary>Answers</summary><div><span class="gk">ημέρα</span> (η) · <span class="gk">σπίτι</span> (ι) · <span class="gk">οικογένεια</span> (οι) · <span class="gk">εικόνα</span> (ει)</div></details></div>
+    <div class="ex"><h4>2. ο or ω?</h4><p class="ask">At A2, the default is ο.</p>
+      <ol><li><span class="gk">λόγ_ς</span> (word)</li><li><span class="gk">οδ_ς</span> (road)</li><li><span class="gk">καλ_</span> (neuter adjective: good)</li></ol>
+      <details class="ans" id="a2-e2"><summary>Answers</summary><div><span class="gk">λόγος · οδός · καλό</span>. All use ο at A2.</div></details></div>
+    <div class="ex"><h4>3. What gender?</h4><p class="ask">Look at the article and write M, F or N.</p>
+      <ol><li><span class="gk">η ζώνη</span></li><li><span class="gk">ο δάσκαλος</span></li><li><span class="gk">το σχολείο</span></li><li><span class="gk">οι μαθητές</span> (plural: which genders could this be?)</li></ol>
+      <details class="ans" id="a2-e3"><summary>Answers</summary><div>1. F · 2. M · 3. N · 4. M or F (<span class="gk">οι</span> is the plural article for both)</div></details></div>
+  </div>
+</section>
+
+<!-- ============ B1 ============ -->
+<section class="level" id="b1">
+  <div class="level-head"><span class="level-code">B1</span><h2>Intermediate</h2></div>
+  <p class="level-sub">Verb endings in -ω, the third person in -ει, and adjective agreement</p>
+
+  <article class="rule"><div class="rule-no">Rule 7</div><div class="rule-body">
+    <h3>Verbs always end in -ω, never -ο</h3>
+    <p>The first person singular present tense of every verb ends in <span class="gk">-ω</span>. Never use ο here.</p>
+    <div class="tbl"><table><thead><tr><th>Meaning</th><th>Wrong</th><th>Correct</th></tr></thead><tbody>
+      <tr><td>I write</td><td><span class="gk bad">γράφο</span></td><td><span class="gk">γράφω</span> <span class="ok">✓</span></td></tr>
+      <tr><td>I eat</td><td><span class="gk bad">τρώγο</span></td><td><span class="gk">τρώω</span> <span class="ok">✓</span></td></tr>
+      <tr><td>I love</td><td><span class="gk bad">αγαπο</span></td><td><span class="gk">αγαπώ</span> <span class="ok">✓</span></td></tr>
+      <tr><td>I go</td><td><span class="gk bad">πηγαίνο</span></td><td><span class="gk">πηγαίνω</span> <span class="ok">✓</span></td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 8</div><div class="rule-body">
+    <h3>Third person singular ends in -ει</h3>
+    <div class="tbl"><table><thead><tr><th>Person</th><th>Verb</th><th>Ending</th></tr></thead><tbody>
+      <tr><td><span class="gk">εγώ</span> (I)</td><td><span class="gk">γράφω</span></td><td><span class="gk">-ω</span></td></tr>
+      <tr><td><span class="gk">εσύ</span> (you)</td><td><span class="gk">γράφεις</span></td><td><span class="gk">-εις</span></td></tr>
+      <tr><td><span class="gk">αυτός/ή/ό</span> (he/she/it)</td><td><span class="gk">γράφει</span></td><td><span class="gk">-ει</span></td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 9</div><div class="rule-body">
+    <h3>Stressed /o/ at word end is often ω</h3>
+    <div class="tbl"><table><thead><tr><th>Word</th><th>Meaning</th><th>Why ω?</th></tr></thead><tbody>
+      <tr><td><span class="gk">γράφω</span></td><td>I write</td><td>Verb first person ending</td></tr>
+      <tr><td><span class="gk">καλώς</span></td><td>well, nicely</td><td>Adverb ending</td></tr>
+      <tr><td><span class="gk">σωστώς</span></td><td>correctly</td><td>Adverb ending</td></tr>
+      <tr><td><span class="gk">τώρα</span></td><td>now</td><td>Fixed form</td></tr>
+      <tr><td><span class="gk">ωραίος</span></td><td>beautiful</td><td>Begins with ω (etymological)</td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 10</div><div class="rule-body">
+    <h3>Adjective agreement</h3>
+    <p>Adjectives agree with the noun in gender, number and case.</p>
+    <div class="tbl"><table><thead><tr><th></th><th>Masc.</th><th>Fem.</th><th>Neut.</th></tr></thead><tbody>
+      <tr><td>Singular</td><td><span class="gk">καλός</span></td><td><span class="gk">καλή</span></td><td><span class="gk">καλό</span></td></tr>
+      <tr><td>Plural</td><td><span class="gk">καλοί</span></td><td><span class="gk">καλές</span></td><td><span class="gk">καλά</span></td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <div class="practice">
+    <div class="practice-title">B1 Practice</div>
+    <div class="ex"><h4>1. Fix the verb ending</h4><p class="ask">Each verb has a spelling mistake. Correct it.</p>
+      <ol><li><span class="gk">εγώ γράφο</span></li><li><span class="gk">εγώ τρώγο</span></li><li><span class="gk">εγώ αγαπο</span></li><li><span class="gk">εγώ πηγαίνο</span></li></ol>
+      <details class="ans" id="b1-e1"><summary>Answers</summary><div><span class="gk">γράφω · τρώω · αγαπώ · πηγαίνω</span></div></details></div>
+    <div class="ex"><h4>2. Write the third person</h4><p class="ask">Change from <span class="gk">εγώ</span> to <span class="gk">αυτός/ή/ό</span>.</p>
+      <ol><li><span class="gk">γράφω</span></li><li><span class="gk">τρώω</span></li><li><span class="gk">αγαπώ</span></li></ol>
+      <details class="ans" id="b1-e2"><summary>Answers</summary><div><span class="gk">γράφει · τρώει · αγαπά</span> (contract verb)</div></details></div>
+    <div class="ex"><h4>3. ο or ω?</h4>
+      <ol><li><span class="gk">γράφ_</span> (I write)</li><li><span class="gk">τ_ρα</span> (now)</li><li><span class="gk">καλ_ς</span> (well, adverb)</li><li><span class="gk">λόγ_ς</span> (word, noun)</li></ol>
+      <details class="ans" id="b1-e3"><summary>Answers</summary><div><span class="gk">γράφω</span> (verb) · <span class="gk">τώρα</span> (fixed form) · <span class="gk">καλώς</span> (adverb) · <span class="gk">λόγος</span> (noun)</div></details></div>
+    <div class="ex"><h4>4. Make the adjective agree</h4><p class="ask">Change <span class="gk">καλός</span> to match each noun.</p>
+      <ol><li><span class="gk">η ζώνη: καλ_</span></li><li><span class="gk">το σπίτι: καλ_</span></li><li><span class="gk">οι φίλοι: καλ_</span></li></ol>
+      <details class="ans" id="b1-e4"><summary>Answers</summary><div><span class="gk">καλή · καλό · καλοί</span></div></details></div>
+  </div>
+</section>
+
+<!-- ============ B2 ============ -->
+<section class="level" id="b2">
+  <div class="level-head"><span class="level-code">B2</span><h2>Upper Intermediate</h2></div>
+  <p class="level-sub">Feminine -η vs -α, masculine -ης endings, neuter -υ exceptions, adverbs in -ως</p>
+
+  <article class="rule"><div class="rule-no">Rule 11</div><div class="rule-body">
+    <h3>Feminine nouns: -η is default, -α after ε, ι, λ, ν, ρ</h3>
+    <p>Feminine nouns take <span class="gk">-η</span> by default. They take <span class="gk">-α</span> when the preceding letter is ε, ι, λ, ν or ρ.</p>
+    <div class="tbl"><table><thead><tr><th>Ending</th><th>Preceding letter</th><th>Example</th></tr></thead><tbody>
+      <tr><td><span class="gk">-η</span></td><td>Default</td><td><span class="gk">η ζώνη, η φωνή</span></td></tr>
+      <tr><td><span class="gk">-α</span></td><td>After ε, ι, λ, ν, ρ</td><td><span class="gk">η θάλασσα</span> (λ), <span class="gk">η χώρα</span> (ρ), <span class="gk">η γιαγιά</span> (ι)</td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 12</div><div class="rule-body">
+    <h3>Masculine nouns in -ης use η</h3>
+    <div class="tbl"><table><thead><tr><th>Word</th><th>Meaning</th></tr></thead><tbody>
+      <tr><td><span class="gk">ο μαθητής</span></td><td>student</td></tr>
+      <tr><td><span class="gk">ο πολίτης</span></td><td>citizen</td></tr>
+      <tr><td><span class="gk">ο πελάτης</span></td><td>customer</td></tr>
+    </tbody></table></div>
+    <p class="tip">Always η here, never ι or ει.</p>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 13</div><div class="rule-body">
+    <h3>Neuter -υ exceptions: learn this list whole</h3>
+    <p>A small closed group of neuter nouns ends in <span class="gk">-υ</span>. The list does not grow.</p>
+    <div class="tbl"><table><thead><tr><th>Word</th><th>Meaning</th></tr></thead><tbody>
+      <tr><td><span class="gk">το βράδυ</span></td><td>evening</td></tr>
+      <tr><td><span class="gk">το δίχτυ</span></td><td>net</td></tr>
+      <tr><td><span class="gk">το δάκρυ</span></td><td>tear</td></tr>
+      <tr><td><span class="gk">το στάχυ</span></td><td>ear of wheat</td></tr>
+      <tr><td><span class="gk">το δόρυ</span></td><td>spear</td></tr>
+      <tr><td><span class="gk">το γόνυ</span></td><td>knee</td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 14</div><div class="rule-body">
+    <h3>Adverbs derived from adjectives end in -ως</h3>
+    <div class="tbl"><table><thead><tr><th>Adjective</th><th>Adverb</th><th>Meaning</th></tr></thead><tbody>
+      <tr><td><span class="gk">καλός</span></td><td><span class="gk">καλώς</span></td><td>well</td></tr>
+      <tr><td><span class="gk">σωστός</span></td><td><span class="gk">σωστώς</span></td><td>correctly</td></tr>
+      <tr><td><span class="gk">αργός</span></td><td><span class="gk">αργώς</span></td><td>slowly</td></tr>
+      <tr><td><span class="gk">γρήγορος</span></td><td><span class="gk">γρήγορα</span></td><td>quickly</td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <div class="practice">
+    <div class="practice-title">B2 Practice</div>
+    <div class="ex"><h4>1. η or α?</h4>
+      <div class="tbl"><table><thead><tr><th>Incomplete</th><th>Meaning</th></tr></thead><tbody>
+        <tr><td><span class="gk">η ζών_</span></td><td>belt</td></tr>
+        <tr><td><span class="gk">η θάλασσ_</span></td><td>sea</td></tr>
+        <tr><td><span class="gk">η χώρ_</span></td><td>country</td></tr>
+        <tr><td><span class="gk">η γιαγι_</span></td><td>grandma</td></tr>
+        <tr><td><span class="gk">η φων_</span></td><td>voice</td></tr>
+      </tbody></table></div>
+      <details class="ans" id="b2-e1"><summary>Answers</summary><div><span class="gk">ζώνη</span> (default) · <span class="gk">θάλασσα</span> (after λ) · <span class="gk">χώρα</span> (after ρ) · <span class="gk">γιαγιά</span> (after ι) · <span class="gk">φωνή</span> (default)</div></details></div>
+    <div class="ex"><h4>2. Spot the fake -υ word</h4><p class="ask">Five are real neuter -υ nouns. One is invented. Cross out the fake.</p>
+      <p><span class="gk">βράδυ · δίχτυ · σπίτυ · δάκρυ · δόρυ · γόνυ</span></p>
+      <details class="ans" id="b2-e2"><summary>Answer</summary><div><span class="gk">σπίτυ</span> is not a real word. The correct form is <span class="gk">σπίτι</span> (neuter -ι).</div></details></div>
+    <div class="ex"><h4>3. Form the adverb</h4><p class="ask">Add -ως to each adjective.</p>
+      <ol><li><span class="gk">καλός</span></li><li><span class="gk">αργός</span></li><li><span class="gk">σωστός</span></li></ol>
+      <details class="ans" id="b2-e3"><summary>Answers</summary><div><span class="gk">καλώς · αργώς · σωστώς</span></div></details></div>
+  </div>
+</section>
+
+<!-- ============ C ============ -->
+<section class="level" id="c">
+  <div class="level-head"><span class="level-code">C1 · C2</span><h2>Advanced</h2></div>
+  <p class="level-sub">Historical spellings, learned vocabulary, double consonants, and tricky homophones</p>
+
+  <article class="rule"><div class="rule-no">Rule 15</div><div class="rule-body">
+    <h3>Learned vocabulary keeps historical spellings</h3>
+    <div class="tbl"><table><thead><tr><th>Word</th><th>Meaning</th><th>Note</th></tr></thead><tbody>
+      <tr><td><span class="gk">αμφιβάλλω</span></td><td>to doubt</td><td><span class="gk">αμφι-</span> prefix (ancient)</td></tr>
+      <tr><td><span class="gk">καταρρίπτω</span></td><td>to fling down</td><td>double <span class="gk">ρρ</span> (ancient compound)</td></tr>
+      <tr><td><span class="gk">σύνθεση</span></td><td>composition</td><td>keeps ancient <span class="gk">-εση</span></td></tr>
+      <tr><td><span class="gk">επιστημονικός</span></td><td>scientific</td><td><span class="gk">-ημ-</span> from <span class="gk">επιστήμη</span></td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 16</div><div class="rule-body">
+    <h3>Double consonants</h3>
+    <p>Modern Greek has very few genuine double consonants. They appear in:</p>
+    <ul style="margin:0;padding-left:20px;display:grid;gap:4px">
+      <li>Compounds where prefix and root meet: <span class="gk">συν- + ναύτης = συνναύτης</span></li>
+      <li>Learned words: <span class="gk">θάλασσα, γραμματική, αλλά</span></li>
+    </ul>
+  </div></article>
+
+  <article class="rule"><div class="rule-no">Rule 17</div><div class="rule-body">
+    <h3>Tricky homophones at advanced level</h3>
+    <div class="tbl"><table><thead><tr><th>Pair</th><th>Difference</th></tr></thead><tbody>
+      <tr><td><span class="gk">αλλά / άλλα</span></td><td><span class="gk">αλλά</span> = but · <span class="gk">άλλα</span> = other things (neut. pl.)</td></tr>
+      <tr><td><span class="gk">αυτός / αυτώς</span></td><td><span class="gk">αυτός</span> = he, himself · <span class="gk">αυτώς</span> = in person</td></tr>
+      <tr><td><span class="gk">παρά / παρα-</span></td><td>preposition vs. prefix: one word vs. compound</td></tr>
+    </tbody></table></div>
+  </div></article>
+
+  <div class="practice">
+    <div class="practice-title">C1 · C2 Practice</div>
+    <div class="ex"><h4>1. Choose the right homophone</h4>
+      <ol><li>The answer is _____ right. (<span class="gk">σωστός / σωστώς</span>)</li><li>He came _____ person. (<span class="gk">αυτός / αυτώς</span>)</li><li>_____ I don't agree. (<span class="gk">αλλά / άλλα</span>)</li></ol>
+      <details class="ans" id="c-e1"><summary>Answers</summary><div><span class="gk">σωστώς</span> (adverb) · <span class="gk">αυτώς</span> (in person) · <span class="gk">αλλά</span> (but)</div></details></div>
+    <div class="ex"><h4>2. Double consonant or not?</h4>
+      <ol><li><span class="gk">θάλασα / θάλασσα</span></li><li><span class="gk">αλα / αλλά</span></li><li><span class="gk">γραματική / γραμματική</span></li><li><span class="gk">καλος / καλλος</span></li></ol>
+      <details class="ans" id="c-e2"><summary>Answers</summary><div><span class="gk">θάλασσα · αλλά · γραμματική · καλός</span> (single)</div></details></div>
+    <div class="ex"><h4>3. Prefix + root compounds</h4>
+      <ol><li><span class="gk">συν- + ναύτης</span></li><li><span class="gk">κατα- + γράφω</span></li></ol>
+      <details class="ans" id="c-e3"><summary>Answers</summary><div><span class="gk">συνναύτης</span> (double νν) · <span class="gk">καταγράφω</span> (single γ, no change)</div></details></div>
+  </div>
+</section>
+
+<!-- ============ Cheat sheet ============ -->
+<section class="cheat" id="cheat">
+  <div>
+    <div class="brand">Every level</div>
+    <h2>Master Cheat Sheet</h2>
+    <p style="margin-top:8px;color:var(--muted)">These rules apply at every level and fix the most common spelling mistakes.</p>
+  </div>
+
+  <div>
+    <h3 style="margin-bottom:12px">The 5 rules never to forget</h3>
+    <ol class="five">
+      <li><span><strong>σ vs ς.</strong> ς only at the end of a word; σ everywhere else.</span></li>
+      <li><span><strong>Verbs end in -ω.</strong> Never -ο in first person singular present.</span></li>
+      <li><span><strong>Third person is -ει.</strong> <span class="gk">γράφει</span>, not <span class="gk">γράφε</span> or <span class="gk">γράφη</span>.</span></li>
+      <li><span><strong>Every word gets one accent.</strong> Capital letters get none.</span></li>
+      <li><span><strong>Feminine default is -η; after ε, ι, λ, ν, ρ it is -α.</strong> <span class="gk">γιαγιά, θάλασσα, χώρα</span>.</span></li>
+    </ol>
+  </div>
+
+  <div class="two">
+    <div>
+      <h3>The /ee/ sound: 6 spellings</h3>
+      <div class="tbl"><table><thead><tr><th>Spelling</th><th>Examples</th></tr></thead><tbody>
+        <tr><td><span class="gk">η</span></td><td><span class="gk">ημέρα, ζώνη, ζωή</span></td></tr>
+        <tr><td><span class="gk">ι</span></td><td><span class="gk">ιστορία, σπίτι, παιδί</span></td></tr>
+        <tr><td><span class="gk">υ</span></td><td><span class="gk">υπό, βράδυ, δίχτυ</span></td></tr>
+        <tr><td><span class="gk">ει</span></td><td><span class="gk">εικόνα, γράφεις, γράφει</span></td></tr>
+        <tr><td><span class="gk">οι</span></td><td><span class="gk">οικογένεια, οι</span> (pl. article)</td></tr>
+        <tr><td><span class="gk">αι</span></td><td><span class="gk">καιρός, καλές</span> (fem. pl. adj.)</td></tr>
+      </tbody></table></div>
+    </div>
+    <div>
+      <h3>The /o/ sound: ο vs ω</h3>
+      <div class="tbl"><table><thead><tr><th>Use</th><th>Rule</th><th>Examples</th></tr></thead><tbody>
+        <tr><td><span class="gk">ο</span></td><td>Default</td><td><span class="gk">οδός, λόγος</span></td></tr>
+        <tr><td><span class="gk">ω</span></td><td>Verb first person</td><td><span class="gk">γράφω, αγαπώ</span></td></tr>
+        <tr><td><span class="gk">ω</span></td><td>Adverb -ως</td><td><span class="gk">καλώς, σωστώς</span></td></tr>
+        <tr><td><span class="gk">ω</span></td><td>Fixed words</td><td><span class="gk">τώρα, ωραίος, ως</span></td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+
+  <div>
+    <h3 style="margin-bottom:10px">Neuter -υ words: learn them whole</h3>
+    <div class="ywords"><span>βράδυ</span><span>δίχτυ</span><span>δάκρυ</span><span>στάχυ</span><span>δόρυ</span><span>γόνυ</span></div>
+  </div>
+</section>
+
+<!-- ============ Appendix ============ -->
+<section class="appendix" id="appendix">
+  <div><div class="brand">Appendix</div><h2>All 18 rules by level</h2></div>
+  <div class="tbl"><table><thead><tr><th>#</th><th>Rule</th><th>Level</th></tr></thead><tbody>
+    <tr><td>1</td><td>σ vs ς: ς only at word end</td><td><span class="lv">A1</span></td></tr>
+    <tr><td>2</td><td>The tonos: one accent per word, none on capitals</td><td><span class="lv">A1</span></td></tr>
+    <tr><td>3</td><td>Digraphs: μπ=b, ντ=d, γκ=g; αι/ει/οι=ee; αυ/ευ=af, av / ef, ev</td><td><span class="lv">A1</span></td></tr>
+    <tr><td>4</td><td>6 spellings of /ee/: η, ι, υ, ει, οι, αι</td><td><span class="lv">A2</span></td></tr>
+    <tr><td>5</td><td>/o/ is ο by default; ω in specific endings</td><td><span class="lv">A2</span></td></tr>
+    <tr><td>6</td><td>Feminine nouns: -η default, -α after ε, ι, λ, ν, ρ</td><td><span class="lv">A2</span></td></tr>
+    <tr><td>7</td><td>Definite article agrees in gender, number, case</td><td><span class="lv">A2</span></td></tr>
+    <tr><td>8</td><td>Verbs first person end in -ω (never -ο)</td><td><span class="lv">B1</span></td></tr>
+    <tr><td>9</td><td>Third person singular ends in -ει</td><td><span class="lv">B1</span></td></tr>
+    <tr><td>10</td><td>Stressed /o/ at word end is often ω</td><td><span class="lv">B1</span></td></tr>
+    <tr><td>11</td><td>Adjectives agree with noun (gender, number, case)</td><td><span class="lv">B1</span></td></tr>
+    <tr><td>12</td><td>Masculine -ης nouns spell ending with η</td><td><span class="lv">B2</span></td></tr>
+    <tr><td>13</td><td>Neuter nouns end in -ι or -ο (standard)</td><td><span class="lv">B2</span></td></tr>
+    <tr><td>14</td><td>Neuter -υ words: βράδυ, δίχτυ, δάκρυ, στάχυ, δόρυ, γόνυ</td><td><span class="lv">B2</span></td></tr>
+    <tr><td>15</td><td>Adverbs from adjectives: -ως ending</td><td><span class="lv">B2</span></td></tr>
+    <tr><td>16</td><td>Learned vocabulary keeps historical spellings</td><td><span class="lv">C1 · C2</span></td></tr>
+    <tr><td>17</td><td>Double consonants in compounds and learned words</td><td><span class="lv">C1 · C2</span></td></tr>
+    <tr><td>18</td><td>Tricky homophones: αλλά/άλλα, αυτός/αυτώς</td><td><span class="lv">C1 · C2</span></td></tr>
+  </tbody></table></div>
+
+  <h3 style="font-size:24px;margin-top:16px">Common traps: words students most often misspell</h3>
+  <div class="tbl"><table><thead><tr><th>Word</th><th>Common mistake</th><th>Correct</th><th>Rule #</th></tr></thead><tbody>
+    <tr><td><span class="gk">γράφω</span></td><td><span class="gk bad">γράφο</span></td><td><span class="gk">γράφω</span> <span class="ok">✓</span></td><td>8</td></tr>
+    <tr><td><span class="gk">γράφει</span></td><td><span class="gk bad">γράφη</span></td><td><span class="gk">γράφει</span> <span class="ok">✓</span></td><td>9</td></tr>
+    <tr><td><span class="gk">καλώς</span></td><td><span class="gk bad">καλός</span></td><td><span class="gk">καλώς</span> <span class="ok">✓</span></td><td>15</td></tr>
+    <tr><td><span class="gk">θάλασσα</span></td><td><span class="gk bad">θάλασα</span></td><td><span class="gk">θάλασσα</span> <span class="ok">✓</span></td><td>16</td></tr>
+    <tr><td><span class="gk">βράδυ</span></td><td><span class="gk bad">βράδι</span></td><td><span class="gk">βράδυ</span> <span class="ok">✓</span></td><td>14</td></tr>
+    <tr><td><span class="gk">ημέρα</span></td><td><span class="gk bad">ιμέρα</span></td><td><span class="gk">ημέρα</span> <span class="ok">✓</span></td><td>4</td></tr>
+    <tr><td><span class="gk">αλλά</span></td><td><span class="gk bad">αλά</span></td><td><span class="gk">αλλά</span> <span class="ok">✓</span></td><td>16</td></tr>
+  </tbody></table></div>
+</section>
+
+<footer>
+  <b>Glossomathia</b>
+  <span>Play · Listen · Learn · glossomathia.com</span>
+</footer>
+
+</div>
+
+</body></html>
