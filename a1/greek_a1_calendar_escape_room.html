@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Το Χαμένο Ημερολόγιο</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#4a4458; --muted:#7a7290; --wordmark:#b3a7c9;
+  --purple:#8e7cc3; --purple-d:#6d5b87; --purple-bg:#f7eef9;
+  --blue:#7aa6b9; --blue-d:#3f6d82; --blue-bg:#e9f1f7;
+  --green:#6fae84; --green-d:#3f7a54; --green-bg:#eaf6ee;
+  --rose:#c98bb0; --rose-d:#9c5980; --rose-bg:#fbeef5;
+  --wine:#8e4a73; --gold:#c6a75e; --gold-bg:#fbf5e6;
+  --lav:#ece3f7; --lav2:#f7f2fc; --paper:#fffdfb; --line:#e6ddf0;
+  --ok:#3f7a54; --ok-bg:#e3f4e8; --bad:#a8505f; --bad-bg:#fbe7ea;
+  --accent:var(--purple); --accent-d:var(--purple-d); --accent-bg:var(--purple-bg);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:linear-gradient(180deg,var(--lav2),#fdfbff 40%,var(--lav2));color:var(--plum);font-family:Nunito,system-ui,sans-serif;font-size:17px;line-height:1.5;min-height:100vh}
+.wrap{max-width:780px;margin:0 auto;padding:20px 16px 40px}
+header.top{text-align:center;margin-bottom:14px}
+.brand{font-family:"Cormorant Garamond",serif;color:var(--wordmark);letter-spacing:.18em;font-size:14px;text-transform:uppercase}
+h1{font-family:"Cormorant Garamond",serif;font-weight:700;color:var(--purple);font-size:clamp(34px,7vw,48px);margin:2px 0 0;line-height:1.1}
+.subtitle{color:#a88bcf;font-style:italic;font-family:"Cormorant Garamond",serif;font-size:20px}
+h2{font-family:"Cormorant Garamond",serif;color:var(--accent-d);font-size:30px;margin:0 0 4px;line-height:1.15}
+h3{font-family:"Cormorant Garamond",serif;color:var(--accent);font-size:22px;margin:16px 0 6px}
+.en{color:var(--muted);font-size:14.5px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px 20px;box-shadow:0 6px 24px rgba(110,90,150,.08);animation:pop .35s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.locks{display:flex;justify-content:center;gap:10px;margin:10px 0 16px;flex-wrap:wrap}
+.lock{display:flex;align-items:center;gap:6px;border-radius:999px;padding:5px 12px;font-size:13.5px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--muted)}
+.lock.on{border-color:currentColor}
+.lock.done{color:#fff}
+.lock .dot{width:9px;height:9px;border-radius:50%;background:currentColor}
+.r0{color:var(--purple)} .r1{color:var(--blue)} .r2{color:var(--green)} .r3{color:var(--rose)}
+.lock.done.r0{background:var(--purple)} .lock.done.r1{background:var(--blue)} .lock.done.r2{background:var(--green)} .lock.done.r3{background:var(--rose)}
+.lock.done .dot{background:#fff}
+.progress{display:flex;gap:5px;margin:2px 0 14px}
+.progress span{flex:1;height:6px;border-radius:6px;background:var(--line)}
+.progress span.d{background:var(--accent)}
+.progress span.c{background:var(--accent-d)}
+.q{font-size:21px;font-weight:700;margin:4px 0 6px}
+.qsub{color:var(--muted);font-size:15px;margin-bottom:14px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:8px}
+button{font-family:inherit;cursor:pointer}
+.opt,.chip{background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px;font-size:18px;font-weight:700;color:var(--plum);transition:transform .1s,border-color .15s,background .15s}
+.opt:hover:not(:disabled),.chip:hover:not(:disabled){border-color:var(--accent);transform:translateY(-1px)}
+.opt.good,.chip.good{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.opt.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);opacity:.75}
+.chip.sel{border-color:var(--accent);background:var(--accent-bg);box-shadow:0 0 0 3px var(--accent-bg)}
+.chip.gone{visibility:hidden}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:999px;padding:12px 24px;font-size:17px;font-weight:800;box-shadow:0 4px 12px rgba(110,90,150,.18)}
+.btn:hover{filter:brightness(1.05)}
+.btn.ghost{background:#fff;color:var(--accent-d);border:2px solid var(--accent);box-shadow:none}
+.btn.small{padding:7px 14px;font-size:14.5px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.right{justify-content:flex-end}
+.between{justify-content:space-between}
+input.ans{width:100%;font-family:inherit;font-size:20px;padding:12px 14px;border-radius:14px;border:2px solid var(--line);color:var(--plum);outline:none}
+input.ans:focus{border-color:var(--accent)}
+.fb{margin-top:14px;border-radius:14px;padding:11px 14px;font-weight:600;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-bg);color:var(--ok)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.fb.info{background:var(--gold-bg);color:#7d6527}
+.hintbox{margin-top:12px;background:var(--gold-bg);border-left:4px solid var(--gold);border-radius:10px;padding:10px 14px;font-size:15.5px;display:none}
+.hintbox.show{display:block}
+.foot-actions{margin-top:18px}
+.speak{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:none;background:var(--accent-bg);color:var(--accent-d);flex:none}
+.speak:hover{background:var(--accent);color:#fff}
+.speak.big{width:84px;height:84px}
+.speak svg{width:55%;height:55%}
+.listen-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin:6px 0 10px}
+.reveal{font-size:22px;font-weight:800;color:var(--accent-d);min-height:30px}
+/* lesson */
+.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:10px 0}
+.li{display:flex;align-items:center;gap:8px;background:var(--accent-bg);border-radius:12px;padding:7px 9px}
+.li .n{font-weight:800;color:var(--accent-d);min-width:24px;text-align:right}
+.li .w{font-weight:700;flex:1}
+.li .e{display:block;font-size:12.5px;color:var(--muted);font-weight:600}
+.tip{background:var(--lav2);border:1px dashed var(--wordmark);border-radius:14px;padding:12px 14px;margin:12px 0;font-size:15.5px}
+.tip b{color:var(--accent-d)}
+/* order & match & sort */
+.slots{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;padding:10px;border-radius:14px;background:var(--accent-bg);margin:8px 0 12px}
+.slot{background:#fff;border:2px solid var(--accent);color:var(--accent-d);border-radius:12px;padding:8px 12px;font-weight:800;animation:pop .25s}
+.slot.empty{border-style:dashed;border-color:var(--wordmark);color:var(--wordmark)}
+.pool{display:flex;flex-wrap:wrap;gap:8px}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.match .col{display:flex;flex-direction:column;gap:8px}
+.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}
+.bucket{border:2px dashed var(--accent);border-radius:16px;padding:10px;min-height:96px;background:#fff;text-align:center}
+.bucket .bt{font-family:"Cormorant Garamond",serif;font-size:21px;font-weight:700;color:var(--accent-d)}
+.bucket .be{font-size:12.5px;color:var(--muted)}
+.bucket .in{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:6px}
+.bucket .in span{background:var(--ok-bg);color:var(--ok);border-radius:999px;padding:2px 9px;font-size:14px;font-weight:700}
+.bucket.ready{background:var(--accent-bg)}
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px;font-size:13.5px;text-align:center}
+.cal div{padding:5px 0;border-radius:8px;background:#fff}
+.cal .h{font-weight:800;color:var(--accent-d);background:transparent}
+.cal .x{background:var(--accent);color:#fff;font-weight:800}
+/* digit reveal & code */
+.scroll{text-align:center;padding:10px 0}
+.scroll .word{font-family:"Cormorant Garamond",serif;font-size:56px;color:var(--accent-d);font-weight:700;line-height:1.1}
+.found{display:flex;justify-content:center;gap:10px;margin:14px 0}
+.found div{width:64px;height:76px;border-radius:14px;border:2px dashed var(--wordmark);display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:700;text-align:center;line-height:1.05;padding:4px}
+.found div.f{border-style:solid;background:#fff}
+.code{display:flex;justify-content:center;gap:10px;margin:14px 0}
+.code input{width:58px;height:70px;font-size:34px;text-align:center;border-radius:14px;border:2px solid var(--gold);font-family:Nunito,sans-serif;font-weight:800;color:var(--plum);background:var(--gold-bg)}
+.code input:focus{outline:none;border-color:var(--wine)}
+.door{text-align:center;font-size:15px;color:var(--muted)}
+/* review */
+.review h3{margin-top:18px}
+.review ul{margin:6px 0;padding-left:20px}
+.review li{margin:5px 0}
+.review .ca{color:var(--ok);font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.stats div{background:var(--lav2);border-radius:14px;padding:10px;text-align:center}
+.stats b{display:block;font-size:26px;color:var(--purple-d)}
+footer{text-align:center;color:var(--wordmark);margin-top:26px;font-family:"Cormorant Garamond",serif;font-size:17px;letter-spacing:.06em}
+canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+@media (max-width:520px){
+  .q{font-size:19px}
+  .opt{font-size:16.5px;padding:11px}
+  .scroll .word{font-size:44px}
+  .code input{width:52px;height:64px}
+  .found div{width:56px;height:68px;font-size:17px}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Glossomathia · Ελληνικά A1</div>
+    <h1>Το Χαμένο Ημερολόγιο</h1>
+    <div class="subtitle">Αριθμοί 1 έως 30 · Μέρες · Μήνες</div>
+  </header>
+  <div class="locks" id="locks"></div>
+  <main id="app"></main>
+  <footer>❀ Glossomathia · Play · Listen · Learn 🌿</footer>
+</div>
+
+<script>
+/* ========== DATA ========== */
+const NUM = {1:["ένα"],2:["δύο"],3:["τρία"],4:["τέσσερα"],5:["πέντε"],6:["έξι"],7:["επτά","εφτά"],8:["οκτώ","οχτώ"],9:["εννέα","εννιά"],10:["δέκα"],11:["έντεκα"],12:["δώδεκα"],13:["δεκατρία"],14:["δεκατέσσερα"],15:["δεκαπέντε"],16:["δεκαέξι"],17:["δεκαεπτά","δεκαεφτά"],18:["δεκαοκτώ","δεκαοχτώ"],19:["δεκαεννέα","δεκαεννιά"],20:["είκοσι"],30:["τριάντα"]};
+for(let n=21;n<30;n++) NUM[n]=NUM[n-20].map(x=>"είκοσι "+x);
+const W = n => NUM[n][0];
+const DAYS=["Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή","Σάββατο","Κυριακή"];
+const DAYS_EN=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const MONTHS=["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάιος","Ιούνιος","Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"];
+const MONTHS_GEN=["Ιανουαρίου","Φεβρουαρίου","Μαρτίου","Απριλίου","Μαΐου","Ιουνίου","Ιουλίου","Αυγούστου","Σεπτεμβρίου","Οκτωβρίου","Νοεμβρίου","Δεκεμβρίου"];
+const MONTHS_POP=["Γενάρης","Φλεβάρης","Μάρτης","Απρίλης","Μάης","Ιούνης","Ιούλης","Αύγουστος","Σεπτέμβρης","Οκτώβρης","Νοέμβρης","Δεκέμβρης"];
+const MONTHS_EN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const SEASONS=[["χειμώνας","winter"],["άνοιξη","spring"],["καλοκαίρι","summer"],["φθινόπωρο","autumn"]];
+const SEASON_OF=[0,0,1,1,1,2,2,2,3,3,3,0];
+const ROOMS=[
+  {name:"Το Δωμάτιο των Αριθμών", en:"The Room of Numbers", digit:"δύο", num:2},
+  {name:"Ο Διάδρομος των Ημερών", en:"The Hallway of Days", digit:"οκτώ", num:8},
+  {name:"Ο Κήπος των Μηνών", en:"The Garden of Months", digit:"ένα", num:1},
+  {name:"Το Γραφείο των Ημερομηνιών", en:"The Study of Dates", digit:"μηδέν", num:0}
+];
+const ACC=[["--purple","--purple-d","--purple-bg"],["--blue","--blue-d","--blue-bg"],["--green","--green-d","--green-bg"],["--rose","--rose-d","--rose-bg"]];
+
+/* ========== HELPERS ========== */
+const $=s=>document.querySelector(s);
+const rand=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const sample=(a,k)=>shuffle(a).slice(0,k);
+const uniq=a=>[...new Set(a)];
+const norm=s=>s.normalize("NFC").trim().toLowerCase().replace(/\s+/g," ").replace(/ς/g,"σ");
+const strip=s=>norm(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const SPK='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a4.5 4.5 0 0 1 0 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M18.5 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+
+/* ========== SPEECH ========== */
+let elVoice=null;
+function loadVoices(){try{const v=speechSynthesis.getVoices();elVoice=v.find(x=>x.lang&&x.lang.toLowerCase().startsWith("el"))||null}catch(e){}}
+if("speechSynthesis" in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function say(t){
+  if(!("speechSynthesis" in window)) return false;
+  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="el-GR";if(elVoice)u.voice=elVoice;u.rate=.85;speechSynthesis.speak(u);return true}catch(e){return false}
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-say]");if(b)say(b.dataset.say)});
+const spk=(t,cls="")=>`<button class="speak ${cls}" data-say="${esc(t)}" aria-label="Άκου">${SPK}</button>`;
+
+/* ========== PUZZLE GENERATORS ========== */
+function numOptions(n,k=3){
+  let c=uniq([n+1,n-1,n+10,n-10,n+2,n-2,n<10?n+20:n-20,n===13?30:null,n===30?13:null,n===12?20:null,n===20?12:null]).filter(x=>x&&x>=1&&x<=30&&x!==n);
+  return shuffle([n,...sample(c,k)]);
+}
+function room0(){
+  const P=[];
+  P.push({type:"match",q:"Ταίριαξε τον αριθμό με τη λέξη.",sub:"Match each number with its word.",pairs:sample([...Array(30)].map((_,i)=>i+1),6).map(n=>[String(n),W(n)]),hint:"Πάτησε έναν αριθμό αριστερά, μετά τη λέξη δεξιά.",review:"Αριθμοί: λέξη και ψηφίο"});
+  sample([...Array(30)].map((_,i)=>i+1),3).forEach(n=>{
+    P.push({type:"listen",q:"Άκου. Ποιος αριθμός είναι;",sub:"Listen and choose the number.",speak:W(n),options:numOptions(n).map(String),answer:String(n),hint:"Το «είκοσι» είναι 20, το «τριάντα» είναι 30, το «δεκα» στην αρχή σημαίνει 10 και κάτι.",review:`Άκουσες «${W(n)}»`});
+  });
+  sample([7,9,11,12,14,17,19,23,26,28],2).forEach(n=>{
+    P.push({type:"type",q:`Γράψε με λέξεις: ${n}`,sub:"Write the number in Greek letters. Accents count!",answers:NUM[n],hint:n<20?"Από το 13 και μετά: δεκα + αριθμός (δεκατρία, δεκατέσσερα...).":"21 έως 29: είκοσι + αριθμός, με κενό (είκοσι ένα).",review:`${n} με λέξεις`});
+  });
+  for(let i=0;i<2;i++){
+    const a=rand(2,15),b=rand(2,15),s=a+b;
+    P.push({type:"mcq",q:`${W(a)} + ${W(b)} = ;`,sub:"Add them up. Choose the answer in words.",options:numOptions(s).map(W),answer:W(s),hint:`${a} + ${b}`,review:`${W(a)} + ${W(b)}`});
+  }
+  P.push({type:"mcq",q:"Πώς λέμε 11;",sub:"How do we say 11?",options:shuffle(["έντεκα","δώδεκα","δεκαένα","δέκα ένα"]),answer:"έντεκα",hint:"Το 11 και το 12 είναι ειδικά. Δεν είναι «δέκα + ένα».",review:"Πώς λέμε 11"});
+  return P;
+}
+function room1(){
+  const P=[];
+  P.push({type:"order",q:"Βάλε τις μέρες στη σωστή σειρά.",sub:"In Greece the week starts on Monday. Tap the days in order.",items:[...DAYS],hint:"Δευτέρα = 2η, Τρίτη = 3η, Τετάρτη = 4η, Πέμπτη = 5η μέρα.",review:"Η σειρά των ημερών"});
+  P.push({type:"mcq",q:"«Πέμπτος» σημαίνει fifth. Ποια μέρα κρύβει αυτή τη λέξη;",sub:"Long ago the week started on Sunday, so Monday was the 2nd day (δεύτερος).",options:shuffle(["Πέμπτη","Παρασκευή","Τετάρτη","Τρίτη"]),answer:"Πέμπτη",hint:"Ακούγεται σχεδόν ίδια: πέμπτος, Πέμπ...",review:"Πέμπτος → ποια μέρα"});
+  sample([0,1,2,3,4,5,6],3).forEach((d,k)=>{
+    const tomorrow=k%2===0;
+    const ans=DAYS[(d+(tomorrow?1:6))%7];
+    P.push({type:"mcq",q:tomorrow?`Σήμερα είναι ${DAYS[d]}. Αύριο είναι...`:`Σήμερα είναι ${DAYS[d]}. Χθες ήταν...`,sub:tomorrow?"σήμερα = today · αύριο = tomorrow":"σήμερα = today · χθες = yesterday",options:shuffle(uniq([ans,DAYS[(d+1)%7],DAYS[(d+6)%7],DAYS[d]])),answer:ans,hint:tomorrow?"Αύριο = την επόμενη μέρα.":"Χθες = την προηγούμενη μέρα.",review:tomorrow?`Αύριο, μετά από ${DAYS[d]}`:`Χθες, πριν από ${DAYS[d]}`});
+  });
+  sample([1,2,3,4,5,6],2).forEach(i=>{
+    P.push({type:"type",q:`${DAYS[(i+6)%7]}, ______, ${DAYS[(i+1)%7]}`,sub:"Write the missing day.",answers:[DAYS[i]],hint:`Στα αγγλικά: ${DAYS_EN[i]}`,review:`${DAYS[(i+6)%7]}, ?, ${DAYS[(i+1)%7]}`});
+  });
+  const d=Math.random()<.5?5:sample([0,1,3,6],1)[0];
+  const fem=d===0?"Τη":"Την";
+  P.push({type:"mcq",q:`___ ${DAYS[d]} έχω μάθημα ελληνικών.`,sub:`On ${DAYS_EN[d]} I have a Greek lesson.`,options:shuffle([d===5?"Το":fem,d===5?fem:"Το","Ο"]),answer:d===5?"Το":fem,hint:"Όλες οι μέρες είναι θηλυκές (η), εκτός από ένα: το Σάββατο.",review:`«on ${DAYS_EN[d]}»: ___ ${DAYS[d]}`});
+  return P;
+}
+function room2(){
+  const P=[];
+  P.push({type:"order",q:"Βάλε τους πρώτους έξι μήνες στη σειρά.",sub:"January to June. Tap them in order.",items:MONTHS.slice(0,6),hint:"Ιανουάριος, Φεβρουάριος, Μάρτιος... Μάρτιος (3) και Μάιος (5) μοιάζουν!",review:"Η σειρά των μηνών"});
+  const picks=[];SEASONS.forEach((_,s)=>{picks.push(...sample(MONTHS.map((m,i)=>i).filter(i=>SEASON_OF[i]===s),2))});
+  P.push({type:"sort",q:"Σε ποια εποχή είναι κάθε μήνας;",sub:"Tap a month, then tap its season.",buckets:SEASONS,items:shuffle(picks).map(i=>[MONTHS[i],SEASON_OF[i]]),hint:"Χειμώνας: Δεκέμβριος, Ιανουάριος, Φεβρουάριος. Καλοκαίρι: Ιούνιος, Ιούλιος, Αύγουστος.",review:"Μήνες και εποχές"});
+  P.push({type:"mcq",q:"Ποιος μήνας έρχεται μετά τον Ιούνιο;",sub:"Which month comes after June?",options:shuffle(["Ιούλιος","Ιούνιος","Αύγουστος","Μάιος"]),answer:"Ιούλιος",hint:"Ιούνι-ος = June, Ιούλι-ος = July. Κοίτα το ν και το λ!",review:"Μετά τον Ιούνιο"});
+  P.push({type:"mcq",q:"Ποιος μήνας έρχεται μετά τον Απρίλιο;",sub:"Which month comes after April?",options:shuffle(["Μάιος","Μάρτιος","Ιούνιος","Μάρτης"]),answer:"Μάιος",hint:"Μάρτιος = March, Μάιος = May.",review:"Μετά τον Απρίλιο"});
+  sample([4,6,7,8,9,10],2).forEach(i=>{
+    P.push({type:"type",q:`Ο μήνας νούμερο ${i+1} είναι ο...`,sub:`Month number ${i+1} (${MONTHS_EN[i]}).`,answers:uniq([MONTHS[i],MONTHS_POP[i]]),hint:`Αρχίζει από «${MONTHS[i].slice(0,3)}».`,review:`Ο μήνας νούμερο ${i+1}`});
+  });
+  P.push({type:"mcq",q:"Ποιος μήνας έχει συνήθως 28 μέρες;",sub:"Which month usually has 28 days?",options:shuffle(["Φεβρουάριος","Ιανουάριος","Δεκέμβριος","Απρίλιος"]),answer:"Φεβρουάριος",hint:"Ο δεύτερος μήνας.",review:"28 μέρες"});
+  return P;
+}
+function room3(){
+  const P=[];
+  P.push({type:"match",q:"Ταίριαξε τον μήνα με τη μορφή για ημερομηνίες.",sub:"Dates use a special form: Μάρτιος → 25 Μαρτίου.",pairs:sample([...Array(12)].map((_,i)=>i),6).map(i=>[MONTHS[i],MONTHS_GEN[i]]),hint:"Το τέλος «-ος» γίνεται «-ου»: Μάρτιος → Μαρτίου.",review:"Μήνες για ημερομηνίες (Μαρτίου, Μαΐου...)"});
+  for(let k=0;k<2;k++){
+    const d=rand(2,30),m=rand(0,11);
+    const opts=uniq([`${d}/${m+1}`,`${d}/${(m+1)%12+1}`,`${(d+9)%30+1}/${m+1}`,`${m+1}/${d}`,`${d}/${(m+11)%12+1}`]).filter(x=>{const[a,b]=x.split("/").map(Number);return b<=12}).slice(0,4);
+    if(!opts.includes(`${d}/${m+1}`)) opts[0]=`${d}/${m+1}`;
+    P.push({type:"listen",q:"Άκου την ημερομηνία. Ποια είναι;",sub:"Greek dates go day / month.",speak:`${W(d)} ${MONTHS_GEN[m]}`,options:shuffle(opts),answer:`${d}/${m+1}`,hint:"Πρώτα η μέρα, μετά ο μήνας.",review:`Άκουσες «${W(d)} ${MONTHS_GEN[m]}»`});
+  }
+  const hol=sample([["τα Χριστούγεννα","Christmas","25 Δεκεμβρίου"],["η Πρωτοχρονιά","New Year's Day","1 Ιανουαρίου"],["ο Δεκαπενταύγουστος","the big summer holiday","15 Αυγούστου"]],2);
+  hol.forEach(h=>{
+    P.push({type:"mcq",q:`Πότε είναι ${h[0]};`,sub:`When is ${h[1]}?`,options:shuffle(["25 Δεκεμβρίου","1 Ιανουαρίου","15 Αυγούστου","25 Μαρτίου"]),answer:h[2],hint:h[2]==="15 Αυγούστου"?"Κοίτα τη λέξη: δεκαπέντε + Αύγουστος!":h[2]==="1 Ιανουαρίου"?"Πρωτο-χρονιά: η πρώτη μέρα της χρονιάς.":"Ο τελευταίος μήνας.",review:`Πότε είναι ${h[0]}`});
+  });
+  {
+    const d=rand(2,30),m=rand(0,11);
+    P.push({type:"date",q:`Γράψε με αριθμούς: ${W(d)} ${MONTHS_GEN[m]}`,sub:"Write it as day/month, for example 25/3.",d,m:m+1,hint:`Ο μήνας είναι ο ${MONTHS[m]}, ο μήνας νούμερο ${m+1}.`,review:`«${W(d)} ${MONTHS_GEN[m]}» με αριθμούς`});
+  }
+  {
+    const d=sample([5,9,10,13,17,22,24,27],1)[0];
+    const ans=DAYS[(3+d-1)%7];
+    P.push({type:"mcq",cal:true,q:`Η 1η Οκτωβρίου 2026 είναι Πέμπτη. Τι μέρα είναι στις ${d} Οκτωβρίου;`,sub:`October 1, 2026 is a Thursday. What day is October ${d}?`,options:shuffle(uniq([ans,DAYS[(3+d)%7],DAYS[(3+d-2)%7],DAYS[(3+d+2)%7]])),answer:ans,hint:"CAL",review:`Τι μέρα είναι στις ${d} Οκτωβρίου 2026`});
+  }
+  return P;
+}
+const GENS=[room0,room1,room2,room3];
+const LESSONS=[
+  ()=>`<div class="lesson-grid">${[...Array(30)].map((_,i)=>`<div class="li"><span class="n">${i+1}</span><span class="w">${NUM[i+1].join(" / ")}</span>${spk(W(i+1))}</div>`).join("")}</div>
+    <div class="tip"><b>11 και 12 είναι ειδικά:</b> έντεκα, δώδεκα.<br><b>13 έως 19:</b> δεκα + αριθμός, μία λέξη (δεκατρία).<br><b>21 έως 29:</b> είκοσι + αριθμός, δύο λέξεις (είκοσι ένα).<br><span class="en">7, 8, 9 have two forms: επτά/εφτά, οκτώ/οχτώ, εννέα/εννιά. Both are correct!</span></div>`,
+  ()=>`<div class="lesson-grid">${DAYS.map((d,i)=>`<div class="li"><span class="w">${d}<span class="e">${DAYS_EN[i]}</span></span>${spk(d)}</div>`).join("")}</div>
+    <div class="tip"><b>Μυστικό:</b> Δευτέρα (δεύτερος, 2nd), Τρίτη (τρίτος, 3rd), Τετάρτη (τέταρτος, 4th), Πέμπτη (πέμπτος, 5th).<br><b>χθες</b> = yesterday · <b>σήμερα</b> = today · <b>αύριο</b> = tomorrow<br><b>την Τρίτη</b> = on Tuesday · <b>τη Δευτέρα</b> = on Monday · <b>το Σάββατο</b> = on Saturday<br><span class="en">All days are feminine (η), except one: το Σάββατο.</span></div>`,
+  ()=>`<div class="lesson-grid">${MONTHS.map((m,i)=>`<div class="li"><span class="n">${i+1}</span><span class="w">${m}<span class="e">${MONTHS_EN[i]} · ${SEASONS[SEASON_OF[i]][0]}</span></span>${spk(m)}</div>`).join("")}</div>
+    <div class="tip"><b>Εποχές:</b> χειμώνας (winter), άνοιξη (spring), καλοκαίρι (summer), φθινόπωρο (autumn).<br><b>Πρόσεξε:</b> Μάρτιος (3) και Μάιος (5) · Ιούνιος (6) και Ιούλιος (7).<br><span class="en">In everyday speech you will also hear: Γενάρης, Μάρτης, Μάης, Ιούνης, Ιούλης, Οκτώβρης...</span></div>`,
+  ()=>`<div class="lesson-grid">${MONTHS.map((m,i)=>`<div class="li"><span class="w">${m}<span class="e">→ ${MONTHS_GEN[i]}</span></span>${spk(MONTHS_GEN[i])}</div>`).join("")}</div>
+    <div class="tip"><b>Ημερομηνία = αριθμός + μήνας (-ου)</b><br>25/3 → είκοσι πέντε <b>Μαρτίου</b> ${spk("είκοσι πέντε Μαρτίου")}<br>Για την 1η λέμε <b>πρώτη</b>: 1/5 → πρώτη Μαΐου ${spk("πρώτη Μαΐου")}<br>Σήμερα είναι Πέμπτη, οκτώ Οκτωβρίου. ${spk("Σήμερα είναι Πέμπτη, οκτώ Οκτωβρίου.")}<br><span class="en">Greek dates go day first, then month: 8/10 is the 8th of October.</span></div>`
+];
+
+/* ========== STATE ========== */
+let S;
+function reset(){S={screen:"start",room:0,i:0,P:[],miss:[[],[],[],[]],hints:0,tries:0,done:[false,false,false,false]};}
+reset();
+
+function setAccent(r){const a=ACC[r]||ACC[0];const st=document.documentElement.style;st.setProperty("--accent",`var(${a[0]})`);st.setProperty("--accent-d",`var(${a[1]})`);st.setProperty("--accent-bg",`var(${a[2]})`);}
+function drawLocks(){
+  $("#locks").innerHTML=ROOMS.map((r,i)=>`<div class="lock r${i} ${S.done[i]?"done":""} ${S.room===i&&S.screen!=="start"&&S.screen!=="final"&&S.screen!=="win"?"on":""}"><span class="dot"></span>${i+1}. ${r.name.split(" ").slice(-1)[0]}</div>`).join("");
+}
+function logMiss(p,correct){
+  if(p._logged) return; p._logged=true;
+  S.miss[S.room].push({q:p.review||p.q,a:correct});
+}
+function render(){
+  drawLocks();
+  const app=$("#app");
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(S.screen==="start"){setAccent(0);app.innerHTML=startHTML();$("#go").onclick=()=>{S.screen="intro";render()};return}
+  if(S.screen==="intro"){setAccent(S.room);const r=ROOMS[S.room];
+    app.innerHTML=`<div class="card"><div class="en">Δωμάτιο ${S.room+1} από 4 · Room ${S.room+1} of 4</div><h2>${r.name}</h2><div class="en">${r.en} · Read, tap ▶ to listen, then open the lock.</div>${LESSONS[S.room]()}<div class="row right foot-actions"><button class="btn" id="go">Είμαι έτοιμος / έτοιμη →</button></div></div>`;
+    $("#go").onclick=()=>{S.P=GENS[S.room]();S.i=0;S.screen="puzzle";render()};return}
+  if(S.screen==="puzzle"){setAccent(S.room);renderPuzzle(app);return}
+  if(S.screen==="digit"){setAccent(S.room);const r=ROOMS[S.room];
+    app.innerHTML=`<div class="card scroll"><div class="en">Η κλειδαριά άνοιξε! The lock is open!</div><h2>Βρήκες ένα κομμάτι του κωδικού</h2><div class="word">${r.digit}</div><div class="en">Remember this word. You will need it as a digit at the final door.</div>${foundHTML()}<div class="row" style="justify-content:center"><button class="btn" id="go">${S.room<3?"Επόμενο δωμάτιο →":"Στην πόρτα →"}</button></div></div>`;
+    confetti(70);
+    $("#go").onclick=()=>{if(S.room<3){S.room++;S.screen="intro"}else S.screen="final";render()};return}
+  if(S.screen==="final"){renderFinal(app);return}
+  if(S.screen==="win"){renderWin(app);return}
+}
+function foundHTML(){return `<div class="found">${ROOMS.map((r,i)=>`<div class="${S.done[i]?"f r"+i:""}">${S.done[i]?r.digit:"?"}</div>`).join("")}</div>`}
+function startHTML(){return `<div class="card"><h2>Ένα κλειδωμένο ημερολόγιο</h2>
+<p>Βρήκες ένα παλιό ημερολόγιο σε ένα σπίτι στην Ελλάδα. Είναι κλειδωμένο! Πέρνα από <b>τέσσερα δωμάτια</b>, λύσε τους γρίφους και βρες τα <b>τέσσερα ψηφία</b> του κωδικού.</p>
+<p class="en">You found an old calendar in a house in Greece, and it is locked. Go through four rooms, solve the puzzles, and collect the four digits of the code.</p>
+<div class="tip">Κάθε δωμάτιο αρχίζει με ένα μικρό μάθημα. Πάτα ▶ για να ακούσεις.<br><span class="en">Every room starts with a short lesson. Mistakes are fine! At the end you get a personal review list.</span></div>
+${foundHTML()}
+<div class="row right"><button class="btn" id="go">Πάμε! →</button></div></div>`}
+
+/* ========== PUZZLE RENDERING ========== */
+function renderPuzzle(app){
+  const p=S.P[S.i];S.tries=0;
+  const prog=`<div class="progress">${S.P.map((_,k)=>`<span class="${k<S.i?"d":k===S.i?"c":""}"></span>`).join("")}</div>`;
+  app.innerHTML=`<div class="card"><div class="row between"><div class="en">${ROOMS[S.room].name} · ${S.i+1}/${S.P.length}</div><button class="btn ghost small" id="hintBtn">Βοήθεια</button></div>${prog}
+  <div class="q">${esc(p.q)}</div><div class="qsub">${esc(p.sub||"")}</div><div id="body"></div>
+  <div class="hintbox" id="hint"></div><div class="fb" id="fb"></div>
+  <div class="row right foot-actions"><button class="btn" id="next" style="display:none">Συνέχεια →</button></div></div>`;
+  $("#hintBtn").onclick=()=>{const h=$("#hint");if(!h.classList.contains("show")){S.hints++;h.innerHTML=p.hint==="CAL"?calHTML():esc(p.hint);h.classList.add("show")}};
+  $("#next").onclick=()=>{S.i++;if(S.i>=S.P.length){S.done[S.room]=true;S.screen="digit"}render()};
+  const body=$("#body");
+  ({mcq:rMCQ,listen:rListen,type:rType,date:rDate,order:rOrder,match:rMatch,sort:rSort})[p.type](p,body);
+}
+function solved(msg){const fb=$("#fb");fb.className="fb show ok";fb.innerHTML=msg||sample(["Μπράβο!","Σωστά!","Τέλεια!","Πολύ ωραία!"],1)[0];$("#next").style.display="";$("#next").focus();}
+function wrong(msg){const fb=$("#fb");fb.className="fb show no";fb.innerHTML=msg||"Όχι ακόμα. Δοκίμασε ξανά! <span class='en'>Not yet, try again.</span>";}
+function calHTML(){let h=DAYS.map(d=>`<div class="h">${d.slice(0,3)}</div>`).join("");h+=`<div></div><div></div><div></div>`;for(let d=1;d<=31;d++)h+=`<div class="${d===1?"x":""}">${d}</div>`;return `Ημερολόγιο Οκτωβρίου 2026:<div class="cal">${h}</div>`}
+function rMCQ(p,body){
+  body.innerHTML=`<div class="opts">${p.options.map(o=>`<button class="opt">${esc(o)}</button>`).join("")}</div>`;
+  body.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if(b.textContent===p.answer){b.classList.add("good");body.querySelectorAll(".opt").forEach(x=>x.disabled=true);solved()}
+    else{b.classList.add("bad","shake");b.disabled=true;logMiss(p,p.answer);wrong()}
+  });
+}
+function rListen(p,body){
+  body.innerHTML=`<div class="listen-wrap">${spk(p.speak,"big")}<div class="reveal" id="rev"></div><button class="btn ghost small" id="showTxt">Δείξε μου τη λέξη</button></div><div id="mc"></div>`;
+  setTimeout(()=>say(p.speak),250);
+  $("#showTxt").onclick=()=>{$("#rev").textContent=p.speak;S.hints++};
+  if(!("speechSynthesis" in window)) $("#rev").textContent=p.speak;
+  rMCQ(p,$("#mc"));
+}
+function rType(p,body){
+  body.innerHTML=`<input class="ans" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" lang="el" placeholder="γράψε εδώ..."><div class="row right" style="margin-top:10px"><button class="btn" id="chk">Έλεγχος</button></div>`;
+  const inp=$("#ans");inp.focus();
+  const check=()=>{
+    const v=inp.value;if(!v.trim())return;
+    if(p.answers.some(a=>norm(a)===norm(v))){inp.disabled=true;$("#chk").disabled=true;say(p.answers[0]);solved();return}
+    const m=p.answers.find(a=>strip(a)===strip(v));
+    if(m){inp.disabled=true;$("#chk").disabled=true;say(m);solved(`Σωστό! Πρόσεξε μόνο τον τόνο: <b>${esc(m)}</b> <span class="en">(Correct! Just check the accent.)</span>`);return}
+    S.tries++;logMiss(p,p.answers.join(" / "));inp.classList.add("shake");setTimeout(()=>inp.classList.remove("shake"),400);
+    if(S.tries>=2){inp.disabled=true;$("#chk").disabled=true;const fb=$("#fb");fb.className="fb show info";fb.innerHTML=`Η σωστή απάντηση: <b>${esc(p.answers.join(" / "))}</b> ${spk(p.answers[0])}<br><span class="en">It goes on your review list. Keep going!</span>`;$("#next").style.display=""}
+    else wrong();
+  };
+  $("#chk").onclick=check;inp.onkeydown=e=>{if(e.key==="Enter")check()};
+}
+function rDate(p,body){
+  const ans=`${p.d}/${p.m}`;
+  body.innerHTML=`<input class="ans" id="ans" inputmode="numeric" autocomplete="off" placeholder="π.χ. 25/3"><div class="row right" style="margin-top:10px"><button class="btn" id="chk">Έλεγχος</button></div>`;
+  const inp=$("#ans");inp.focus();
+  const check=()=>{
+    const mt=inp.value.match(/^\s*(\d{1,2})\s*[\/.\- ]\s*(\d{1,2})\s*$/);
+    if(mt&&+mt[1]===p.d&&+mt[2]===p.m){inp.disabled=true;$("#chk").disabled=true;solved();return}
+    S.tries++;logMiss(p,ans);inp.classList.add("shake");setTimeout(()=>inp.classList.remove("shake"),400);
+    if(S.tries>=2){inp.disabled=true;$("#chk").disabled=true;const fb=$("#fb");fb.className="fb show info";fb.innerHTML=`Η σωστή απάντηση: <b>${ans}</b><br><span class="en">Day first, then month.</span>`;$("#next").style.display=""}
+    else wrong();
+  };
+  $("#chk").onclick=check;inp.onkeydown=e=>{if(e.key==="Enter")check()};
+}
+function rOrder(p,body){
+  let k=0;
+  body.innerHTML=`<div class="slots" id="slots">${p.items.map(()=>`<span class="slot empty">?</span>`).join("")}</div><div class="pool">${shuffle(p.items).map(x=>`<button class="chip">${esc(x)}</button>`).join("")}</div>`;
+  body.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{
+    if(b.textContent===p.items[k]){const s=$("#slots").children[k];s.className="slot";s.textContent=b.textContent;b.classList.add("gone");say(b.textContent);k++;if(k===p.items.length)solved()}
+    else{b.classList.add("shake");setTimeout(()=>b.classList.remove("shake"),400);logMiss(p,p.items.join(", "));wrong(`Όχι ακόμα. Ποια λέξη έρχεται μετά; <span class="en">Not yet. Which one comes next?</span>`)}
+  });
+}
+function rMatch(p,body){
+  let selL=null,left=0;
+  body.innerHTML=`<div class="match"><div class="col">${shuffle(p.pairs).map(x=>`<button class="chip L" data-k="${esc(x[0])}">${esc(x[0])}</button>`).join("")}</div><div class="col">${shuffle(p.pairs).map(x=>`<button class="chip R" data-k="${esc(x[0])}">${esc(x[1])}</button>`).join("")}</div></div>`;
+  body.querySelectorAll(".L").forEach(b=>b.onclick=()=>{body.querySelectorAll(".L").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");selL=b});
+  body.querySelectorAll(".R").forEach(b=>b.onclick=()=>{
+    if(!selL){wrong("Πρώτα διάλεξε από αριστερά. <span class='en'>Choose from the left first.</span>");return}
+    if(b.dataset.k===selL.dataset.k){[b,selL].forEach(x=>{x.classList.remove("sel");x.classList.add("good");x.disabled=true});say(b.textContent);selL=null;left++;$("#fb").className="fb";if(left===p.pairs.length)solved()}
+    else{b.classList.add("shake");setTimeout(()=>b.classList.remove("shake"),400);const pr=p.pairs.find(x=>x[0]===selL.dataset.k);if(!p._mm)p._mm=new Set();if(!p._mm.has(pr[0])){p._mm.add(pr[0]);S.miss[S.room].push({q:p.review,a:`${pr[0]} = ${pr[1]}`})}wrong()}
+  });
+}
+function rSort(p,body){
+  let sel=null,left=p.items.length;
+  body.innerHTML=`<div class="pool">${p.items.map((x,i)=>`<button class="chip" data-i="${i}">${esc(x[0])}</button>`).join("")}</div><div class="buckets">${p.buckets.map((b,i)=>`<div class="bucket" data-b="${i}"><div class="bt">${b[0]}</div><div class="be">${b[1]}</div><div class="in"></div></div>`).join("")}</div>`;
+  body.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{body.querySelectorAll(".chip").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");sel=b;body.querySelectorAll(".bucket").forEach(x=>x.classList.add("ready"))});
+  body.querySelectorAll(".bucket").forEach(bk=>bk.onclick=()=>{
+    if(!sel)return;const it=p.items[+sel.dataset.i];
+    if(+bk.dataset.b===it[1]){bk.querySelector(".in").insertAdjacentHTML("beforeend",`<span>${esc(it[0])}</span>`);sel.classList.add("gone");sel=null;left--;body.querySelectorAll(".bucket").forEach(x=>x.classList.remove("ready"));$("#fb").className="fb";if(left===0)solved()}
+    else{bk.classList.add("shake");setTimeout(()=>bk.classList.remove("shake"),400);if(!p._mm)p._mm=new Set();if(!p._mm.has(it[0])){p._mm.add(it[0]);S.miss[S.room].push({q:p.review,a:`${it[0]}: ${p.buckets[it[1]][0]}`})}wrong()}
+  });
+}
+
+/* ========== FINAL DOOR ========== */
+function renderFinal(app){
+  setAccent(3);document.documentElement.style.setProperty("--accent","var(--wine)");
+  app.innerHTML=`<div class="card"><h2 style="color:var(--wine);text-align:center">Η τελευταία πόρτα</h2>
+  <p class="door">Τα τέσσερα κομμάτια του κωδικού είναι λέξεις. Γράψε τα σαν <b>ψηφία</b>, με τη σειρά.<br><span class="en">Your four code pieces are words. Type them as digits, in order.</span></p>
+  ${foundHTML()}
+  <div class="code">${[0,1,2,3].map(i=>`<input maxlength="1" inputmode="numeric" data-i="${i}">`).join("")}</div>
+  <div class="row" style="justify-content:center"><button class="btn" id="open" style="background:var(--wine)">Άνοιξε την πόρτα</button></div>
+  <div class="fb" id="fb"></div><div id="bonus"></div></div>`;
+  const ins=[...document.querySelectorAll(".code input")];ins[0].focus();
+  ins.forEach((x,i)=>{x.oninput=()=>{x.value=x.value.replace(/\D/g,"");if(x.value&&i<3)ins[i+1].focus()};x.onkeydown=e=>{if(e.key==="Backspace"&&!x.value&&i>0)ins[i-1].focus();if(e.key==="Enter")$("#open").click()}});
+  $("#open").onclick=()=>{
+    const v=ins.map(x=>x.value).join("");
+    if(v==="2810"){ins.forEach(x=>x.disabled=true);$("#open").disabled=true;const fb=$("#fb");fb.className="fb show ok";fb.innerHTML="Ο κωδικός είναι σωστός! Μια τελευταία ερώτηση...";bonus()}
+    else{const fb=$("#fb");fb.className="fb show no";fb.innerHTML="Λάθος κωδικός. Κοίτα πάλι τις λέξεις: δύο, οκτώ, ένα, μηδέν. <span class='en'>(μηδέν = 0)</span>";document.querySelector(".code").classList.add("shake");setTimeout(()=>document.querySelector(".code").classList.remove("shake"),400)}
+  };
+}
+function bonus(){
+  const p={q:"Ο κωδικός 28 10 είναι μια ημερομηνία. Ποια;",sub:"The code 28 10 is a date. Which one?",options:shuffle(["28 Οκτωβρίου","28 Δεκεμβρίου","18 Οκτωβρίου","20 Ιανουαρίου"]),answer:"28 Οκτωβρίου",review:"Ο κωδικός 2810 ως ημερομηνία"};
+  $("#bonus").innerHTML=`<div style="margin-top:18px"><div class="q">${p.q}</div><div class="qsub">${p.sub}</div><div id="bm"></div></div>`;
+  const body=$("#bm");
+  body.innerHTML=`<div class="opts">${p.options.map(o=>`<button class="opt">${o}</button>`).join("")}</div>`;
+  body.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if(b.textContent===p.answer){b.classList.add("good");body.querySelectorAll(".opt").forEach(x=>x.disabled=true);say("είκοσι οκτώ Οκτωβρίου");setTimeout(()=>{S.screen="win";render()},1100)}
+    else{b.classList.add("bad","shake");b.disabled=true;if(!p._logged){p._logged=true;S.miss[3].push({q:p.review,a:p.answer})}}
+  });
+}
+
+/* ========== WIN ========== */
+function renderWin(app){
+  setAccent(0);
+  const total=S.miss.reduce((a,m)=>a+m.length,0);
+  const review=S.miss.map((m,i)=>m.length?`<h3 class="r${i}" style="color:var(${ACC[i][1]})">${ROOMS[i].name}</h3><ul>${m.map(x=>`<li>${esc(x.q)}: <span class="ca">${esc(x.a)}</span></li>`).join("")}</ul>`:"").join("");
+  app.innerHTML=`<div class="card"><div style="text-align:center"><div class="en">Το ημερολόγιο άνοιξε! The calendar is open!</div><h2 style="font-size:38px">Συγχαρητήρια!</h2>
+  <p>Η <b>28η Οκτωβρίου</b> είναι εθνική γιορτή στην Ελλάδα. ${spk("Η εικοστή όγδοη Οκτωβρίου είναι εθνική γιορτή στην Ελλάδα.")}<br><span class="en">October 28 is a national holiday in Greece.</span></p></div>
+  <div class="stats"><div><b>4/4</b>δωμάτια</div><div><b>${total}</b>για επανάληψη</div><div><b>${S.hints}</b>βοήθειες</div></div>
+  <div class="review">${total?`<h2 style="font-size:24px;color:var(--purple-d)">Η λίστα επανάληψής σου</h2><div class="en">Your personal review list: the items that tripped you up, with the right answer.</div>${review}`:`<div class="tip" style="text-align:center"><b>Τέλεια!</b> Κανένα λάθος. <span class="en">Not a single mistake!</span></div>`}</div>
+  <div class="row" style="justify-content:center;margin-top:18px"><button class="btn" id="again">Παίξε ξανά (νέοι γρίφοι)</button><button class="btn ghost" onclick="window.print()">Τύπωσε τη λίστα</button></div></div>`;
+  confetti(180);
+  $("#again").onclick=()=>{reset();render()};
+}
+
+/* ========== CONFETTI ========== */
+const cv=$("#confetti"),cx=cv.getContext("2d");let parts=[],anim=null;
+function fit(){cv.width=innerWidth;cv.height=innerHeight}addEventListener("resize",fit);fit();
+function confetti(n){
+  const cols=["#8e7cc3","#7aa6b9","#6fae84","#c98bb0","#c6a75e"];
+  for(let i=0;i<n;i++)parts.push({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.4,vx:(Math.random()-.5)*3,vy:2+Math.random()*3,r:Math.random()*6.28,vr:(Math.random()-.5)*.2,s:6+Math.random()*7,c:cols[i%5]});
+  if(!anim)tick();
+}
+function tick(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.03;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);cx.restore()});
+  parts=parts.filter(p=>p.y<cv.height+30);
+  anim=parts.length?requestAnimationFrame(tick):null;if(!anim)cx.clearRect(0,0,cv.width,cv.height);
+}
+
+render();
+</script>
+</body>
+</html>
