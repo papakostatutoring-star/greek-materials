@@ -1,0 +1,376 @@
+<title>Χαμένοι στην Παλιά Πόλη</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: one narrow column; a four-door map on top, one room open at a time, the lockbox at the end. */
+:root{
+  --bg:#f6f3fa; --card:#ffffff; --ink:#3f3a4d; --muted:#6f6782; --line:#e4dcef; --gold:#b8963f;
+  --p:#8e7cc3; --p-ink:#6d5b87; --p-tint:#f3edf9;
+  --b:#7aa6b9; --b-ink:#3f6d82; --b-tint:#e9f1f7;
+  --g:#6fae84; --g-ink:#3f7a54; --g-tint:#eaf6ee;
+  --r:#c98bb0; --r-ink:#9c5980; --r-tint:#fbeef5;
+  --ok:#3f7a54; --bad:#b0476a;
+  --display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --body:"Nunito","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1f1c27; --card:#2a2634; --ink:#ece6f5; --muted:#b3a9c4; --line:#3e3850; --gold:#d9bd76;
+  --p:#a893db; --p-ink:#cdbdf0; --p-tint:#352d48;
+  --b:#8fbbcd; --b-ink:#a9d0e0; --b-tint:#233843;
+  --g:#86c39a; --g-ink:#a6d9b6; --g-tint:#213a2b;
+  --r:#d9a0c2; --r-ink:#ebb6d5; --r-tint:#3d2534;
+  --ok:#8fd0a5; --bad:#f08fae; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1f1c27; --card:#2a2634; --ink:#ece6f5; --muted:#b3a9c4; --line:#3e3850; --gold:#d9bd76;
+  --p:#a893db; --p-ink:#cdbdf0; --p-tint:#352d48;
+  --b:#8fbbcd; --b-ink:#a9d0e0; --b-tint:#233843;
+  --g:#86c39a; --g-ink:#a6d9b6; --g-tint:#213a2b;
+  --r:#d9a0c2; --r-ink:#ebb6d5; --r-tint:#3d2534;
+  --ok:#8fd0a5; --bad:#f08fae; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding-block:28px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;font-weight:600}
+h1{font-size:clamp(2.1rem,6vw,3rem);line-height:1.05;color:var(--p-ink)}
+h2{font-size:1.75rem;line-height:1.1}
+.eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--muted)}
+.intro{display:flex;flex-direction:column;gap:10px}
+.intro p{margin:0;max-width:62ch;color:var(--muted)}
+.intro strong{color:var(--ink)}
+
+/* door map */
+.map{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.door{border:2px solid var(--line);background:var(--card);border-radius:14px;padding:10px 8px;text-align:center;
+  display:flex;flex-direction:column;gap:2px;align-items:center;font:inherit;color:var(--ink);cursor:default}
+.door .gr{font-family:var(--display);font-size:1.05rem;font-weight:600;line-height:1.1}
+.door .dg{font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--muted);letter-spacing:.05em}
+.door.on{border-color:var(--c)}
+.door.done{background:var(--ct);border-color:var(--c)}
+.door.done .dg{color:var(--ci)}
+.door.locked{opacity:.55}
+@media (max-width:520px){.map{grid-template-columns:repeat(2,1fr)}}
+
+.room{background:var(--card);border:1px solid var(--line);border-top:6px solid var(--c);border-radius:16px;
+  padding:22px 20px;display:flex;flex-direction:column;gap:16px}
+.room h2{color:var(--ci)}
+.task{margin:0;color:var(--muted);max-width:62ch}
+.task b{color:var(--ink)}
+.c-p{--c:var(--p);--ci:var(--p-ink);--ct:var(--p-tint)}
+.c-b{--c:var(--b);--ci:var(--b-ink);--ct:var(--b-tint)}
+.c-g{--c:var(--g);--ci:var(--g-ink);--ct:var(--g-tint)}
+.c-r{--c:var(--r);--ci:var(--r-ink);--ct:var(--r-tint)}
+
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.chip{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 12px;
+  font-weight:700;text-align:left;transition:background .15s,border-color .15s}
+.chip:hover:not(:disabled){border-color:var(--c)}
+.chip.sel{border-color:var(--c);background:var(--ct)}
+.chip.right{border-color:var(--ok);background:var(--ct);color:var(--ci);cursor:default}
+.chip.wrong{border-color:var(--bad);animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@media (prefers-reduced-motion:reduce){.chip.wrong,.tile.wrong{animation:none}}
+
+/* room 1 match */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.col .chip[lang="el"]{font-size:1.05rem}
+
+/* list items (rooms 2-4) */
+.items{display:flex;flex-direction:column;gap:12px}
+.item{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--ct)}
+.item .q{flex:1 1 260px;min-width:0;font-size:1.08rem}
+.item .opts{display:flex;flex-wrap:wrap;gap:8px}
+.item .opts .chip{padding:7px 14px;text-align:center}
+.gap{display:inline-block;min-width:4.5em;border-bottom:2px dashed var(--ci);text-align:center;color:var(--ci);font-weight:800}
+.item.solved .q{color:var(--ci)}
+.en{font-size:.85rem;color:var(--muted);display:block}
+
+.foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.hint-btn{background:none;border:none;color:var(--ci);font-weight:700;text-decoration:underline;padding:4px 0}
+.hint{margin:0;padding:10px 14px;border-radius:10px;border:1px dashed var(--c);color:var(--ink);font-size:.95rem}
+.status{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.reward{display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--ct);border:2px solid var(--c)}
+.reward .big{font-family:var(--display);font-size:2.8rem;font-weight:700;color:var(--ci);line-height:1}
+.next{background:var(--ci);color:var(--card);border:none;border-radius:12px;padding:10px 18px;font-weight:800}
+
+/* lockbox */
+.lock{--c:var(--gold);--ci:var(--gold);--ct:var(--p-tint)}
+.dials{display:flex;gap:10px;justify-content:center}
+.dial{display:flex;flex-direction:column;align-items:center;gap:4px}
+.dial button{border:none;background:var(--ct);color:var(--ink);width:56px;border-radius:8px;padding:2px 0;font-weight:800}
+.dial output{width:56px;height:68px;display:grid;place-items:center;font-size:2.2rem;font-weight:800;
+  border:2px solid var(--line);border-radius:12px;font-variant-numeric:tabular-nums;background:var(--card)}
+.center{text-align:center}
+.msg{min-height:1.5em;margin:0;text-align:center;font-weight:700}
+.msg.bad{color:var(--bad)} .msg.good{color:var(--ok)}
+.review{display:flex;flex-direction:column;gap:8px}
+.review ul{margin:0;padding-left:1.2em}
+.review li{margin:2px 0}
+.restart{background:none;border:2px solid var(--line);color:var(--ink);border-radius:12px;padding:9px 16px;font-weight:700}
+.say{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid var(--c);background:var(--card);color:var(--ci);
+  display:inline-grid;place-items:center;padding:0}
+.say:hover{background:var(--ct)}
+.voicebar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.vtoggle{border:2px solid var(--p);background:var(--card);color:var(--p-ink);border-radius:999px;padding:6px 14px;font-weight:800;
+  display:inline-flex;gap:8px;align-items:center}
+.vtoggle[aria-pressed="false"]{border-color:var(--line);color:var(--muted)}
+.vnote{margin:0;font-size:.9rem;color:var(--muted);max-width:62ch}
+.sig{text-align:center;color:var(--muted);font-size:.85rem;font-family:var(--display);font-size:1.05rem}
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <span class="eyebrow">Μάθημα 24 · Επίσκεψη στην Παλιά Πόλη · Escape Room</span>
+    <h1>Χαμένοι στην Παλιά Πόλη</h1>
+    <p>You are on holiday in <strong>Κέρκυρα</strong> with Ελένη. You took a wrong turn in the old town and lost your group. Your boat ticket is in a little lockbox with a <strong>4 digit code</strong>.</p>
+    <p>Pass four places in the old town. Each one gives you one digit. Then open the box and catch the boat!</p>
+    <div class="voicebar"><button class="vtoggle" id="vt" aria-pressed="true"></button>
+      <span class="vnote">Tap a Greek word or the speaker button to hear it.</span></div>
+    <p class="vnote" id="vmissing" hidden>Your device has no Greek voice yet, so the words may sound wrong. On iPhone or iPad: Settings › Accessibility › Spoken Content › Voices › Greek. On Windows: Settings › Time &amp; language › Speech › Add voices › Greek.</p>
+  </header>
+
+  <nav class="map" id="map" aria-label="Rooms"></nav>
+  <main id="stage"></main>
+  <p class="sig">❀ Glossomathia · Play · Listen · Learn</p>
+</div>
+
+<script>
+const ROOMS = [
+  {id:"match", cls:"c-p", gr:"Τα Σοκάκια", en:"The alleys", digit:2,
+   task:"Match each Greek word with its meaning. Tap a Greek word, then tap the English.",
+   hint:"Look for words you already know: μουσείο sounds like museum, τουρίστας like tourist. Ταξιδεύω and μιλάω end in ω, so they are verbs (I travel, I talk)."},
+  {id:"article", cls:"c-b", gr:"Το Μουσείο", en:"The museum", digit:4,
+   task:"The museum guard checks your articles. Choose <b>ο</b>, <b>η</b> or <b>το</b> for each word.",
+   hint:"Words ending in ‑ας or ‑ος are usually ο. Words ending in ‑α or ‑η are usually η. Words ending in ‑ο or ‑ι take το. Σουβενίρ is a borrowed word: it takes το."},
+  {id:"phrase", cls:"c-g", gr:"Το Τουριστικό Μαγαζί", en:"The souvenir shop", digit:1,
+   task:"The shop owner asks: <b>Τι σου αρέσει να κάνεις στις διακοπές;</b> Complete each sentence with the right verb.",
+   hint:"βλέπω = I see, πηγαίνω = I go, αγοράζω = I buy, τρώω = I eat, μιλάω = I talk, ταξιδεύω = I travel. What do you do with souvenirs? With food? With sights?"},
+  {id:"letter", cls:"c-r", gr:"Η Ταβέρνα", en:"The taverna", digit:6,
+   task:"Ελένη is at the taverna! She wants to know if you read her letter to Βούλα (page 161). <b>Σωστό</b> (true) or <b>Λάθος</b> (false)?",
+   hint:"Read the letter again. Look for: how long the flight was, how many weeks they stay, and what they do in the afternoon."}
+];
+
+const MATCH = [
+  ["το κτίριο","building"],["ο τουρίστας","tourist"],["το σοκάκι","alley"],["το φιλί","kiss"],
+  ["το αξιοθέατο","landmark"],["ντόπιος","local"],["η εβδομάδα","week"],["η επίσκεψη","visit"],
+  ["ο άγιος","saint"],["μιλάω","I talk"],["ταξιδεύω","I travel"],["το μουσείο","museum"]
+];
+const ARTICLES = [
+  ["τουρίστας","ο","tourist"],["εβδομάδα","η","week"],["κτίριο","το","building"],["επίσκεψη","η","visit"],
+  ["άγιος","ο","saint"],["σοκάκι","το","alley"],["αξιοθέατο","το","landmark"],["σουβενίρ","το","souvenir"],
+  ["φιλί","το","kiss"],["τουριστικό μαγαζί","το","souvenir shop"]
+];
+const VERBS = ["βλέπω","πηγαίνω","αγοράζω","τρώω","μιλάω","ταξιδεύω"];
+const PHRASES = [
+  ["Εγώ θέλω να ","βλέπω"," τα αξιοθέατα στις διακοπές.","I want to see the sights on vacation."],
+  ["Μου αρέσει να ","πηγαίνω"," σε μουσεία.","I like to go to museums."],
+  ["Θέλω να ","αγοράζω"," σουβενίρ για όλους.","I want to buy souvenirs for everyone."],
+  ["Μου αρέσει να ","τρώω"," σε ντόπιες ταβέρνες.","I like to eat at local tavernas."],
+  ["Το βράδυ ","μιλάω"," με τη Βούλα στο τηλέφωνο.","In the evening I talk with Voula on the phone."],
+  ["Κάθε καλοκαίρι ","ταξιδεύω"," στην Κέρκυρα.","Every summer I travel to Corfu."]
+];
+const LETTER = [
+  ["Η Ελένη ταξίδεψε με αεροπλάνο για πρώτη φορά.",true,"Elena flew for the first time."],
+  ["Το ταξίδι από την Αθήνα στην Κέρκυρα ήταν δύο ώρες.",false,"The flight took half an hour (μισή ώρα)."],
+  ["Θα πάνε στην εκκλησία του Αγίου Σπυρίδωνα.",true,"They visit the church of Saint Spyridon."],
+  ["Το μεσημέρι θα φάνε σε μια ντόπια ταβέρνα.",true,"At noon they eat at a local taverna."],
+  ["Το απόγευμα θα πάνε στο μουσείο.",false,"In the afternoon they go to the pool (πισίνα)."],
+  ["Θα μείνουν στην Κέρκυρα μία εβδομάδα.",false,"They stay two weeks (δύο εβδομάδες)."]
+];
+
+const SPK='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
+const HAS_TTS = typeof window.speechSynthesis!=="undefined" && typeof window.SpeechSynthesisUtterance!=="undefined";
+let voiceOn = HAS_TTS, elVoice = null;
+function pickVoice(){
+  if(!HAS_TTS) return;
+  const vs = speechSynthesis.getVoices();
+  elVoice = vs.find(v=>/^el(-|_|$)/i.test(v.lang)) || null;
+  const miss = document.getElementById("vmissing");
+  if(miss) miss.hidden = !(vs.length && !elVoice);
+}
+if(HAS_TTS){ pickVoice(); try{ speechSynthesis.onvoiceschanged = pickVoice; }catch(e){} }
+function speak(t){
+  if(!voiceOn || !HAS_TTS || !t) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(t);
+    u.lang = "el-GR"; if(elVoice) u.voice = elVoice; u.rate = 0.85;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function drawToggle(){
+  const b=document.getElementById("vt");
+  if(!HAS_TTS){ b.disabled=true; b.innerHTML=SPK+"Voice not available in this browser"; b.setAttribute("aria-pressed","false"); return; }
+  b.innerHTML = SPK + (voiceOn ? "Φωνή: ON" : "Φωνή: OFF");
+  b.setAttribute("aria-pressed", String(voiceOn));
+}
+document.getElementById("vt").onclick=()=>{ voiceOn=!voiceOn; if(!voiceOn) try{speechSynthesis.cancel()}catch(e){}; drawToggle(); };
+drawToggle();
+
+let state = {room:0, done:[false,false,false,false], errors:{}, misses:[[],[],[],[]], finished:false};
+const $ = s => document.querySelector(s);
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a; };
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function miss(r, label){ if(!state.misses[r].includes(label)) state.misses[r].push(label); }
+function shake(el){ el.classList.remove("wrong"); void el.offsetWidth; el.classList.add("wrong"); }
+
+function drawMap(){
+  $("#map").innerHTML = ROOMS.map((r,i)=>{
+    const cls = state.done[i] ? "done" : (i===state.room && !state.finished ? "on" : (i>state.room?"locked":""));
+    return `<div class="door ${r.cls} ${cls}"><span class="gr" lang="el">${r.gr}</span><span class="dg">${state.done[i]?r.digit:"?"}</span></div>`;
+  }).join("");
+}
+
+function roomShell(i, body){
+  const r = ROOMS[i];
+  return `<section class="room ${r.cls}" aria-labelledby="rt">
+    <div><span class="eyebrow">Room ${i+1} of 4 · ${r.en}</span><h2 id="rt" lang="el">${r.gr}</h2></div>
+    <p class="task">${r.task}</p>
+    ${body}
+    <div class="foot"><button class="hint-btn" id="hintBtn">Need a hint?</button><span class="status" id="status"></span></div>
+    <p class="hint" id="hint" hidden>${r.hint}</p>
+    <div id="rewardSlot"></div>
+  </section>`;
+}
+
+function wireHint(){ $("#hintBtn").onclick=()=>{ $("#hint").hidden=!$("#hint").hidden; }; }
+
+function finishRoom(i){
+  state.done[i]=true; drawMap();
+  const r=ROOMS[i], last=i===3;
+  $("#rewardSlot").innerHTML = `<div class="reward"><span class="big">${r.digit}</span>
+    <div style="flex:1;min-width:0"><b lang="el">Μπράβο!</b> You found digit ${i+1} of the code.</div>
+    <button class="next" id="nextBtn">${last?"Open the lockbox":"Next place"}</button></div>`;
+  $("#nextBtn").onclick=()=>{ state.room=i+1; render(); window.scrollTo({top:0,behavior:"smooth"}); };
+  $("#nextBtn").focus({preventScroll:true});
+}
+
+/* Room 1: matching */
+function roomMatch(){
+  const left=shuffle(MATCH), right=shuffle(MATCH);
+  $("#stage").innerHTML = roomShell(0, `<div class="match">
+    <div class="col">${left.map(([g,e])=>`<button class="chip" lang="el" data-g="${esc(g)}">${esc(g)}</button>`).join("")}</div>
+    <div class="col">${right.map(([g,e])=>`<button class="chip" data-e="${esc(e)}">${esc(e)}</button>`).join("")}</div></div>`);
+  wireHint();
+  let pick=null, solved=0;
+  const upd=()=>$("#status").textContent=`${solved} / ${MATCH.length} pairs`; upd();
+  document.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{
+    if(b.disabled) return;
+    document.querySelectorAll("[data-g].sel").forEach(x=>x.classList.remove("sel"));
+    b.classList.add("sel"); pick=b; speak(b.dataset.g);
+  });
+  document.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>{
+    if(b.disabled||!pick) return;
+    const pair=MATCH.find(p=>p[0]===pick.dataset.g);
+    if(pair[1]===b.dataset.e){
+      [pick,b].forEach(x=>{x.classList.remove("sel");x.classList.add("right");x.disabled=true});
+      pick=null; solved++; upd(); if(solved===MATCH.length) finishRoom(0);
+    } else { shake(b); shake(pick); miss(0, `${pair[0]} = ${pair[1]}`); }
+  });
+}
+
+/* generic list room: items with option chips */
+function listRoom(i, items, total){
+  $("#stage").innerHTML = roomShell(i, `<div class="items">${items.map((it,k)=>`
+    <div class="item" id="it${k}"><button class="say" data-say="${k}" aria-label="Listen">${SPK}</button><span class="q" lang="el">${it.q}</span>
+      <div class="opts">${it.opts.map(o=>`<button class="chip" data-k="${k}" data-o="${esc(o)}" lang="el">${esc(o)}</button>`).join("")}</div>
+    </div>`).join("")}</div>`);
+  wireHint();
+  let solved=0; const upd=()=>$("#status").textContent=`${solved} / ${total} solved`; upd();
+  document.querySelectorAll("[data-say]").forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.say; speak(items[k].say($("#it"+k).classList.contains("solved")));
+  });
+  document.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.k, it=items[k], row=$("#it"+k);
+    if(row.classList.contains("solved")) return;
+    if(b.dataset.o===it.ans){
+      row.classList.add("solved"); b.classList.add("right");
+      row.querySelectorAll(".chip").forEach(x=>x.disabled=true);
+      if(it.onRight) it.onRight(row);
+      if(it.sayRight) speak(it.say(true));
+      solved++; upd(); if(solved===total) finishRoom(i);
+    } else { shake(b); miss(i, it.review); }
+  });
+}
+
+function roomArticle(){
+  const items=shuffle(ARTICLES).map(([w,a,e])=>({
+    q:`<span class="gap">?</span> ${esc(w)} <span class="en">${esc(e)}</span>`, opts:["ο","η","το"], ans:a,
+    review:`${a} ${w} (${e})`,
+    say:done=>done?`${a} ${w}`:w, sayRight:true,
+    onRight:row=>{row.querySelector(".gap").textContent=a}
+  }));
+  listRoom(1, items, items.length);
+}
+
+function roomPhrase(){
+  const items=PHRASES.map(([a,v,b,e])=>({
+    q:`${esc(a)}<span class="gap">…</span>${esc(b)}<span class="en">${esc(e)}</span>`,
+    opts:shuffle([v,...shuffle(VERBS.filter(x=>x!==v)).slice(0,2)]), ans:v,
+    review:`${a}${v}${b}`,
+    say:done=>done?`${a}${v}${b}`:`${a.trim()}, ${b.trim()}`, sayRight:true,
+    onRight:row=>{row.querySelector(".gap").textContent=v}
+  }));
+  listRoom(2, items, items.length);
+}
+
+function roomLetter(){
+  const items=LETTER.map(([s,t,why])=>({
+    q:`${esc(s)}<span class="en fb" hidden>${esc(why)}</span>`, opts:["Σωστό","Λάθος"], ans:t?"Σωστό":"Λάθος",
+    review:`${s} → ${t?"Σωστό":"Λάθος"} (${why})`,
+    say:()=>s,
+    onRight:row=>{row.querySelector(".fb").hidden=false}
+  }));
+  listRoom(3, items, items.length);
+}
+
+/* Lockbox */
+function lockbox(){
+  state.finished=false; drawMap();
+  const vals=[0,0,0,0];
+  $("#stage").innerHTML = `<section class="room lock" aria-labelledby="lt">
+    <div><span class="eyebrow">The lockbox</span><h2 id="lt" lang="el">Το Κουτί με τα Εισιτήρια</h2></div>
+    <p class="task">Put the digits in the order you found them: Σοκάκια, Μουσείο, Μαγαζί, Ταβέρνα.</p>
+    <div class="dials">${vals.map((v,k)=>`<div class="dial">
+      <button aria-label="Digit ${k+1} up" data-up="${k}">▲</button>
+      <output id="d${k}">0</output>
+      <button aria-label="Digit ${k+1} down" data-dn="${k}">▼</button></div>`).join("")}</div>
+    <div class="center"><button class="next" id="tryBtn">Open</button></div>
+    <p class="msg" id="lmsg" aria-live="polite"></p>
+    <div id="endSlot"></div></section>`;
+  const set=(k,d)=>{vals[k]=(vals[k]+d+10)%10; $("#d"+k).textContent=vals[k];};
+  document.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>set(+b.dataset.up,1));
+  document.querySelectorAll("[data-dn]").forEach(b=>b.onclick=()=>set(+b.dataset.dn,-1));
+  $("#tryBtn").onclick=()=>{
+    const code=ROOMS.map(r=>r.digit).join("");
+    if(vals.join("")===code){ $("#lmsg").className="msg good"; $("#lmsg").textContent="Κλικ! Το κουτί άνοιξε!"; speak("Κλικ! Το κουτί άνοιξε! Καλό ταξίδι!"); ending(); }
+    else { $("#lmsg").className="msg bad"; $("#lmsg").textContent="Λάθος κωδικός. Check the order of the doors above."; }
+  };
+}
+
+function ending(){
+  state.finished=true; drawMap();
+  const total=state.misses.reduce((n,m)=>n+m.length,0);
+  let rev;
+  if(!total) rev=`<p style="margin:0">You did not miss a single item. <b lang="el">Τέλεια!</b></p>`;
+  else rev = `<p style="margin:0">Practise these before the next lesson:</p>` +
+    state.misses.map((m,i)=>m.length?`<div><b lang="el">${ROOMS[i].gr}</b><ul>${m.map(x=>`<li lang="el">${esc(x)}</li>`).join("")}</ul></div>`:"").join("");
+  $("#endSlot").innerHTML = `<div class="review">
+    <h3 style="font-size:1.4rem" lang="el">Καλό ταξίδι!</h3>
+    <p style="margin:0">You have your ticket and you are on the boat with Ελένη. Η μέρα ήταν κουραστική, αλλά πολύ διασκεδαστική!</p>
+    ${rev}
+    <div><button class="restart" id="again">Play again</button></div></div>`;
+  $("#again").onclick=()=>{ state={room:0,done:[false,false,false,false],errors:{},misses:[[],[],[],[]],finished:false}; render(); window.scrollTo({top:0}); };
+}
+
+function render(){
+  drawMap();
+  [roomMatch,roomArticle,roomPhrase,roomLetter,lockbox][state.room]();
+}
+render();
+</script>
