@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Πρώτη μέρα στο σχολείο · Greek Word Games</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=GFS+Didot&family=Nunito:wght@400;600;800&family=Noto+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parch:#F4F1EA; --char:#2F2F2F; --gold:#C6A75E; --navy:#08314A; --teal:#005F7B;
+  --card:#FFFDF8; --line:#E3DCCB; --ok:#2E7D5B; --bad:#B24A3B;
+  --greek:"GFS Didot","Noto Serif",Georgia,serif;
+  --ui:"Nunito","Noto Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--parch);color:var(--char);font-family:var(--ui);font-size:17px;line-height:1.5}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+header{background:var(--navy);color:var(--parch);padding:22px 20px 0}
+.wrap{max-width:980px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{font-family:"Cormorant Garamond",var(--greek);font-weight:700;font-size:2.1rem;margin:0;line-height:1.1}
+h1 .gr{font-family:var(--greek);font-weight:400;color:var(--gold);display:block;font-size:1.6rem;margin-bottom:4px}
+.sub{opacity:.85;margin:6px 0 0;font-size:.95rem}
+.stars{background:rgba(255,255,255,.08);border:1px solid rgba(198,167,94,.5);border-radius:14px;padding:8px 14px;text-align:center;min-width:120px}
+.stars b{display:block;font-size:1.6rem;color:var(--gold);line-height:1.1}
+.stars small{font-size:.75rem;opacity:.8;text-transform:uppercase;letter-spacing:.08em}
+nav{display:flex;gap:4px;margin-top:18px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{background:transparent;border:0;color:var(--parch);opacity:.75;padding:10px 14px;border-radius:12px 12px 0 0;font-weight:700;white-space:nowrap}
+nav button.on{background:var(--parch);color:var(--navy);opacity:1}
+nav button .n{display:inline-block;width:20px;height:20px;border-radius:50%;background:var(--gold);color:var(--navy);font-size:.75rem;line-height:20px;text-align:center;margin-right:6px}
+main{padding:24px 20px 60px}
+section{display:none}
+section.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+h2{font-family:"Cormorant Garamond",serif;color:var(--navy);font-size:1.8rem;margin:0 0 4px}
+.lead{margin:0 0 18px;color:#555}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.btn{background:var(--teal);color:#fff;border:0;border-radius:12px;padding:10px 18px;font-weight:800}
+.btn.ghost{background:transparent;color:var(--teal);border:2px solid var(--teal)}
+.btn.gold{background:var(--gold);color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spk{background:none;border:1.5px solid var(--teal);color:var(--teal);border-radius:50%;width:34px;height:34px;display:inline-grid;place-items:center;padding:0;flex:none}
+.spk svg{width:16px;height:16px}
+
+/* STORY */
+.story{font-family:var(--greek);font-size:1.35rem;line-height:1.9}
+.story p{margin:0 0 14px}
+.story h3{font-family:var(--greek);color:var(--teal);font-size:1.7rem;margin:0 0 12px;font-weight:400}
+.w{background:linear-gradient(transparent 60%,rgba(198,167,94,.45) 60%);border:0;padding:0 2px;font:inherit;color:var(--navy);font-weight:700;border-radius:3px}
+.w:hover,.w.seen{background:rgba(198,167,94,.35)}
+.tip{position:fixed;z-index:20;background:var(--navy);color:var(--parch);border-radius:14px;padding:12px 14px;max-width:290px;box-shadow:0 10px 30px rgba(0,0,0,.25);font-family:var(--ui);font-size:.95rem;display:none}
+.tip .g{font-family:var(--greek);font-size:1.35rem;color:var(--gold)}
+.tip .p{opacity:.8;font-size:.85rem}
+.found{margin-top:16px;font-family:var(--ui);font-size:.95rem;color:#555}
+.bar{height:10px;background:var(--line);border-radius:10px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
+.eng{font-family:var(--ui);font-size:.95rem;color:#666;font-style:italic;margin-top:-8px;display:none}
+.showEng .eng{display:block}
+
+/* CARDS */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:20px;padding:6px 14px;font-weight:700;color:var(--navy)}
+.chip.on{background:var(--navy);color:var(--parch);border-color:var(--navy)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.fc{perspective:900px;height:230px;border:0;background:none;padding:0;text-align:left}
+.fc .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.fc.flip .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:16px;border:1px solid var(--line);display:flex;flex-direction:column}
+.front{background:var(--card);align-items:center;justify-content:center;text-align:center}
+.front .gw{font-family:var(--greek);font-size:1.75rem;color:var(--navy);line-height:1.2}
+.front .art{font-size:.95rem;color:var(--teal)}
+.front .hint{position:absolute;bottom:10px;font-size:.75rem;color:#999}
+.back{background:var(--navy);color:var(--parch);transform:rotateY(180deg);font-size:.88rem;gap:5px;overflow:auto}
+.back .en{font-weight:800;color:var(--gold);font-size:1.1rem}
+.back .ex{font-family:var(--greek);font-size:1.02rem}
+.back .exen{opacity:.75;font-style:italic}
+.back .hook{margin-top:auto;border-top:1px solid rgba(255,255,255,.15);padding-top:6px;opacity:.9}
+.tag{position:absolute;top:10px;left:12px;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#aaa}
+.known{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);background:#fff;color:transparent;font-weight:800;font-size:.85rem;padding:0}
+.known.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.key{font-size:.85rem;color:#666;margin:-6px 0 14px}
+
+/* MATCH */
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:640px}
+.tile{height:92px;border-radius:14px;border:0;background:var(--teal);color:#fff;font-weight:800;position:relative;transition:transform .15s}
+.tile::after{content:"🌿";font-size:1.4rem;opacity:.6}
+.tile.up{background:var(--card);color:var(--navy);border:2px solid var(--gold)}
+.tile.up::after,.tile.done::after{content:none}
+.tile .t{display:none;padding:6px;font-size:.95rem;line-height:1.2}
+.tile.up .t,.tile.done .t{display:block}
+.tile .t.gk{font-family:var(--greek);font-size:1.2rem;font-weight:400}
+.tile.done{background:#E6F2EC;color:var(--ok);border:2px solid var(--ok);cursor:default}
+.tile.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.stat{display:flex;gap:18px;margin:0 0 14px;font-weight:700;color:var(--navy)}
+
+/* QUESTIONS */
+.q{font-family:var(--greek);font-size:1.45rem;color:var(--navy);margin:6px 0 18px;line-height:1.5}
+.q .blank{display:inline-block;min-width:110px;border-bottom:3px solid var(--gold);text-align:center;color:var(--teal)}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.opt{background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px;font-family:var(--greek);font-size:1.2rem;color:var(--navy);text-align:center}
+.opt.en{font-family:var(--ui);font-size:1rem;font-weight:700}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt.right{background:#E6F2EC;border-color:var(--ok);color:var(--ok)}
+.opt.wrong{background:#F8E7E4;border-color:var(--bad);color:var(--bad)}
+.fb{min-height:28px;margin-top:14px;font-weight:700}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--bad)}
+.prog{font-size:.85rem;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.qen{font-style:italic;color:#666;margin:-10px 0 16px;display:none}
+
+/* UNSCRAMBLE */
+.clue{font-size:1.15rem;font-weight:800;color:var(--teal);margin:6px 0 16px}
+.slots{display:flex;gap:6px;flex-wrap:wrap;min-height:58px;margin-bottom:14px}
+.slot{width:44px;height:52px;border-bottom:3px solid var(--navy);font-family:var(--greek);font-size:1.6rem;display:grid;place-items:center;color:var(--navy)}
+.letters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.let{width:48px;height:52px;border-radius:12px;border:0;background:var(--gold);color:var(--navy);font-family:var(--greek);font-size:1.5rem;box-shadow:0 3px 0 #A5893F}
+.let:disabled{opacity:.25;box-shadow:none}
+.slots.good .slot{color:var(--ok);border-color:var(--ok)}
+.slots.badw .slot{color:var(--bad);border-color:var(--bad)}
+
+/* BELL */
+.clock{font-size:3rem;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.clock.hurry{color:var(--bad)}
+.bigword{font-family:var(--greek);font-size:2.3rem;color:var(--navy);text-align:center;margin:10px 0 18px}
+.bigword.en{font-family:var(--ui);font-weight:800;font-size:1.6rem}
+.result{text-align:center;padding:20px}
+.result .big{font-size:3rem;font-weight:800;color:var(--gold)}
+.missed{margin-top:12px;text-align:left;font-size:.95rem}
+.missed span{font-family:var(--greek);color:var(--navy);font-size:1.1rem}
+footer{text-align:center;color:#999;font-size:.85rem;padding:20px}
+@media (max-width:560px){
+  .mgrid{grid-template-columns:repeat(3,1fr)}
+  .opts{grid-template-columns:1fr}
+  h1{font-size:1.6rem}
+  .story{font-size:1.2rem}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1><span class="gr">Πρώτη μέρα στο σχολείο</span>First Day at School</h1>
+        <p class="sub">22 words · read the story, learn the cards, then play the games</p>
+      </div>
+      <div class="stars"><small>Your stars</small><b id="starCount">0</b></div>
+    </div>
+    <nav id="nav">
+      <button data-t="story" class="on"><span class="n">1</span>Story</button>
+      <button data-t="cards"><span class="n">2</span>Word Cards</button>
+      <button data-t="match"><span class="n">3</span>Memory Match</button>
+      <button data-t="fill"><span class="n">4</span>Fill the Gap</button>
+      <button data-t="scram"><span class="n">5</span>Unscramble</button>
+      <button data-t="bell"><span class="n">6</span>Beat the Bell</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- STORY -->
+<section id="story" class="on">
+  <h2>Step 1 · Meet the words in a story</h2>
+  <p class="lead">Nikos starts at a new school. Tap every gold word to see what it means. Can you find all 22?</p>
+  <div class="panel">
+    <div class="row" style="justify-content:flex-end;margin-bottom:6px">
+      <button class="btn ghost" id="engToggle">Show English</button>
+    </div>
+    <div class="story" id="storyBox"></div>
+    <div class="found"><span id="foundTxt">Words found: 0 / 22</span><div class="bar"><i id="foundBar"></i></div></div>
+  </div>
+</section>
+
+<!-- CARDS -->
+<section id="cards">
+  <h2>Step 2 · Word cards</h2>
+  <p class="lead">Tap a card to flip it. Tap the small circle when you know the word.</p>
+  <p class="key">Sound guide: <b>dh</b> = "th" in <i>this</i> (δ) · <b>th</b> = "th" in <i>think</i> (θ) · CAPITALS = the stressed syllable</p>
+  <div class="filters" id="filters"></div>
+  <div class="row" style="margin-bottom:14px"><span id="knownTxt" style="font-weight:700;color:var(--navy)"></span></div>
+  <div class="grid" id="cardGrid"></div>
+</section>
+
+<!-- MATCH -->
+<section id="match">
+  <h2>Game · Memory match</h2>
+  <p class="lead">Turn over two tiles. Find the Greek word and its English partner.</p>
+  <div class="stat"><span>Moves: <span id="mMoves">0</span></span><span>Pairs: <span id="mPairs">0</span> / 6</span></div>
+  <div class="mgrid" id="mGrid"></div>
+  <div class="row" style="margin-top:16px"><button class="btn" id="mNew">New game</button><span id="mMsg" style="font-weight:800;color:var(--ok)"></span></div>
+</section>
+
+<!-- FILL -->
+<section id="fill">
+  <h2>Exercise · Fill the gap</h2>
+  <p class="lead">Choose the word that completes the sentence.</p>
+  <div class="panel" id="fillBox"></div>
+</section>
+
+<!-- SCRAMBLE -->
+<section id="scram">
+  <h2>Exercise · Unscramble</h2>
+  <p class="lead">Read the English clue. Tap the letters in the right order to spell the Greek word. Watch the accents!</p>
+  <div class="panel" id="scrBox"></div>
+</section>
+
+<!-- BELL -->
+<section id="bell">
+  <h2>Game · Beat the bell</h2>
+  <p class="lead">The break bell rings in 60 seconds! Answer as many as you can before the διάλειμμα.</p>
+  <div class="panel" id="bellBox"></div>
+</section>
+
+</main>
+<footer>Glossomathia · Play · Listen · Learn 🌿</footer>
+<div class="tip" id="tip"></div>
+
+<script>
+const W = [
+ {id:"sympm", gr:"συμπαθητικός", art:"", en:"likeable, nice (he)", pr:"sim·ba·thi·ti·KOS", ex:"Ο καινούριος συμμαθητής μου είναι πολύ συμπαθητικός.", exen:"My new classmate is very nice.", hook:"Looks like English \"sympathetic\", but in Greek it means someone you simply like.", g:"Describing people", pair:"sympf"},
+ {id:"sympf", gr:"συμπαθητική", art:"", en:"likeable, nice (she)", pr:"sim·ba·thi·ti·KI", ex:"Η καθηγήτρια είναι πολύ συμπαθητική.", exen:"The teacher is very nice.", hook:"Same word for a woman: the ending changes from ‑ός to ‑ή.", g:"Describing people", pair:"sympm"},
+ {id:"evgm", gr:"ευγενικός", art:"", en:"polite, kind (he)", pr:"ev·ye·ni·KOS", ex:"Ο Πέτρος είναι πάντα ευγενικός.", exen:"Petros is always polite.", hook:"ευ (well) + γένος (birth): someone with good manners, \"well born\".", g:"Describing people", pair:"evgf"},
+ {id:"evgf", gr:"ευγενική", art:"", en:"polite, kind (she)", pr:"ev·ye·ni·KI", ex:"Η Μαρία λέει πάντα «ευχαριστώ». Είναι ευγενική.", exen:"Maria always says thank you. She is polite.", hook:"For a woman: ‑ός becomes ‑ή.", g:"Describing people", pair:"evgm"},
+ {id:"fil", gr:"φιλικός", art:"", en:"friendly", pr:"fi·li·KOS", ex:"Ο σκύλος μας είναι πολύ φιλικός.", exen:"Our dog is very friendly.", hook:"φίλος = friend. Same root as philosophy, \"love of wisdom\".", g:"Describing people"},
+ {id:"afst", gr:"αυστηρός", art:"", en:"strict", pr:"af·sti·ROS", ex:"Ο καθηγητής των μαθηματικών είναι αυστηρός.", exen:"The maths teacher is strict.", hook:"English \"austere\" comes from this word.", g:"Describing people"},
+ {id:"diaf", gr:"διαφορετικός", art:"", en:"different", pr:"dhia·fo·re·ti·KOS", ex:"Ο αδελφός μου είναι πολύ διαφορετικός από μένα.", exen:"My brother is very different from me.", hook:"Think of the English word \"differ\": both mean to carry apart.", g:"Describing people"},
+ {id:"sig", gr:"σίγουρος", art:"", en:"sure, certain", pr:"SI·gu·ros", ex:"Είσαι σίγουρος; Ναι, είμαι σίγουρος!", exen:"Are you sure? Yes, I'm sure!", hook:"It came into Greek from Latin securus, like English \"secure\".", g:"Describing people"},
+ {id:"kath", gr:"καθηγητής", art:"ο", en:"teacher (man)", pr:"ka·thi·yi·TIS", ex:"Ο καθηγητής των αγγλικών λέγεται κύριος Παύλος.", exen:"The English teacher is called Mr Pavlos.", hook:"From ηγούμαι, to lead. A teacher leads the way (like \"hegemony\").", g:"People at school", pair:"kathf"},
+ {id:"kathf", gr:"καθηγήτρια", art:"η", en:"teacher (woman)", pr:"ka·thi·YI·tri·a", ex:"Η καθηγήτρια μας λέει πάντα «μπράβο».", exen:"Our teacher always says \"well done\".", hook:"‑τρια is a common ending for women: καθηγήτρια, μαθήτρια.", g:"People at school", pair:"kath"},
+ {id:"symm", gr:"συμμαθητής", art:"ο", en:"classmate", pr:"si·ma·thi·TIS", ex:"Ο Άρης είναι ο συμμαθητής μου.", exen:"Aris is my classmate.", hook:"συν (together) + μαθητής (student): a student who learns with you.", g:"People at school"},
+ {id:"engo", gr:"εγγονός", art:"ο", en:"grandson", pr:"en·go·NOS", ex:"Ο Νίκος είναι ο εγγονός της κυρίας Ελένης.", exen:"Nikos is Mrs Eleni's grandson.", hook:"Same root as genealogy: γένος, family line. γγ sounds like \"ng\".", g:"People at school"},
+ {id:"pare", gr:"παρέα", art:"η", en:"company, group of friends", pr:"pa·RE·a", ex:"Έχω πολύ καλή παρέα στο σχολείο.", exen:"I have a really good group of friends at school.", hook:"Your παρέα is your crew, the people you spend time with.", g:"School life"},
+ {id:"kpar", gr:"κάνω παρέα", art:"", en:"I hang out (with)", pr:"KA·no pa·RE·a", ex:"Το Σάββατο κάνω παρέα με τους φίλους μου.", exen:"On Saturday I hang out with my friends.", hook:"Literally \"I make company\".", g:"School life"},
+ {id:"diale", gr:"διάλειμμα", art:"το", en:"break, recess", pr:"DHYA·li·ma", ex:"Στο διάλειμμα παίζουμε μπάλα.", exen:"At break we play ball.", hook:"From λείπω, to leave out: a gap between lessons, like \"ellipsis\".", g:"School life"},
+ {id:"melet", gr:"μελετάω", art:"", en:"I study", pr:"me·le·TA·o", ex:"Μελετάω ελληνικά κάθε μέρα.", exen:"I study Greek every day.", hook:"μελέτη means study, care, attention.", g:"School life"},
+ {id:"logo", gr:"λογοτεχνία", art:"η", en:"literature", pr:"lo·yo·teh·NI·a", ex:"Το αγαπημένο μου μάθημα είναι η λογοτεχνία.", exen:"My favourite subject is literature.", hook:"λόγος (word) + τέχνη (art): the art of words.", g:"School life"},
+ {id:"endi", gr:"ενδιαφέρον", art:"", en:"interesting", pr:"en·dhia·FE·ron", ex:"Το βιβλίο είναι πολύ ενδιαφέρον.", exen:"The book is very interesting.", hook:"Also a noun: το ενδιαφέρον = interest.", g:"School life"},
+ {id:"pal", gr:"παλιός", art:"", en:"old (for things)", pr:"pa·LYOS", ex:"Ο σταθμός είναι πολύ παλιός.", exen:"The station is very old.", hook:"Like \"paleo\" in paleontology. Opposite: καινούριος.", g:"Opposites"},
+ {id:"kain", gr:"καινούριος", art:"", en:"new", pr:"ke·NU·ryos", ex:"Ο καινούριος μαθητής ήρθε σήμερα.", exen:"The new student came today.", hook:"From καινός, new. Opposite: παλιός.", g:"Opposites"},
+ {id:"dysk", gr:"δύσκολο", art:"", en:"difficult", pr:"DHI·sko·lo", ex:"Το μάθημα είναι δύσκολο.", exen:"The lesson is difficult.", hook:"δυσ‑ means bad or hard, like dysfunction. Opposite: εύκολο.", g:"Opposites"},
+ {id:"efk", gr:"εύκολο", art:"", en:"easy", pr:"EF·ko·lo", ex:"Το τεστ ήταν εύκολο!", exen:"The test was easy!", hook:"ευ‑ means well or good, like euphoria. Opposite: δύσκολο.", g:"Opposites"}
+];
+const byId = Object.fromEntries(W.map(w=>[w.id,w]));
+
+/* ---------- helpers ---------- */
+const $ = s=>document.querySelector(s);
+const shuffle = a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const store = {
+  get(k,d){try{const v=localStorage.getItem("gm22_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("gm22_"+k,JSON.stringify(v))}catch(e){}}
+};
+let stars = store.get("stars",0);
+function addStars(n){stars+=n;store.set("stars",stars);$("#starCount").textContent=stars;
+  const el=$("#starCount");el.animate([{transform:"scale(1.5)"},{transform:"scale(1)"}],{duration:350});}
+$("#starCount").textContent=stars;
+const spkSVG='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>';
+function say(t){try{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="el-GR";u.rate=.85;
+  const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith("el"));if(v)u.voice=v;speechSynthesis.speak(u);}catch(e){}}
+function full(w){return (w.art?w.art+" ":"")+w.gr}
+
+/* ---------- tabs ---------- */
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===b.dataset.t));
+  hideTip(); if(b.dataset.t!=="bell") stopBell(true);
+});
+
+/* ---------- STORY ---------- */
+const story = [
+ ["h","Πρώτη μέρα στο [καινούριο|kain] σχολείο"],
+ ["p","Ο Νίκος είναι ο [εγγονός|engo] της κυρίας Ελένης. Σήμερα είναι η πρώτη του μέρα σε ένα καινούριο σχολείο. Το κτίριο είναι [παλιό|pal], αλλά πολύ ωραίο.","Nikos is Mrs Eleni's grandson. Today is his first day at a new school. The building is old, but very nice."],
+ ["p","Η [καθηγήτρια|kathf] της [λογοτεχνίας|logo] είναι πολύ [συμπαθητική|sympf] και [ευγενική|evgf]. Τους δίνει ένα [ενδιαφέρον|endi] βιβλίο.","The literature teacher is very nice and polite. She gives them an interesting book."],
+ ["p","Στο [διάλειμμα|diale], ένας [συμμαθητής|symm] του, ο Άρης, έρχεται και λέει: «Γεια! Θέλεις να [κάνουμε παρέα|kpar];» Ο Άρης είναι [φιλικός|fil], [ευγενικός|evgm] και πολύ [συμπαθητικός|sympm]. Είναι λίγο [διαφορετικός|diaf] από τα άλλα παιδιά: διαβάζει ποιήματα στο διάλειμμα!","At break, a classmate, Aris, comes and says: “Hi! Do you want to hang out?” Aris is friendly, polite and very likeable. He is a little different from the other kids: he reads poems at break!"],
+ ["p","Το βράδυ η γιαγιά ρωτάει: «Πώς ήταν; Ήταν δύσκολο;» Ο Νίκος απαντάει: «Όχι, γιαγιά, ήταν [εύκολο|efk]! Έχω καινούρια [παρέα|pare].» «Είσαι [σίγουρος|sig];» «Ναι, γιαγιά, είμαι σίγουρος!»","In the evening grandma asks: “How was it? Was it difficult?” Nikos answers: “No, grandma, it was easy! I have new friends.” “Are you sure?” “Yes, grandma, I'm sure!”"]
+];
+story.splice(2,0,["p","Ο [καθηγητής|kath] των μαθηματικών είναι [αυστηρός|afst]. Λέει: «Τα μαθηματικά δεν είναι [δύσκολο|dysk] μάθημα. Αλλά πρέπει να μελετάτε κάθε μέρα!» Ο Νίκος σκέφτεται: «Εντάξει, [μελετάω|melet] κάθε μέρα.»","The maths teacher is strict. He says: “Maths is not a difficult subject. But you must study every day!” Nikos thinks: “OK, I study every day.”"]);
+
+const found = new Set(store.get("found",[]));
+function renderStory(){
+  const box=$("#storyBox");box.innerHTML="";
+  story.forEach(([t,txt,en])=>{
+    const el=document.createElement(t==="h"?"h3":"p");
+    el.innerHTML=txt.replace(/\[([^|\]]+)\|(\w+)\]/g,(m,s,id)=>`<button class="w${found.has(id)?" seen":""}" data-id="${id}">${s}</button>`);
+    box.appendChild(el);
+    if(en){const e=document.createElement("div");e.className="eng";e.textContent=en;box.appendChild(e);}
+  });
+  box.querySelectorAll(".w").forEach(b=>b.onclick=ev=>{ev.stopPropagation();showTip(b,byId[b.dataset.id]);
+    if(!found.has(b.dataset.id)){found.add(b.dataset.id);store.set("found",[...found]);
+      box.querySelectorAll(`.w[data-id="${b.dataset.id}"]`).forEach(x=>x.classList.add("seen"));
+      updFound(); if(found.size===W.length) addStars(5);}
+  });
+  updFound();
+}
+function updFound(){$("#foundTxt").textContent=`Words found: ${found.size} / ${W.length}`+(found.size===W.length?" · All found! +5 stars":"");$("#foundBar").style.width=(found.size/W.length*100)+"%";}
+function showTip(anchor,w){
+  const t=$("#tip");
+  t.innerHTML=`<div class="row" style="gap:8px"><span class="g">${full(w)}</span><button class="spk" style="border-color:var(--gold);color:var(--gold)" id="tipSpk">${spkSVG}</button></div>
+  <div class="p">${w.pr}</div><div style="font-weight:800;margin-top:4px">${w.en}</div><div style="opacity:.85;margin-top:6px;font-size:.85rem">${w.hook}</div>`;
+  t.style.display="block";
+  const r=anchor.getBoundingClientRect();
+  let x=Math.min(window.innerWidth-t.offsetWidth-10,Math.max(10,r.left));
+  let y=r.bottom+8; if(y+t.offsetHeight>window.innerHeight-10) y=r.top-t.offsetHeight-8;
+  t.style.left=x+"px";t.style.top=y+"px";
+  $("#tipSpk").onclick=e=>{e.stopPropagation();say(w.gr)};
+}
+function hideTip(){$("#tip").style.display="none"}
+document.addEventListener("click",e=>{if(!e.target.closest("#tip"))hideTip()});
+window.addEventListener("scroll",hideTip,{passive:true});
+$("#engToggle").onclick=()=>{const b=$("#storyBox");b.classList.toggle("showEng");$("#engToggle").textContent=b.classList.contains("showEng")?"Hide English":"Show English"};
+renderStory();
+
+/* ---------- CARDS ---------- */
+const groups=["All","People at school","Describing people","School life","Opposites"];
+let curG="All"; const known=new Set(store.get("known",[]));
+function renderFilters(){$("#filters").innerHTML=groups.map(g=>`<button class="chip${g===curG?" on":""}" data-g="${g}">${g}</button>`).join("");
+  document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{curG=c.dataset.g;renderFilters();renderCards()});}
+function renderCards(){
+  const list=W.filter(w=>curG==="All"||w.g===curG);
+  $("#cardGrid").innerHTML=list.map(w=>`
+   <div class="fc" data-id="${w.id}" role="button" tabindex="0"><div class="in">
+     <div class="face front"><span class="tag">${w.g}</span>
+       <button class="known${known.has(w.id)?" yes":""}" data-k="${w.id}" title="I know this">✓</button>
+       ${w.art?`<div class="art">${w.art}</div>`:""}<div class="gw">${w.gr}</div>
+       <div style="color:#888;font-size:.85rem;margin-top:4px">${w.pr}</div>
+       <button class="spk" data-s="${w.id}" style="margin-top:10px">${spkSVG}</button>
+       <span class="hint">tap to flip</span></div>
+     <div class="face back"><div class="en">${w.en}</div><div class="ex">${w.ex}</div><div class="exen">${w.exen}</div><div class="hook">${w.hook}</div></div>
+   </div></div>`).join("");
+  document.querySelectorAll(".fc").forEach(c=>{c.onclick=e=>{if(e.target.closest(".known,.spk"))return;c.classList.toggle("flip")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("flip")}}});
+  document.querySelectorAll(".spk[data-s]").forEach(b=>b.onclick=e=>{e.stopPropagation();say(byId[b.dataset.s].gr)});
+  document.querySelectorAll(".known").forEach(b=>b.onclick=e=>{e.stopPropagation();const id=b.dataset.k;
+    if(known.has(id)){known.delete(id)}else{known.add(id);addStars(1)} store.set("known",[...known]);b.classList.toggle("yes",known.has(id));updKnown();});
+  updKnown();
+}
+function updKnown(){$("#knownTxt").textContent=`I know ${known.size} of ${W.length} words`+(known.size===W.length?" · Bravo!":"")}
+renderFilters();renderCards();
+
+/* ---------- MATCH ---------- */
+let mOpen=[],mLock=false,mMoves=0,mPairs=0;
+function newMatch(){
+  // avoid putting he/she pairs together (same English stem would be confusing)
+  let pool=shuffle(W),pick=[];
+  for(const w of pool){if(pick.length===6)break;if(w.pair&&pick.some(p=>p.id===w.pair))continue;pick.push(w)}
+  const tiles=shuffle(pick.flatMap(w=>[{id:w.id,txt:w.gr,gk:true},{id:w.id,txt:w.en,gk:false}]));
+  mOpen=[];mLock=false;mMoves=0;mPairs=0;$("#mMoves").textContent=0;$("#mPairs").textContent=0;$("#mMsg").textContent="";
+  $("#mGrid").innerHTML=tiles.map((t,i)=>`<button class="tile" data-i="${i}" data-id="${t.id}" data-gk="${t.gk}"><span class="t ${t.gk?"gk":""}">${t.txt}</span></button>`).join("");
+  document.querySelectorAll(".tile").forEach(b=>b.onclick=()=>flipTile(b));
+}
+function flipTile(b){
+  if(mLock||b.classList.contains("up")||b.classList.contains("done"))return;
+  b.classList.add("up"); if(b.dataset.gk==="true") say(byId[b.dataset.id].gr);
+  mOpen.push(b);
+  if(mOpen.length===2){
+    mMoves++;$("#mMoves").textContent=mMoves;
+    const [a,c]=mOpen;
+    if(a.dataset.id===c.dataset.id&&a.dataset.gk!==c.dataset.gk){
+      a.classList.add("done");c.classList.add("done");a.classList.remove("up");c.classList.remove("up");mOpen=[];
+      mPairs++;$("#mPairs").textContent=mPairs;
+      if(mPairs===6){const s=mMoves<=9?3:mMoves<=13?2:1;addStars(s);$("#mMsg").textContent=`Μπράβο! Done in ${mMoves} moves · +${s} stars`;}
+    }else{mLock=true;setTimeout(()=>{a.classList.add("shake");c.classList.add("shake")},350);
+      setTimeout(()=>{a.classList.remove("up","shake");c.classList.remove("up","shake");mOpen=[];mLock=false},950);}
+  }
+}
+$("#mNew").onclick=newMatch;newMatch();
+
+/* ---------- FILL THE GAP ---------- */
+const FILL=[
+ ["Ο Άρης κάθεται δίπλα μου στην τάξη. Είναι ο ___ μου.","symm",["kath","engo","pare"],"Aris sits next to me in class. He is my classmate."],
+ ["Στο ___ παίζουμε μπάλα στην αυλή.","diale",["logo","pare","kpar"],"At break we play ball in the yard."],
+ ["Ο καθηγητής δεν χαμογελάει ποτέ. Είναι πολύ ___.","afst",["fil","efk","kain"],"The teacher never smiles. He is very strict."],
+ ["Η ___ μας λέει πάντα «μπράβο».","kathf",["logo","pare","symm"],"Our teacher always says \"well done\"."],
+ ["Κάθε απόγευμα ___ ελληνικά για μία ώρα.","melet",["kpar","sig","diaf"],"Every afternoon I study Greek for an hour."],
+ ["Αυτό το βιβλίο είναι πολύ ___! Δεν μπορώ να σταματήσω.","endi",["dysk","pal","afst"],"This book is very interesting! I can't stop."],
+ ["Το τεστ δεν ήταν δύσκολο. Ήταν ___.","efk",["dysk","endi","pal"],"The test wasn't difficult. It was easy."],
+ ["Τα αρχαία ελληνικά είναι λίγο ___ για μένα.","dysk",["efk","kain","fil"],"Ancient Greek is a bit difficult for me."],
+ ["Ο ___ μαθητής ήρθε σήμερα για πρώτη φορά.","kain",["pal","afst","sig"],"The new student came today for the first time."],
+ ["Ο σταθμός είναι πολύ ___. Είναι από το 1900!","pal",["kain","fil","sig"],"The station is very old. It is from 1900!"],
+ ["Ο Νίκος είναι ο ___ της κυρίας Ελένης.","engo",["symm","kath","kathf"],"Nikos is Mrs Eleni's grandson."],
+ ["«Είσαι ___;» «Ναι, το ξέρω!»","sig",["diaf","efk","fil"],"\"Are you sure?\" \"Yes, I know it!\""],
+ ["Το Σάββατο ___ με τους φίλους μου στο πάρκο.","kpar",["melet","pare","diale"],"On Saturday I hang out with my friends in the park."],
+ ["Ο σκύλος μας είναι πολύ ___. Αγαπάει όλους!","fil",["afst","dysk","pal"],"Our dog is very friendly. He loves everyone!"],
+ ["Το αγαπημένο μου μάθημα είναι η ___.","logo",["pare","kathf","diale"],"My favourite subject is literature."],
+ ["Η Μαρία λέει πάντα «ευχαριστώ» και «παρακαλώ». Είναι ___.","evgf",["evgm","afst","kain"],"Maria always says thank you and please. She is polite."],
+ ["Η καινούρια γειτόνισσα είναι πολύ ___. Όλοι τη συμπαθούν!","sympf",["sympm","pal","dysk"],"The new neighbour (a woman) is very nice. Everyone likes her!"],
+ ["Ο Πέτρος λέει πάντα «ευχαριστώ». Είναι ___.","evgm",["evgf","dysk","logo"],"Petros always says thank you. He is polite."],
+ ["Ο αδελφός μου κι εγώ δεν είμαστε ίδιοι. Είναι πολύ ___ από μένα.","diaf",["sig","efk","fil"],"My brother and I are not the same. He is very different from me."],
+ ["Ο ___ των αγγλικών λέγεται κύριος Παύλος.","kath",["kathf","logo","pare"],"The English teacher (a man) is called Mr Pavlos."],
+ ["Έχω πολύ καλή ___ στο σχολείο. Είμαστε πέντε φίλοι.","pare",["diale","logo","kathf"],"I have a really good group at school. We are five friends."],
+ ["Ο καινούριος γείτονας είναι πολύ ___. Όλοι τον συμπαθούν.","sympm",["sympf","efk","pal"],"The new neighbour (a man) is very nice. Everyone likes him."]
+];
+let fQ=[],fI=0,fScore=0;
+function startFill(){fQ=shuffle(FILL).slice(0,10);fI=0;fScore=0;showFill();}
+function showFill(){
+  const box=$("#fillBox");
+  if(fI>=fQ.length){const s=fScore>=9?3:fScore>=7?2:fScore>=5?1:0;if(s)addStars(s);
+    box.innerHTML=`<div class="result"><div class="prog">Finished</div><div class="big">${fScore} / ${fQ.length}</div>
+    <p>${fScore>=9?"Εξαιρετικά! Excellent!":fScore>=7?"Πολύ καλά! Very good!":"Καλή προσπάθεια! Good try, play again!"}${s?` · +${s} stars`:""}</p>
+    <button class="btn" id="fAgain">Play again</button></div>`;$("#fAgain").onclick=startFill;return;}
+  const [sent,ans,dis,en]=fQ[fI];
+  const opts=shuffle([ans,...dis]);
+  box.innerHTML=`<div class="prog">Question ${fI+1} of ${fQ.length} · Score ${fScore}</div>
+   <div class="q">${sent.replace("___",'<span class="blank">?</span>')}</div>
+   <div class="qen" id="fEn">${en}</div>
+   <div class="opts">${opts.map(o=>`<button class="opt" data-o="${o}">${byId[o].gr}</button>`).join("")}</div>
+   <div class="fb" id="fFb"></div><div class="row" style="margin-top:8px"><button class="btn" id="fNext" style="display:none">Next</button></div>`;
+  box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    box.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(x.dataset.o===ans)x.classList.add("right")});
+    const ok=b.dataset.o===ans; if(!ok)b.classList.add("wrong"); else fScore++;
+    box.querySelector(".blank").textContent=byId[ans].gr; say(sent.replace("___",byId[ans].gr));
+    $("#fEn").style.display="block";
+    const fb=$("#fFb");fb.className="fb "+(ok?"ok":"no");fb.textContent=ok?"Σωστά! Correct!":`Not quite. The answer is ${byId[ans].gr} (${byId[ans].en}).`;
+    $("#fNext").style.display="inline-block";
+  });
+  $("#fNext").onclick=()=>{fI++;showFill()};
+}
+startFill();
+
+/* ---------- UNSCRAMBLE ---------- */
+let sQ=[],sI=0,sBuilt=[],sScore=0;
+function startScr(){sQ=shuffle(W.filter(w=>!w.gr.includes(" "))).slice(0,8);sI=0;sScore=0;showScr();}
+function showScr(){
+  const box=$("#scrBox");
+  if(sI>=sQ.length){const s=sScore>=7?3:sScore>=5?2:sScore>=3?1:0;if(s)addStars(s);
+    box.innerHTML=`<div class="result"><div class="prog">Finished</div><div class="big">${sScore} / ${sQ.length}</div><p>${s?`+${s} stars`:"Keep practising!"}</p><button class="btn" id="sAgain">Play again</button></div>`;
+    $("#sAgain").onclick=startScr;return;}
+  const w=sQ[sI];const letters=[...w.gr];let mixed=shuffle(letters.map((l,i)=>({l,i})));
+  if(mixed.map(x=>x.l).join("")===w.gr) mixed=mixed.reverse();
+  sBuilt=[];
+  box.innerHTML=`<div class="prog">Word ${sI+1} of ${sQ.length} · Score ${sScore}</div>
+   <div class="clue">${w.en}${w.art?` <span style="color:#999;font-weight:600">(${w.art} …)</span>`:""}</div>
+   <div class="slots" id="slots">${letters.map(()=>'<div class="slot"></div>').join("")}</div>
+   <div class="letters">${mixed.map((x,k)=>`<button class="let" data-k="${k}">${x.l}</button>`).join("")}</div>
+   <div class="row"><button class="btn ghost" id="sBack">Undo</button><button class="btn ghost" id="sHint">Hint</button><button class="btn ghost" id="sSkip">Skip</button></div>
+   <div class="fb" id="sFb"></div>`;
+  const slots=[...box.querySelectorAll(".slot")];let usedHint=false;
+  const draw=()=>slots.forEach((s,i)=>s.textContent=sBuilt[i]?sBuilt[i].l:"");
+  box.querySelectorAll(".let").forEach(b=>b.onclick=()=>{
+    if(sBuilt.length>=letters.length)return;
+    sBuilt.push({l:b.textContent,b});b.disabled=true;draw();
+    if(sBuilt.length===letters.length){
+      const word=sBuilt.map(x=>x.l).join("");
+      if(word===w.gr){$("#slots").classList.add("good");if(!usedHint)sScore++;$("#sFb").className="fb ok";$("#sFb").textContent=`Σωστά! ${full(w)} · ${w.pr}`;say(w.gr);
+        setTimeout(()=>{sI++;showScr()},1600);}
+      else{$("#slots").classList.add("badw");$("#sFb").className="fb no";$("#sFb").textContent="Not yet. Tap Undo and try again.";}
+    }
+  });
+  $("#sBack").onclick=()=>{const x=sBuilt.pop();if(x)x.b.disabled=false;$("#slots").classList.remove("badw");$("#sFb").textContent="";draw();};
+  $("#sHint").onclick=()=>{usedHint=true;$("#sFb").className="fb";$("#sFb").style.color="var(--teal)";$("#sFb").textContent=`Starts with “${letters[0]}”. Sounds like: ${w.pr}`;say(w.gr);};
+  $("#sSkip").onclick=()=>{$("#sFb").className="fb no";$("#sFb").textContent=`The word was ${full(w)}.`;setTimeout(()=>{sI++;showScr()},1400);};
+}
+startScr();
+
+/* ---------- BEAT THE BELL ---------- */
+let bTimer=null,bLeft=60,bScore=0,bMiss=[],bCur=null,bBest=store.get("best",0);
+function bellIntro(){
+  $("#bellBox").innerHTML=`<div class="result"><div class="prog">Best score: ${bBest}</div>
+   <p style="max-width:460px;margin:10px auto 18px">You see a word in Greek or in English. Pick its partner as fast as you can. Every right answer is a point. A wrong answer costs 3 seconds!</p>
+   <button class="btn gold" id="bGo">Start the clock</button></div>`;
+  $("#bGo").onclick=startBell;
+}
+function startBell(){bLeft=60;bScore=0;bMiss=[];nextBell();tickDraw();
+  clearInterval(bTimer);bTimer=setInterval(()=>{bLeft--;tickDraw();if(bLeft<=0)endBell()},1000);}
+function tickDraw(){const c=$("#bClock");if(c){c.textContent=`0:${String(Math.max(0,bLeft)).padStart(2,"0")}`;c.classList.toggle("hurry",bLeft<=10)}}
+function nextBell(){
+  const w=W[Math.floor(Math.random()*W.length)];const toEn=Math.random()<.5;
+  const dis=shuffle(W.filter(x=>x.id!==w.id&&x.id!==w.pair)).slice(0,3);
+  const opts=shuffle([w,...dis]);bCur=w;
+  $("#bellBox").innerHTML=`<div class="row" style="justify-content:space-between"><div class="clock" id="bClock"></div><div style="font-weight:800;color:var(--teal);font-size:1.3rem">Points: ${bScore}</div></div>
+   <div class="bigword ${toEn?"":"en"}">${toEn?full(w):w.en}</div>
+   <div class="opts">${opts.map(o=>`<button class="opt ${toEn?"en":""}" data-id="${o.id}">${toEn?o.en:o.gr}</button>`).join("")}</div>`;
+  tickDraw(); if(toEn) say(w.gr);
+  document.querySelectorAll("#bellBox .opt").forEach(b=>b.onclick=()=>{
+    if(b.dataset.id===w.id){bScore++;b.classList.add("right");setTimeout(nextBell,250);}
+    else{b.classList.add("wrong");b.disabled=true;bLeft=Math.max(0,bLeft-3);tickDraw();if(!bMiss.includes(w))bMiss.push(w);if(bLeft<=0)endBell();}
+  });
+}
+function endBell(){clearInterval(bTimer);bTimer=null;
+  const s=bScore>=20?3:bScore>=14?2:bScore>=8?1:0;if(s)addStars(s);
+  const nb=bScore>bBest;if(nb){bBest=bScore;store.set("best",bBest)}
+  $("#bellBox").innerHTML=`<div class="result"><div class="prog">Ντριιιν! The bell rang</div><div class="big">${bScore}</div>
+   <p>${nb?"New best score! ":""}${s?`+${s} stars`:"Try again to earn stars (8 points = 1 star)."}</p>
+   ${bMiss.length?`<div class="missed"><b>Words to review:</b><br>${bMiss.map(w=>`<span>${full(w)}</span> = ${w.en}`).join("<br>")}</div>`:""}
+   <div class="row" style="justify-content:center;margin-top:16px"><button class="btn gold" id="bAgain">Play again</button></div></div>`;
+  $("#bAgain").onclick=startBell;
+}
+function stopBell(reset){if(bTimer){clearInterval(bTimer);bTimer=null;if(reset)bellIntro();}}
+bellIntro();
+</script>
+</body>
+</html>
