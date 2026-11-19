@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Πρώτη μέρα στο σχολείο · Greek Word Games</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Nunito:wght@600;800;900&family=Noto+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#08314A; --teal:#00A6A6; --gold:#F5B700; --coral:#FF6B6B; --purple:#8E7CC3;
+  --pink:#FF8FC7; --green:#3DBE7A; --sky:#4FA3FF; --orange:#FF9F43;
+  --ink:#1F2A44; --ok:#22A06B; --bad:#E5484D;
+  --fun:"Comfortaa","Noto Sans",sans-serif;
+  --ui:"Nunito","Noto Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;color:var(--ink);font-family:var(--ui);font-size:17px;line-height:1.5}
+body{background:#FFF8EC;
+  background-image:radial-gradient(circle at 10% 20%,rgba(255,143,199,.18) 0 90px,transparent 91px),
+  radial-gradient(circle at 90% 40%,rgba(79,163,255,.16) 0 120px,transparent 121px),
+  radial-gradient(circle at 30% 85%,rgba(245,183,0,.18) 0 110px,transparent 111px),
+  radial-gradient(circle at 80% 90%,rgba(61,190,122,.16) 0 80px,transparent 81px);
+  background-attachment:fixed;min-height:100vh}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+.wrap{max-width:1020px;margin:0 auto;padding:0 18px}
+
+/* HEADER */
+header{background:linear-gradient(120deg,#6C5CE7 0%,#00A6A6 55%,#3DBE7A 100%);color:#fff;padding:22px 0 0;position:relative;overflow:hidden}
+header::before{content:"📚 ✏️ 🎒 🔔 ⭐ 📖 🍎 ✨";position:absolute;right:-20px;top:6px;font-size:2.6rem;opacity:.18;letter-spacing:14px;white-space:nowrap;transform:rotate(-6deg)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;position:relative}
+.title{display:flex;align-items:center;gap:14px}
+.logo{font-size:3.4rem;animation:wiggle 3s ease-in-out infinite;display:inline-block}
+@keyframes wiggle{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+h1{font-family:var(--fun);font-weight:700;font-size:2rem;margin:0;line-height:1.15;text-shadow:0 3px 0 rgba(0,0,0,.15)}
+h1 small{display:block;font-family:var(--ui);font-size:1rem;font-weight:800;opacity:.9;text-shadow:none}
+.stars{background:#fff;color:var(--navy);border-radius:20px;padding:8px 18px;text-align:center;box-shadow:0 5px 0 rgba(0,0,0,.15);display:flex;align-items:center;gap:8px}
+.stars .s{font-size:2rem}
+.stars b{font-size:1.8rem;font-weight:900}
+nav{display:flex;gap:6px;margin-top:18px;overflow-x:auto;scrollbar-width:none;position:relative}
+nav::-webkit-scrollbar{display:none}
+nav button{border:0;color:#fff;background:rgba(255,255,255,.18);padding:10px 16px 12px;border-radius:18px 18px 0 0;font-weight:900;white-space:nowrap;display:flex;align-items:center;gap:7px;transition:.2s}
+nav button .e{font-size:1.3rem}
+nav button:hover{background:rgba(255,255,255,.3)}
+nav button.on{background:#FFF8EC;color:var(--navy)}
+main{padding:26px 0 50px}
+section{display:none}
+section.on{display:block;animation:pop .35s}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+h2{font-family:var(--fun);font-weight:700;color:var(--navy);font-size:1.75rem;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+h2 .big{font-size:2.2rem}
+.lead{margin:0 0 18px;color:#556;font-weight:600}
+.panel{background:#fff;border-radius:26px;padding:24px;box-shadow:0 8px 0 rgba(8,49,74,.08),0 10px 30px rgba(8,49,74,.08)}
+.btn{border:0;border-radius:16px;padding:12px 22px;font-weight:900;color:#fff;background:var(--coral);box-shadow:0 5px 0 #C94A4A;transition:transform .1s}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #C94A4A}
+.btn.teal{background:var(--teal);box-shadow:0 5px 0 #007A7A}
+.btn.gold{background:var(--gold);color:var(--navy);box-shadow:0 5px 0 #C08F00}
+.btn.purple{background:var(--purple);box-shadow:0 5px 0 #6A5AA0}
+.btn.small{padding:8px 14px;font-size:.9rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spk{background:#fff;border:0;color:var(--teal);border-radius:50%;width:38px;height:38px;display:inline-grid;place-items:center;padding:0;flex:none;box-shadow:0 3px 0 rgba(0,0,0,.12)}
+.spk svg{width:18px;height:18px}
+
+/* STORY COMIC */
+.progress{background:#fff;border-radius:20px;padding:12px 18px;display:flex;align-items:center;gap:14px;margin-bottom:18px;box-shadow:0 5px 0 rgba(8,49,74,.07)}
+.progress .bar{flex:1;height:16px;background:#F0EAF8;border-radius:10px;overflow:hidden}
+.progress .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--coral),var(--gold),var(--green));transition:width .4s;border-radius:10px}
+.progress b{color:var(--navy);white-space:nowrap}
+.comic{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.pnl{background:#fff;border-radius:24px;overflow:hidden;border:4px solid var(--navy);box-shadow:6px 6px 0 var(--navy);display:flex;flex-direction:column}
+.pnl.wide{grid-column:1/-1}
+.scene{height:150px;display:flex;align-items:center;justify-content:center;gap:10px;position:relative;font-size:4.2rem;overflow:hidden}
+.scene span{display:inline-block;animation:bob 2.4s ease-in-out infinite}
+.scene span:nth-child(2){animation-delay:.3s}.scene span:nth-child(3){animation-delay:.6s}.scene span:nth-child(4){animation-delay:.9s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.num{position:absolute;top:10px;left:12px;background:var(--navy);color:#fff;font-weight:900;font-size:.9rem;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--ui)}
+.bubble{position:absolute;top:12px;right:14px;background:#fff;border:3px solid var(--navy);border-radius:16px;padding:4px 10px;font-size:.95rem;font-family:var(--fun);font-weight:700;color:var(--navy)}
+.bubble::after{content:"";position:absolute;bottom:-10px;left:18px;border:8px solid transparent;border-top-color:var(--navy);border-bottom:0}
+.txt{padding:16px 18px;font-family:"Noto Sans",sans-serif;font-size:1.15rem;line-height:1.85;flex:1}
+.w{border:0;padding:1px 8px;font:inherit;font-weight:800;border-radius:10px;color:#fff;background:var(--purple);box-shadow:0 3px 0 rgba(0,0,0,.18);margin:2px 0;transition:transform .15s}
+.w:hover{transform:translateY(-2px) rotate(-1deg)}
+.w.seen{background:var(--green)}
+.w.seen::after{content:" ✓"}
+.en-line{display:none;padding:0 18px 14px;color:#667;font-style:italic;font-size:.95rem}
+.showEng .en-line{display:block}
+.tip{position:fixed;z-index:30;background:#fff;color:var(--ink);border-radius:22px;padding:14px 16px;max-width:300px;box-shadow:0 14px 40px rgba(0,0,0,.25);border:4px solid var(--gold);display:none;text-align:center}
+.tip .pic{font-size:3.4rem;line-height:1.1}
+.tip .g{font-family:var(--fun);font-weight:700;font-size:1.5rem;color:var(--navy)}
+.tip .p{color:#889;font-size:.85rem;font-weight:700}
+.tip .m{font-weight:900;color:var(--coral);font-size:1.1rem;margin-top:2px}
+.tip .h{font-size:.85rem;color:#556;margin-top:6px}
+
+/* CARDS */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:0;border-radius:22px;padding:8px 16px;font-weight:900;color:#fff;opacity:.55;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.chip.on{opacity:1;transform:scale(1.06)}
+.key{font-size:.88rem;color:#667;margin:0 0 16px;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.fc{perspective:900px;height:250px;cursor:pointer}
+.fc .in{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.4,1.6,.6,1);transform-style:preserve-3d}
+.fc.flip .in{transform:rotateY(180deg)}
+.fc:hover .in{transform:translateY(-4px)}
+.fc.flip:hover .in{transform:rotateY(180deg) translateY(-4px)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:24px;padding:14px;display:flex;flex-direction:column;box-shadow:0 6px 0 rgba(0,0,0,.15)}
+.front{color:#fff;align-items:center;justify-content:center;text-align:center}
+.front .pic{font-size:3.6rem;line-height:1;margin-bottom:6px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.12))}
+.front .gw{font-family:var(--fun);font-weight:700;font-size:1.45rem;line-height:1.2}
+.front .art{font-weight:900;opacity:.85;font-size:.9rem}
+.front .pr{font-size:.82rem;font-weight:800;opacity:.85;margin-top:2px}
+.front .spk{position:absolute;bottom:12px;right:12px}
+.back{background:#fff;transform:rotateY(180deg);font-size:.88rem;gap:6px;overflow:auto;border:4px solid}
+.back .en{font-weight:900;font-size:1.15rem}
+.back .ex{font-family:"Noto Sans",sans-serif;font-weight:700;color:var(--navy)}
+.back .exen{color:#778;font-style:italic}
+.back .hook{margin-top:auto;background:#FFF5D6;border-radius:12px;padding:8px;color:#5a4a10}
+.known{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;border:3px solid rgba(255,255,255,.8);background:rgba(255,255,255,.2);color:transparent;font-weight:900;padding:0}
+.known.yes{background:#fff;color:var(--ok)}
+.knownBox{font-weight:900;color:var(--navy);margin-bottom:14px;font-size:1.05rem}
+
+/* MATCH */
+.stat{display:flex;gap:12px;margin:0 0 16px;flex-wrap:wrap}
+.stat span{background:#fff;border-radius:14px;padding:6px 14px;font-weight:900;color:var(--navy);box-shadow:0 4px 0 rgba(8,49,74,.08)}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:700px}
+.tile{height:118px;border-radius:20px;border:0;color:#fff;font-weight:900;position:relative;box-shadow:0 6px 0 rgba(0,0,0,.18);transition:transform .2s}
+.tile:hover{transform:translateY(-3px) rotate(-1deg)}
+.tile .back-ic{font-size:2.2rem}
+.tile .t{display:none}
+.tile.up,.tile.done{background:#fff !important;color:var(--navy);border:4px solid var(--gold)}
+.tile.up .back-ic,.tile.done .back-ic{display:none}
+.tile.up .t,.tile.done .t{display:block}
+.tile .t .pic{font-size:2.8rem;line-height:1}
+.tile .t .cap{font-size:.75rem;color:#889;margin-top:2px}
+.tile .t.gk{font-family:var(--fun);font-weight:700;font-size:1.15rem;padding:6px}
+.tile.done{border-color:var(--ok);background:#E8F8EF !important;animation:yay .5s}
+@keyframes yay{50%{transform:scale(1.12) rotate(3deg)}}
+.tile.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* QUESTIONS */
+.prog{display:inline-block;background:#F0EAF8;color:var(--purple);border-radius:12px;padding:4px 12px;font-size:.85rem;font-weight:900}
+.qwrap{display:flex;gap:20px;align-items:center;margin:16px 0 20px}
+.qpic{font-size:4.5rem;width:110px;height:110px;flex:none;border-radius:28px;display:grid;place-items:center;background:#FFF1D6;animation:bob 2.4s ease-in-out infinite}
+.q{font-family:"Noto Sans",sans-serif;font-weight:700;font-size:1.4rem;color:var(--navy);line-height:1.55}
+.q .blank{display:inline-block;min-width:120px;border-bottom:4px dashed var(--coral);text-align:center;color:var(--coral)}
+.qen{font-style:italic;color:#667;margin-top:6px;font-size:1rem;font-weight:600;display:none}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.opt{border:0;border-radius:18px;padding:16px;font-family:var(--fun);font-weight:700;font-size:1.25rem;color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.18);transition:transform .1s}
+.opt.en{font-family:var(--ui);font-weight:900;font-size:1.05rem}
+.opt:hover:not(:disabled){transform:translateY(-2px)}
+.opt:disabled{opacity:.45}
+.opt.right{background:var(--ok) !important;opacity:1;animation:yay .4s}
+.opt.right::before{content:"✅ "}
+.opt.wrong{background:var(--bad) !important;opacity:1;animation:shake .35s}
+.fb{min-height:30px;margin-top:16px;font-weight:900;font-size:1.1rem}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--bad)}
+
+/* UNSCRAMBLE */
+.slots{display:flex;gap:6px;flex-wrap:wrap;min-height:62px;margin-bottom:16px}
+.slot{width:46px;height:56px;background:#F4F0FB;border-radius:12px;font-family:var(--fun);font-weight:700;font-size:1.6rem;display:grid;place-items:center;color:var(--navy);border-bottom:4px solid var(--purple)}
+.letters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+.let{width:50px;height:56px;border-radius:14px;border:0;color:#fff;font-family:var(--fun);font-weight:700;font-size:1.55rem;box-shadow:0 5px 0 rgba(0,0,0,.2);transition:transform .1s}
+.let:hover:not(:disabled){transform:translateY(-3px) rotate(-3deg)}
+.let:disabled{opacity:.2;box-shadow:none}
+.slots.good .slot{background:#E8F8EF;border-color:var(--ok);color:var(--ok)}
+.slots.badw .slot{background:#FDECEC;border-color:var(--bad);color:var(--bad)}
+
+/* BELL */
+.bellTop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.clock{font-size:2.6rem;font-weight:900;color:var(--navy);font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px}
+.clock.hurry{color:var(--bad)} .clock.hurry .ring{animation:ring .3s infinite}
+.ring{display:inline-block}
+@keyframes ring{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
+.pts{background:var(--gold);color:var(--navy);font-weight:900;font-size:1.3rem;border-radius:16px;padding:6px 16px;box-shadow:0 4px 0 #C08F00}
+.tbar{height:12px;border-radius:8px;background:#EEE;overflow:hidden;margin:10px 0 18px}
+.tbar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--gold),var(--coral));transition:width 1s linear}
+.bigword{text-align:center;margin:6px 0 20px}
+.bigword .pic{font-size:4rem;line-height:1.1}
+.bigword .wd{font-family:var(--fun);font-weight:700;font-size:2.1rem;color:var(--navy)}
+.bigword .wd.en{font-family:var(--ui);font-weight:900;font-size:1.7rem}
+.result{text-align:center;padding:16px}
+.result .trophy{font-size:5rem;animation:bob 2s infinite}
+.result .big{font-size:3.4rem;font-weight:900;color:var(--coral);line-height:1.1}
+.result p{font-weight:800;font-size:1.1rem}
+.missed{margin:14px auto 0;text-align:left;max-width:420px;background:#FFF5D6;border-radius:16px;padding:12px 16px;font-weight:700}
+.missed span{font-family:var(--fun);color:var(--navy)}
+.intro-pic{font-size:5rem;animation:ring 1s infinite;display:inline-block}
+
+footer{text-align:center;color:#99a;font-size:.85rem;padding:10px 0 30px;font-weight:700}
+.confetti{position:fixed;top:-20px;width:10px;height:16px;z-index:50;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+@media (max-width:640px){
+  .comic{grid-template-columns:1fr}
+  .mgrid{grid-template-columns:repeat(3,1fr)}
+  .opts{grid-template-columns:1fr}
+  h1{font-size:1.45rem}.logo{font-size:2.6rem}
+  .qwrap{flex-direction:column;align-items:flex-start}
+  .qpic{width:84px;height:84px;font-size:3.4rem}
+  .scene{font-size:3.4rem;height:130px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="title"><span class="logo">🎒</span>
+        <h1>Πρώτη μέρα στο σχολείο!<small>First day at school · 22 words to learn and play</small></h1></div>
+      <div class="stars"><span class="s">⭐</span><b id="starCount">0</b></div>
+    </div>
+    <nav>
+      <button data-t="story" class="on"><span class="e">📖</span>Story</button>
+      <button data-t="cards"><span class="e">🃏</span>Word Cards</button>
+      <button data-t="match"><span class="e">🧩</span>Memory Match</button>
+      <button data-t="fill"><span class="e">✏️</span>Fill the Gap</button>
+      <button data-t="scram"><span class="e">🔤</span>Unscramble</button>
+      <button data-t="bell"><span class="e">🔔</span>Beat the Bell</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="story" class="on">
+  <h2><span class="big">📖</span>Nikos goes to a new school</h2>
+  <p class="lead">Read the comic. Tap every purple word to see a picture and the meaning. It turns green when you find it. Can you find all 22?</p>
+  <div class="progress"><b id="foundTxt">0 / 22 found</b><div class="bar"><i id="foundBar"></i></div><button class="btn teal small" id="engToggle">Show English</button></div>
+  <div class="comic" id="comic"></div>
+</section>
+
+<section id="cards">
+  <h2><span class="big">🃏</span>Word cards</h2>
+  <p class="lead">Tap a card to flip it. Tap the circle when you know the word.</p>
+  <p class="key">🔊 Sound guide: <b>dh</b> = "th" in <i>this</i> (δ) · <b>th</b> = "th" in <i>think</i> (θ) · CAPITALS = say it louder</p>
+  <div class="filters" id="filters"></div>
+  <div class="knownBox" id="knownTxt"></div>
+  <div class="grid" id="cardGrid"></div>
+</section>
+
+<section id="match">
+  <h2><span class="big">🧩</span>Memory match</h2>
+  <p class="lead">Turn over two tiles. Match each picture to its Greek word!</p>
+  <div class="stat"><span>👆 Moves: <b id="mMoves">0</b></span><span>✅ Pairs: <b id="mPairs">0</b> / 6</span></div>
+  <div class="mgrid" id="mGrid"></div>
+  <div class="row" style="margin-top:20px"><button class="btn" id="mNew">🔄 New game</button><span id="mMsg" style="font-weight:900;color:var(--ok);font-size:1.1rem"></span></div>
+</section>
+
+<section id="fill">
+  <h2><span class="big">✏️</span>Fill the gap</h2>
+  <p class="lead">Look at the picture and choose the word that completes the sentence.</p>
+  <div class="panel" id="fillBox"></div>
+</section>
+
+<section id="scram">
+  <h2><span class="big">🔤</span>Unscramble</h2>
+  <p class="lead">Look at the picture. Tap the letters in the right order. Watch the accents!</p>
+  <div class="panel" id="scrBox"></div>
+</section>
+
+<section id="bell">
+  <h2><span class="big">🔔</span>Beat the bell</h2>
+  <p class="lead">The break bell rings in 60 seconds! Answer as many as you can before the διάλειμμα.</p>
+  <div class="panel" id="bellBox"></div>
+</section>
+</main>
+<footer>Glossomathia · Play · Listen · Learn 🌿</footer>
+<div class="tip" id="tip"></div>
+
+<script>
+const PIC = {"sympm": "👦😊", "sympf": "👧😊", "evgm": "🙇‍♂️", "evgf": "💐", "fil": "🐶", "afst": "😠", "diaf": "🦓", "sig": "👍", "kath": "👨‍🏫", "kathf": "👩‍🏫", "symm": "🧑‍🤝‍🧑", "engo": "👵👦", "pare": "🎉👫", "kpar": "🛹", "diale": "⚽", "melet": "📝", "logo": "📚", "endi": "🤩", "pal": "🏚️", "kain": "🎁", "dysk": "🧗", "efk": "🍰"};
+const W = [
+ {id:"sympm", gr:"συμπαθητικός", art:"", en:"likeable, nice (he)", pr:"sim·ba·thi·ti·KOS", ex:"Ο καινούριος συμμαθητής μου είναι πολύ συμπαθητικός.", exen:"My new classmate is very nice.", hook:"Looks like English \"sympathetic\", but in Greek it means someone you simply like.", g:"Describing people", pair:"sympf"},
+ {id:"sympf", gr:"συμπαθητική", art:"", en:"likeable, nice (she)", pr:"sim·ba·thi·ti·KI", ex:"Η καθηγήτρια είναι πολύ συμπαθητική.", exen:"The teacher is very nice.", hook:"Same word for a woman: the ending changes from ‑ός to ‑ή.", g:"Describing people", pair:"sympm"},
+ {id:"evgm", gr:"ευγενικός", art:"", en:"polite, kind (he)", pr:"ev·ye·ni·KOS", ex:"Ο Πέτρος είναι πάντα ευγενικός.", exen:"Petros is always polite.", hook:"ευ (well) + γένος (birth): someone with good manners, \"well born\".", g:"Describing people", pair:"evgf"},
+ {id:"evgf", gr:"ευγενική", art:"", en:"polite, kind (she)", pr:"ev·ye·ni·KI", ex:"Η Μαρία λέει πάντα «ευχαριστώ». Είναι ευγενική.", exen:"Maria always says thank you. She is polite.", hook:"For a woman: ‑ός becomes ‑ή.", g:"Describing people", pair:"evgm"},
+ {id:"fil", gr:"φιλικός", art:"", en:"friendly", pr:"fi·li·KOS", ex:"Ο σκύλος μας είναι πολύ φιλικός.", exen:"Our dog is very friendly.", hook:"φίλος = friend. Same root as philosophy, \"love of wisdom\".", g:"Describing people"},
+ {id:"afst", gr:"αυστηρός", art:"", en:"strict", pr:"af·sti·ROS", ex:"Ο καθηγητής των μαθηματικών είναι αυστηρός.", exen:"The maths teacher is strict.", hook:"English \"austere\" comes from this word.", g:"Describing people"},
+ {id:"diaf", gr:"διαφορετικός", art:"", en:"different", pr:"dhia·fo·re·ti·KOS", ex:"Ο αδελφός μου είναι πολύ διαφορετικός από μένα.", exen:"My brother is very different from me.", hook:"Think of the English word \"differ\": both mean to carry apart.", g:"Describing people"},
+ {id:"sig", gr:"σίγουρος", art:"", en:"sure, certain", pr:"SI·gu·ros", ex:"Είσαι σίγουρος; Ναι, είμαι σίγουρος!", exen:"Are you sure? Yes, I'm sure!", hook:"It came into Greek from Latin securus, like English \"secure\".", g:"Describing people"},
+ {id:"kath", gr:"καθηγητής", art:"ο", en:"teacher (man)", pr:"ka·thi·yi·TIS", ex:"Ο καθηγητής των αγγλικών λέγεται κύριος Παύλος.", exen:"The English teacher is called Mr Pavlos.", hook:"From ηγούμαι, to lead. A teacher leads the way (like \"hegemony\").", g:"People at school", pair:"kathf"},
+ {id:"kathf", gr:"καθηγήτρια", art:"η", en:"teacher (woman)", pr:"ka·thi·YI·tri·a", ex:"Η καθηγήτρια μας λέει πάντα «μπράβο».", exen:"Our teacher always says \"well done\".", hook:"‑τρια is a common ending for women: καθηγήτρια, μαθήτρια.", g:"People at school", pair:"kath"},
+ {id:"symm", gr:"συμμαθητής", art:"ο", en:"classmate", pr:"si·ma·thi·TIS", ex:"Ο Άρης είναι ο συμμαθητής μου.", exen:"Aris is my classmate.", hook:"συν (together) + μαθητής (student): a student who learns with you.", g:"People at school"},
+ {id:"engo", gr:"εγγονός", art:"ο", en:"grandson", pr:"en·go·NOS", ex:"Ο Νίκος είναι ο εγγονός της κυρίας Ελένης.", exen:"Nikos is Mrs Eleni's grandson.", hook:"Same root as genealogy: γένος, family line. γγ sounds like \"ng\".", g:"People at school"},
+ {id:"pare", gr:"παρέα", art:"η", en:"company, group of friends", pr:"pa·RE·a", ex:"Έχω πολύ καλή παρέα στο σχολείο.", exen:"I have a really good group of friends at school.", hook:"Your παρέα is your crew, the people you spend time with.", g:"School life"},
+ {id:"kpar", gr:"κάνω παρέα", art:"", en:"I hang out (with)", pr:"KA·no pa·RE·a", ex:"Το Σάββατο κάνω παρέα με τους φίλους μου.", exen:"On Saturday I hang out with my friends.", hook:"Literally \"I make company\".", g:"School life"},
+ {id:"diale", gr:"διάλειμμα", art:"το", en:"break, recess", pr:"DHYA·li·ma", ex:"Στο διάλειμμα παίζουμε μπάλα.", exen:"At break we play ball.", hook:"From λείπω, to leave out: a gap between lessons, like \"ellipsis\".", g:"School life"},
+ {id:"melet", gr:"μελετάω", art:"", en:"I study", pr:"me·le·TA·o", ex:"Μελετάω ελληνικά κάθε μέρα.", exen:"I study Greek every day.", hook:"μελέτη means study, care, attention.", g:"School life"},
+ {id:"logo", gr:"λογοτεχνία", art:"η", en:"literature", pr:"lo·yo·teh·NI·a", ex:"Το αγαπημένο μου μάθημα είναι η λογοτεχνία.", exen:"My favourite subject is literature.", hook:"λόγος (word) + τέχνη (art): the art of words.", g:"School life"},
+ {id:"endi", gr:"ενδιαφέρον", art:"", en:"interesting", pr:"en·dhia·FE·ron", ex:"Το βιβλίο είναι πολύ ενδιαφέρον.", exen:"The book is very interesting.", hook:"Also a noun: το ενδιαφέρον = interest.", g:"School life"},
+ {id:"pal", gr:"παλιός", art:"", en:"old (for things)", pr:"pa·LYOS", ex:"Ο σταθμός είναι πολύ παλιός.", exen:"The station is very old.", hook:"Like \"paleo\" in paleontology. Opposite: καινούριος.", g:"Opposites"},
+ {id:"kain", gr:"καινούριος", art:"", en:"new", pr:"ke·NU·ryos", ex:"Ο καινούριος μαθητής ήρθε σήμερα.", exen:"The new student came today.", hook:"From καινός, new. Opposite: παλιός.", g:"Opposites"},
+ {id:"dysk", gr:"δύσκολο", art:"", en:"difficult", pr:"DHI·sko·lo", ex:"Το μάθημα είναι δύσκολο.", exen:"The lesson is difficult.", hook:"δυσ‑ means bad or hard, like dysfunction. Opposite: εύκολο.", g:"Opposites"},
+ {id:"efk", gr:"εύκολο", art:"", en:"easy", pr:"EF·ko·lo", ex:"Το τεστ ήταν εύκολο!", exen:"The test was easy!", hook:"ευ‑ means well or good, like euphoria. Opposite: δύσκολο.", g:"Opposites"}
+];
+W.forEach(w=>w.pic=PIC[w.id]);
+const byId = Object.fromEntries(W.map(w=>[w.id,w]));
+const GCOL = {"People at school":"#4FA3FF","Describing people":"#FF6B6B","School life":"#8E7CC3","Opposites":"#FF9F43"};
+const GEMO = {"People at school":"🧑‍🏫","Describing people":"😊","School life":"🏫","Opposites":"⚖️"};
+const RAINBOW=["#FF6B6B","#FF9F43","#F5B700","#3DBE7A","#00A6A6","#4FA3FF","#8E7CC3","#FF8FC7"];
+
+const $ = s=>document.querySelector(s);
+const shuffle = a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const store = {get(k,d){try{const v=localStorage.getItem("gm22_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("gm22_"+k,JSON.stringify(v))}catch(e){}}};
+let stars = store.get("stars",0);
+$("#starCount").textContent=stars;
+function addStars(n){stars+=n;store.set("stars",stars);$("#starCount").textContent=stars;
+  $(".stars").animate([{transform:"scale(1.35) rotate(-6deg)"},{transform:"scale(1)"}],{duration:450});}
+function confetti(n=70){for(let i=0;i<n;i++){const c=document.createElement("div");c.className="confetti";
+  c.style.left=Math.random()*100+"vw";c.style.background=RAINBOW[i%RAINBOW.length];c.style.animationDuration=(1.6+Math.random()*1.6)+"s";
+  c.style.animationDelay=(Math.random()*.4)+"s";c.style.borderRadius=Math.random()<.5?"50%":"3px";document.body.appendChild(c);setTimeout(()=>c.remove(),3800);}}
+const spkSVG='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>';
+function say(t){try{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="el-GR";u.rate=.85;
+  const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith("el"));if(v)u.voice=v;speechSynthesis.speak(u);}catch(e){}}
+const full=w=>(w.art?w.art+" ":"")+w.gr;
+
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===b.dataset.t));
+  hideTip(); if(b.dataset.t!=="bell") stopBell(); window.scrollTo({top:0,behavior:"smooth"});
+});
+
+/* ---------- STORY COMIC ---------- */
+const PANELS=[
+ {bg:"#FFE3EC",scene:["👵","💛","👦","🎒"],txt:"Ο Νίκος είναι ο [εγγονός|engo] της κυρίας Ελένης. Σήμερα πάει σε [καινούριο|kain] σχολείο!",en:"Nikos is Mrs Eleni's grandson. Today he goes to a new school!"},
+ {bg:"#E3F1FF",scene:["🏫","🕰️","🌳"],bubble:"Ουάου!",txt:"Το σχολείο είναι [παλιό|pal], αλλά πολύ ωραίο.",en:"The school is old, but very nice."},
+ {bg:"#FFF1D6",scene:["👨‍🏫","📏","🧮"],bubble:"Μελετάτε!",txt:"Ο [καθηγητής|kath] των μαθηματικών είναι [αυστηρός|afst]. «Τα μαθηματικά δεν είναι [δύσκολο|dysk] μάθημα, αλλά πρέπει να μελετάτε κάθε μέρα!»",en:"The maths teacher is strict. “Maths is not a difficult subject, but you must study every day!”"},
+ {bg:"#E8F8EF",scene:["👦","📖","💭"],bubble:"Εντάξει!",txt:"Ο Νίκος σκέφτεται: «Εντάξει, [μελετάω|melet] κάθε μέρα.»",en:"Nikos thinks: “OK, I study every day.”"},
+ {bg:"#F1ECFB",scene:["👩‍🏫","📚","😊"],wide:true,txt:"Η [καθηγήτρια|kathf] της [λογοτεχνίας|logo] είναι πολύ [συμπαθητική|sympf] και [ευγενική|evgf]. Τους δίνει ένα [ενδιαφέρον|endi] βιβλίο.",en:"The literature teacher is very nice and polite. She gives them an interesting book."},
+ {bg:"#FFE9D6",scene:["🔔","⚽","🧒","👋"],bubble:"Γεια!",txt:"Στο [διάλειμμα|diale] ένας [συμμαθητής|symm], ο Άρης, λέει: «Θέλεις να [κάνουμε παρέα|kpar];»",en:"At break a classmate, Aris, says: “Do you want to hang out?”"},
+ {bg:"#E0F7F7",scene:["🧒","📜","✨"],txt:"Ο Άρης είναι [φιλικός|fil], [ευγενικός|evgm] και [συμπαθητικός|sympm]. Είναι λίγο [διαφορετικός|diaf]: διαβάζει ποιήματα στο διάλειμμα!",en:"Aris is friendly, polite and likeable. He is a bit different: he reads poems at break!"},
+ {bg:"#1E2A5A",scene:["🌙","👵","💬","👦"],wide:true,bubble:"Ναι, γιαγιά!",txt:"«Ήταν δύσκολο;» ρωτάει η γιαγιά. «Όχι, ήταν [εύκολο|efk]! Έχω καινούρια [παρέα|pare]!» «Είσαι [σίγουρος|sig];» «Ναι, είμαι σίγουρος!»",en:"“Was it difficult?” asks grandma. “No, it was easy! I have new friends!” “Are you sure?” “Yes, I'm sure!”"}
+];
+const found=new Set(store.get("found",[]));
+function renderStory(){
+  $("#comic").innerHTML=PANELS.map((p,i)=>`<div class="pnl${p.wide?" wide":""}">
+    <div class="scene" style="background:${p.bg}"><span class="num">${i+1}</span>${p.bubble?`<span class="bubble">${p.bubble}</span>`:""}${p.scene.map(e=>`<span>${e}</span>`).join("")}</div>
+    <div class="txt">${p.txt.replace(/\[([^|\]]+)\|(\w+)\]/g,(m,s,id)=>`<button class="w${found.has(id)?" seen":""}" data-id="${id}">${s}</button>`)}</div>
+    <div class="en-line">${p.en}</div></div>`).join("");
+  document.querySelectorAll(".w").forEach(b=>b.onclick=ev=>{ev.stopPropagation();const id=b.dataset.id;showTip(b,byId[id]);say(byId[id].gr);
+    if(!found.has(id)){found.add(id);store.set("found",[...found]);
+      document.querySelectorAll(`.w[data-id="${id}"]`).forEach(x=>x.classList.add("seen"));updFound();
+      if(found.size===W.length){addStars(5);confetti(120);}}
+  });
+  updFound();
+}
+function updFound(){$("#foundTxt").textContent=found.size===W.length?"🎉 All 22 found! +5 ⭐":`🔍 ${found.size} / ${W.length} found`;$("#foundBar").style.width=(found.size/W.length*100)+"%";}
+function showTip(a,w){const t=$("#tip");
+  t.innerHTML=`<div class="pic">${w.pic}</div><div class="row" style="justify-content:center;gap:8px"><span class="g">${full(w)}</span><button class="spk" id="tipSpk">${spkSVG}</button></div>
+   <div class="p">${w.pr}</div><div class="m">${w.en}</div><div class="h">💡 ${w.hook}</div>`;
+  t.style.display="block";const r=a.getBoundingClientRect();
+  let x=Math.min(window.innerWidth-t.offsetWidth-10,Math.max(10,r.left+r.width/2-t.offsetWidth/2));
+  let y=r.bottom+10;if(y+t.offsetHeight>window.innerHeight-10)y=r.top-t.offsetHeight-10;
+  t.style.left=x+"px";t.style.top=Math.max(10,y)+"px";
+  $("#tipSpk").onclick=e=>{e.stopPropagation();say(w.gr)};}
+function hideTip(){$("#tip").style.display="none"}
+document.addEventListener("click",e=>{if(!e.target.closest("#tip"))hideTip()});
+window.addEventListener("scroll",hideTip,{passive:true});
+$("#engToggle").onclick=()=>{const c=$("#comic");c.classList.toggle("showEng");$("#engToggle").textContent=c.classList.contains("showEng")?"Hide English":"Show English"};
+renderStory();
+
+/* ---------- CARDS ---------- */
+const groups=["All","People at school","Describing people","School life","Opposites"];
+let curG="All";const known=new Set(store.get("known",[]));
+function renderFilters(){$("#filters").innerHTML=groups.map(g=>`<button class="chip${g===curG?" on":""}" data-g="${g}" style="background:${GCOL[g]||"#08314A"}">${g==="All"?"🌈":GEMO[g]} ${g}</button>`).join("");
+  document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{curG=c.dataset.g;renderFilters();renderCards()});}
+function renderCards(){
+  const list=W.filter(w=>curG==="All"||w.g===curG);
+  $("#cardGrid").innerHTML=list.map(w=>{const c=GCOL[w.g];return `
+   <div class="fc" data-id="${w.id}" role="button" tabindex="0"><div class="in">
+     <div class="face front" style="background:linear-gradient(160deg,${c},${c}cc)">
+       <button class="known${known.has(w.id)?" yes":""}" data-k="${w.id}" title="I know this">✓</button>
+       <div class="pic">${w.pic}</div>${w.art?`<div class="art">${w.art}</div>`:""}<div class="gw">${w.gr}</div><div class="pr">${w.pr}</div>
+       <button class="spk" data-s="${w.id}">${spkSVG}</button></div>
+     <div class="face back" style="border-color:${c}"><div class="en" style="color:${c}">${w.pic} ${w.en}</div><div class="ex">${w.ex}</div><div class="exen">${w.exen}</div><div class="hook">💡 ${w.hook}</div></div>
+   </div></div>`}).join("");
+  document.querySelectorAll(".fc").forEach(c=>{c.onclick=e=>{if(e.target.closest(".known,.spk"))return;c.classList.toggle("flip")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("flip")}}});
+  document.querySelectorAll(".spk[data-s]").forEach(b=>b.onclick=e=>{e.stopPropagation();say(byId[b.dataset.s].gr)});
+  document.querySelectorAll(".known").forEach(b=>b.onclick=e=>{e.stopPropagation();const id=b.dataset.k;
+    if(known.has(id))known.delete(id);else{known.add(id);addStars(1);if(known.size===W.length)confetti(120);}
+    store.set("known",[...known]);b.classList.toggle("yes",known.has(id));updKnown();});
+  updKnown();}
+function updKnown(){$("#knownTxt").textContent=known.size===W.length?"🏆 I know all 22 words! Μπράβο!":`🧠 I know ${known.size} of ${W.length} words`}
+renderFilters();renderCards();
+
+/* ---------- MATCH ---------- */
+let mOpen=[],mLock=false,mMoves=0,mPairs=0;
+function newMatch(){
+  let pick=[];for(const w of shuffle(W)){if(pick.length===6)break;if(w.pair&&pick.some(p=>p.id===w.pair))continue;pick.push(w)}
+  const tiles=shuffle(pick.flatMap(w=>[{id:w.id,gk:true},{id:w.id,gk:false}]));
+  mOpen=[];mLock=false;mMoves=0;mPairs=0;$("#mMoves").textContent=0;$("#mPairs").textContent=0;$("#mMsg").textContent="";
+  $("#mGrid").innerHTML=tiles.map((t,i)=>{const w=byId[t.id];return `<button class="tile" data-id="${t.id}" data-gk="${t.gk}" style="background:${RAINBOW[i%RAINBOW.length]}">
+    <span class="back-ic">${["⭐","🍀","🎈","🌟","🍭","🎵"][i%6]}</span>
+    ${t.gk?`<span class="t gk">${full(w)}</span>`:`<span class="t"><div class="pic">${w.pic}</div><div class="cap">${w.en}</div></span>`}</button>`}).join("");
+  document.querySelectorAll(".tile").forEach(b=>b.onclick=()=>flipTile(b));}
+function flipTile(b){
+  if(mLock||b.classList.contains("up")||b.classList.contains("done"))return;
+  b.classList.add("up");if(b.dataset.gk==="true")say(byId[b.dataset.id].gr);mOpen.push(b);
+  if(mOpen.length===2){mMoves++;$("#mMoves").textContent=mMoves;const[a,c]=mOpen;
+    if(a.dataset.id===c.dataset.id){a.classList.replace("up","done");c.classList.replace("up","done");mOpen=[];mPairs++;$("#mPairs").textContent=mPairs;
+      if(mPairs===6){const s=mMoves<=9?3:mMoves<=13?2:1;addStars(s);confetti();$("#mMsg").textContent=`🎉 Μπράβο! ${mMoves} moves · +${s} ⭐`;}}
+    else{mLock=true;setTimeout(()=>{a.classList.add("shake");c.classList.add("shake")},400);
+      setTimeout(()=>{a.classList.remove("up","shake");c.classList.remove("up","shake");mOpen=[];mLock=false},1000);}}}
+$("#mNew").onclick=newMatch;newMatch();
+
+/* ---------- FILL ---------- */
+const FILL=[
+ ["Ο Άρης κάθεται δίπλα μου στην τάξη. Είναι ο ___ μου.","symm",["kath","engo","pare"],"Aris sits next to me in class. He is my classmate."],
+ ["Στο ___ παίζουμε μπάλα στην αυλή.","diale",["logo","pare","kpar"],"At break we play ball in the yard."],
+ ["Ο καθηγητής δεν χαμογελάει ποτέ. Είναι πολύ ___.","afst",["fil","efk","kain"],"The teacher never smiles. He is very strict."],
+ ["Η ___ μας λέει πάντα «μπράβο».","kathf",["logo","pare","symm"],"Our teacher always says \"well done\"."],
+ ["Κάθε απόγευμα ___ ελληνικά για μία ώρα.","melet",["kpar","sig","diaf"],"Every afternoon I study Greek for an hour."],
+ ["Αυτό το βιβλίο είναι πολύ ___! Δεν μπορώ να σταματήσω.","endi",["dysk","pal","afst"],"This book is very interesting! I can't stop."],
+ ["Το τεστ δεν ήταν δύσκολο. Ήταν ___.","efk",["dysk","endi","pal"],"The test wasn't difficult. It was easy."],
+ ["Τα αρχαία ελληνικά είναι λίγο ___ για μένα.","dysk",["efk","kain","fil"],"Ancient Greek is a bit difficult for me."],
+ ["Ο ___ μαθητής ήρθε σήμερα για πρώτη φορά.","kain",["pal","afst","sig"],"The new student came today for the first time."],
+ ["Ο σταθμός είναι πολύ ___. Είναι από το 1900!","pal",["kain","fil","sig"],"The station is very old. It is from 1900!"],
+ ["Ο Νίκος είναι ο ___ της κυρίας Ελένης.","engo",["symm","kath","kathf"],"Nikos is Mrs Eleni's grandson."],
+ ["«Είσαι ___;» «Ναι, το ξέρω!»","sig",["diaf","efk","fil"],"\"Are you sure?\" \"Yes, I know it!\""],
+ ["Το Σάββατο ___ με τους φίλους μου στο πάρκο.","kpar",["melet","pare","diale"],"On Saturday I hang out with my friends in the park."],
+ ["Ο σκύλος μας είναι πολύ ___. Αγαπάει όλους!","fil",["afst","dysk","pal"],"Our dog is very friendly. He loves everyone!"],
+ ["Το αγαπημένο μου μάθημα είναι η ___.","logo",["pare","kathf","diale"],"My favourite subject is literature."],
+ ["Η Μαρία λέει πάντα «ευχαριστώ» και «παρακαλώ». Είναι ___.","evgf",["evgm","afst","kain"],"Maria always says thank you and please. She is polite."],
+ ["Η καινούρια γειτόνισσα είναι πολύ ___. Όλοι τη συμπαθούν!","sympf",["sympm","pal","dysk"],"The new neighbour (a woman) is very nice. Everyone likes her!"],
+ ["Ο Πέτρος λέει πάντα «ευχαριστώ». Είναι ___.","evgm",["evgf","dysk","logo"],"Petros always says thank you. He is polite."],
+ ["Ο αδελφός μου κι εγώ δεν είμαστε ίδιοι. Είναι πολύ ___ από μένα.","diaf",["sig","efk","fil"],"My brother and I are not the same. He is very different from me."],
+ ["Ο ___ των αγγλικών λέγεται κύριος Παύλος.","kath",["kathf","logo","pare"],"The English teacher (a man) is called Mr Pavlos."],
+ ["Έχω πολύ καλή ___ στο σχολείο. Είμαστε πέντε φίλοι.","pare",["diale","logo","kathf"],"I have a really good group at school. We are five friends."],
+ ["Ο καινούριος γείτονας είναι πολύ ___. Όλοι τον συμπαθούν.","sympm",["sympf","efk","pal"],"The new neighbour (a man) is very nice. Everyone likes him."]
+];
+let fQ=[],fI=0,fScore=0;
+function endScreen(box,score,total,s,again){
+  box.innerHTML=`<div class="result"><div class="trophy">${score/total>=.8?"🏆":score/total>=.5?"🥈":"💪"}</div><div class="big">${score} / ${total}</div>
+   <p>${score/total>=.8?"Εξαιρετικά! Excellent!":score/total>=.5?"Πολύ καλά! Very good!":"Καλή προσπάθεια! Try again!"}${s?` · +${s} ⭐`:""}</p>
+   <button class="btn" id="again">🔄 Play again</button></div>`;
+  $("#again").onclick=again; if(s>=2) confetti();}
+function startFill(){fQ=shuffle(FILL).slice(0,10);fI=0;fScore=0;showFill();}
+function showFill(){const box=$("#fillBox");
+  if(fI>=fQ.length){const s=fScore>=9?3:fScore>=7?2:fScore>=5?1:0;if(s)addStars(s);return endScreen(box,fScore,fQ.length,s,startFill);}
+  const[sent,ans,dis,en]=fQ[fI];const opts=shuffle([ans,...dis]);
+  box.innerHTML=`<span class="prog">Question ${fI+1} of ${fQ.length} · ⭐ ${fScore}</span>
+   <div class="qwrap"><div class="qpic">${byId[ans].pic}</div><div><div class="q">${sent.replace("___",'<span class="blank">?</span>')}</div><div class="qen" id="fEn">${en}</div></div></div>
+   <div class="opts">${opts.map((o,i)=>`<button class="opt" data-o="${o}" style="background:${["#4FA3FF","#8E7CC3","#FF9F43","#00A6A6"][i]}">${byId[o].gr}</button>`).join("")}</div>
+   <div class="fb" id="fFb"></div><button class="btn teal" id="fNext" style="display:none;margin-top:6px">Next ➜</button>`;
+  box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    box.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(x.dataset.o===ans)x.classList.add("right")});
+    const ok=b.dataset.o===ans;if(!ok)b.classList.add("wrong");else fScore++;
+    box.querySelector(".blank").textContent=byId[ans].gr;say(sent.replace("___",byId[ans].gr));$("#fEn").style.display="block";
+    const fb=$("#fFb");fb.className="fb "+(ok?"ok":"no");fb.textContent=ok?["🎉 Σωστά!","🌟 Μπράβο!","👏 Τέλεια!"][Math.floor(Math.random()*3)]:`🙈 Not quite. It's ${byId[ans].gr} (${byId[ans].en}).`;
+    $("#fNext").style.display="inline-block";});
+  $("#fNext").onclick=()=>{fI++;showFill()};}
+startFill();
+
+/* ---------- UNSCRAMBLE ---------- */
+let sQ=[],sI=0,sBuilt=[],sScore=0;
+function startScr(){sQ=shuffle(W.filter(w=>!w.gr.includes(" "))).slice(0,8);sI=0;sScore=0;showScr();}
+function showScr(){const box=$("#scrBox");
+  if(sI>=sQ.length){const s=sScore>=7?3:sScore>=5?2:sScore>=3?1:0;if(s)addStars(s);return endScreen(box,sScore,sQ.length,s,startScr);}
+  const w=sQ[sI];const letters=[...w.gr];let mixed=shuffle(letters);if(mixed.join("")===w.gr)mixed.reverse();sBuilt=[];
+  box.innerHTML=`<span class="prog">Word ${sI+1} of ${sQ.length} · ⭐ ${sScore}</span>
+   <div class="qwrap"><div class="qpic">${w.pic}</div><div><div class="q" style="font-family:var(--ui);font-weight:900">${w.en}</div>${w.art?`<div style="color:#889;font-weight:800">${w.art} …</div>`:""}</div></div>
+   <div class="slots" id="slots">${letters.map(()=>'<div class="slot"></div>').join("")}</div>
+   <div class="letters">${mixed.map((l,k)=>`<button class="let" style="background:${RAINBOW[k%RAINBOW.length]}">${l}</button>`).join("")}</div>
+   <div class="row"><button class="btn purple small" id="sBack">↩️ Undo</button><button class="btn gold small" id="sHint">💡 Hint</button><button class="btn teal small" id="sSkip">⏭️ Skip</button></div>
+   <div class="fb" id="sFb"></div>`;
+  const slots=[...box.querySelectorAll(".slot")];let usedHint=false;
+  const draw=()=>slots.forEach((s,i)=>s.textContent=sBuilt[i]?sBuilt[i].l:"");
+  box.querySelectorAll(".let").forEach(b=>b.onclick=()=>{if(sBuilt.length>=letters.length)return;
+    sBuilt.push({l:b.textContent,b});b.disabled=true;draw();
+    if(sBuilt.length===letters.length){
+      if(sBuilt.map(x=>x.l).join("")===w.gr){$("#slots").classList.add("good");if(!usedHint)sScore++;$("#sFb").className="fb ok";$("#sFb").textContent=`🎉 Σωστά! ${full(w)}`;say(w.gr);confetti(25);
+        setTimeout(()=>{sI++;showScr()},1700);}
+      else{$("#slots").classList.add("badw");$("#sFb").className="fb no";$("#sFb").textContent="🙈 Not yet! Tap Undo and try again.";}}});
+  $("#sBack").onclick=()=>{const x=sBuilt.pop();if(x)x.b.disabled=false;$("#slots").classList.remove("badw");$("#sFb").textContent="";draw();};
+  $("#sHint").onclick=()=>{usedHint=true;$("#sFb").className="fb";$("#sFb").style.color="var(--purple)";$("#sFb").textContent=`💡 It starts with “${letters[0]}”. Say it: ${w.pr}`;say(w.gr);};
+  $("#sSkip").onclick=()=>{$("#sFb").className="fb no";$("#sFb").textContent=`The word was ${full(w)}.`;setTimeout(()=>{sI++;showScr()},1400);};}
+startScr();
+
+/* ---------- BEAT THE BELL ---------- */
+let bTimer=null,bLeft=60,bScore=0,bMiss=[],bBest=store.get("best",0);
+function bellIntro(){$("#bellBox").innerHTML=`<div class="result"><div class="intro-pic">⏰</div>
+  <p style="max-width:480px;margin:10px auto 6px">You see a picture and a word in Greek or English. Tap its partner fast! Every right answer = 1 point. A wrong answer costs 3 seconds!</p>
+  <p style="color:var(--purple)">🏅 Your best score: ${bBest}</p><button class="btn gold" id="bGo">▶️ Start the clock</button></div>`;
+  $("#bGo").onclick=startBell;}
+function startBell(){bLeft=60;bScore=0;bMiss=[];nextBell();clearInterval(bTimer);bTimer=setInterval(()=>{bLeft--;tickDraw();if(bLeft<=0)endBell()},1000);}
+function tickDraw(){const c=$("#bClock");if(!c)return;c.innerHTML=`<span class="ring">🔔</span>0:${String(Math.max(0,bLeft)).padStart(2,"0")}`;c.classList.toggle("hurry",bLeft<=10);
+  const t=$("#tFill");if(t)t.style.width=(bLeft/60*100)+"%";}
+function nextBell(){const w=W[Math.floor(Math.random()*W.length)];const toEn=Math.random()<.5;
+  const opts=shuffle([w,...shuffle(W.filter(x=>x.id!==w.id&&x.id!==w.pair)).slice(0,3)]);
+  $("#bellBox").innerHTML=`<div class="bellTop"><div class="clock" id="bClock"></div><div class="pts">⭐ ${bScore}</div></div>
+   <div class="tbar"><i id="tFill"></i></div>
+   <div class="bigword"><div class="pic">${w.pic}</div><div class="wd ${toEn?"":"en"}">${toEn?full(w):w.en}</div></div>
+   <div class="opts">${opts.map((o,i)=>`<button class="opt ${toEn?"en":""}" data-id="${o.id}" style="background:${["#FF6B6B","#4FA3FF","#3DBE7A","#8E7CC3"][i]}">${toEn?o.en:o.gr}</button>`).join("")}</div>`;
+  tickDraw();if(toEn)say(w.gr);
+  document.querySelectorAll("#bellBox .opt").forEach(b=>b.onclick=()=>{
+    if(b.dataset.id===w.id){bScore++;b.classList.add("right");setTimeout(nextBell,250);}
+    else{b.classList.add("wrong");b.disabled=true;bLeft=Math.max(0,bLeft-3);tickDraw();if(!bMiss.includes(w))bMiss.push(w);if(bLeft<=0)endBell();}});}
+function endBell(){clearInterval(bTimer);bTimer=null;const s=bScore>=20?3:bScore>=14?2:bScore>=8?1:0;if(s)addStars(s);
+  const nb=bScore>bBest;if(nb){bBest=bScore;store.set("best",bBest)} if(s||nb)confetti();
+  $("#bellBox").innerHTML=`<div class="result"><div class="trophy">🔔</div><p style="color:var(--purple)">Ντριιιν! Διάλειμμα!</p><div class="big">${bScore} points</div>
+   <p>${nb?"🏅 New best score! ":""}${s?`+${s} ⭐`:"Get 8 points for a star!"}</p>
+   ${bMiss.length?`<div class="missed">📌 Words to review:<br>${bMiss.map(w=>`${w.pic} <span>${full(w)}</span> = ${w.en}`).join("<br>")}</div>`:""}
+   <div style="margin-top:16px"><button class="btn gold" id="bAgain">🔄 Play again</button></div></div>`;
+  $("#bAgain").onclick=startBell;}
+function stopBell(){if(bTimer){clearInterval(bTimer);bTimer=null;}bellIntro();}
+bellIntro();
+</script>
+</body>
+</html>
